@@ -1,0 +1,3 @@
+description: 'ZeroBias platform boundary ID for the engagement'
+displayName: 'Boundary ID'
+type: string

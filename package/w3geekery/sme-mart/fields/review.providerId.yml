@@ -1,0 +1,3 @@
+description: 'ZeroBias user ID of the reviewed provider'
+displayName: 'Provider ID'
+type: string

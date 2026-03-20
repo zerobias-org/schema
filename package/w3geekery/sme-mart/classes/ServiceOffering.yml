@@ -2,14 +2,24 @@ description: "A provider's catalog listing in the SME marketplace"
 extends:
   - Object
 properties:
+  - providerId:
+    field: serviceOffering.providerId
+  - isActive:
+    field: serviceOffering.isActive
   - category:
     field: serviceOffering.category
+  - subcategory:
+    field: serviceOffering.subcategory
   - pricingType:
     field: serviceOffering.pricingType
   - price:
     field: serviceOffering.price
   - deliveryTime:
     field: serviceOffering.deliveryTime
+  - serviceIncludes:
+    field: serviceOffering.serviceIncludes
+  - serviceRequirements:
+    field: serviceOffering.serviceRequirements
 viewProperties:
   "Name":
     jsonata: name

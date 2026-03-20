@@ -1,0 +1,3 @@
+description: 'ZeroBias user ID of the note author'
+displayName: 'Author User ID'
+type: string
