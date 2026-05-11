@@ -37,14 +37,20 @@ env:
 
 # ── Lifecycle ────────────────────────────────────────────────────────
 # Schema packages have no Docker phase. The TS-twin publish runs inside
-# `publish` (wired into the publishNpm aggregate by zb.schema), so this
-# yaml looks the same as suite/vendor.
+# `publish` (wired into the publishNpm aggregate by zb.schema).
+#
+# `version:` is required by the new zbb model (0.3.63+). The reusable
+# workflow's `version` job calls `zbb version --modules=$PACKAGES`,
+# which dispatches here → versionStandardPackages aggregates all module
+# version bumps into a single commit pre-matrix. Without this entry,
+# the workflow's version job fails.
 lifecycle:
   clean:     ./gradlew clean
   build:     ./gradlew build
   test:      ./gradlew test
   gate:      ./gradlew gate
   gateCheck: ./gradlew gateCheck
+  version:   ./gradlew versionStandardPackages
   publish:   ./gradlew publish
 
 require:
