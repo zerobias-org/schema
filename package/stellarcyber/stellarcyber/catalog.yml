@@ -1,0 +1,6 @@
+Schema:
+  name: "Stellar Cyber"
+  package: "stellarcyber.stellarcyber.schema"
+  description: |-
+    AuditgraphDB schema for Stellar Cyber Open XDR — correlated threat findings (cases),
+    linked to affected assets by ARN, with MITRE ATT&CK context.
