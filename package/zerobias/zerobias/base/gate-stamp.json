@@ -1,7 +1,7 @@
 {
-  "version": "3.0.2",
-  "branch": "main",
-  "sourceHash": "196cb59869b0fbfd68917cbc6416c8350ba677838a0e688a47aff226f0662c7e",
+  "version": "3.0.2-uat.0",
+  "branch": "feat/interface-catalog-links",
+  "sourceHash": "64c7ddbcd88cbdfa348b5d989302bcc8525bf72853b40377ac3d3adad15d97d7",
   "testHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "tasks": {
     "validate": "passed",

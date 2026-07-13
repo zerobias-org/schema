@@ -1,5 +1,13 @@
 description: "IT Asset Management"
 extends: Application
+links:
+  models:
+    # --- segments ---
+    - t_itam     # IT Asset Management (ITAM)
+    # --- compliance features ---
+    - f_adai     # Asset Discovery and Inventory
+    - f_alm      # Asset Lifecycle Management
+    - f_slm2     # Software License Management
 properties:
   #Links
   - assets:
