@@ -1,0 +1,4 @@
+example: "claude-sonnet-4"
+description: "Identifier of the underlying AI model powering the assistant"
+displayName: "Model"
+type: "string"

@@ -1,0 +1,39 @@
+description: "A CI/CD pipeline definition (e.g. a workflow that builds, tests, or deploys code)"
+tags:
+  - 971c3b42-4058-11ee-be56-0242ac120006
+extends:
+  - Component
+links:
+  models:
+    # --- segments ---
+    - t_cicd     # Continuous Integration and Continuous Deployment (CI/CD)
+    # --- compliance features ---
+    - f_pac      # Pipeline as Code
+    - f_pdam     # Pipeline Definition and Management
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Description":
+    jsonata: description
+    sort: description
+  "Definition Path":
+    jsonata: definitionPath
+    sort: definitionPath
+properties:
+  - definitionPath: "Path of the pipeline definition file within its source repository"
+    field: pipeline.definitionPath
+  - htmlUrl:
+    field: scm.htmlUrl
+  - created:
+    field: timeCreated
+  - updated:
+    field: timeModified
+  - disabled:
+    field: timeDisabled
+# Links
+  - repository: "Repository the pipeline definition lives in"
+    linkTo: Repository
+  - runs:
+    linkTo: PipelineRun
+    multi: true

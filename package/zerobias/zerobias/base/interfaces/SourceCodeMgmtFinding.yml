@@ -4,6 +4,7 @@ links:
   models:
     # --- segments ---
     - t_sca      # Software Composition Analysis (SCA)
+    - t_pdm      # Project Dependency Management
     # --- compliance features ---
     - f_cs2      # Code Scanning
     - f_ss       # Secret Scanning

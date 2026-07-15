@@ -97,3 +97,6 @@ properties:
   - pullRequests:
     linkTo: PullRequest
     multi: true
+  - pipelines:
+    linkTo: Pipeline
+    multi: true

@@ -1,0 +1,4 @@
+example: "repo.create"
+description: "The action recorded by an audit log entry"
+displayName: "Action"
+type: "string"
