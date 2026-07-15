@@ -16,6 +16,7 @@ links:
   models:
     # --- compliance features ---
     - f_sp       # Security Policies
+    - f_crfcr    # Code Review (Code Repositories) — enforceable review policies
 properties:
   - requiredSignatures:
     field:

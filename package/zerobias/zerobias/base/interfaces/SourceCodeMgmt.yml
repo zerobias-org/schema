@@ -5,6 +5,8 @@ links:
   models:
     # --- segments ---
     - d_sd       # Software Development
+    - c_vcs      # Version Control Systems (VCS)
+    - t_vchp     # Version Control Hosting Platform
     # --- compliance features ---
     - f_afcr     # Authentication (for Code Repositories)
 properties:
