@@ -1,8 +1,12 @@
 description: "Runtime environment for application(s)"
 icon: images/classes/auditmation/base/AppEnvironment.svg
 displayName: "Application Environment"
-tags: 
+tags:
   - query-folder.assets
+links:
+  models:
+    # --- compliance features ---
+    - f_em       # Environment Management
 viewProperties:
   "Name":
     jsonata: name

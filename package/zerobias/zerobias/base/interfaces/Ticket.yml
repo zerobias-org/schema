@@ -1,7 +1,11 @@
 description: "Ticket (incident, work order, user story, problem, bug, ...)"
 icon: images/classes/auditmation/base/Ticket.svg
-tags: 
+tags:
   - 971c3b42-4058-11ee-be56-0242ac120006
+links:
+  models:
+    # --- compliance features ---
+    - f_it       # Issue Tracking
 viewProperties:
   "Name":
     jsonata: name

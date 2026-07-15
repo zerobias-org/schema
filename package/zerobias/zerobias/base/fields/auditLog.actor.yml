@@ -1,0 +1,4 @@
+example: "octocat"
+description: "The actor (user, service, or system) that performed the recorded action"
+displayName: "Actor"
+type: "string"

@@ -1,0 +1,4 @@
+example: "in_progress"
+description: "Current status of a pipeline run"
+displayName: "Status"
+type: "string"

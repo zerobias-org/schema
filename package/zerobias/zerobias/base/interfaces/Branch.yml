@@ -1,6 +1,10 @@
 description: "A Branch of a Repository"
-tags: 
+tags:
   - 971c3b42-4058-11ee-be56-0242ac120006
+links:
+  models:
+    # --- compliance features ---
+    - f_cbam     # Code Branching and Merging
 viewProperties:
   "Name":
     jsonata: name

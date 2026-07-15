@@ -1,0 +1,23 @@
+description: "A software package or artifact published to a registry"
+tags:
+  - 971c3b42-4058-11ee-be56-0242ac120006
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Version":
+    jsonata: version
+    sort: version
+  "Ecosystem":
+    jsonata: ecosystem
+    sort: ecosystem
+properties:
+  - version:
+    field: artifact.version
+  - ecosystem: "Package ecosystem the software package belongs to (e.g. npm, maven, pypi, container)"
+    field: softwarePackage.ecosystem
+  - published:
+    field: datePublished
+# Links
+  - registry: "Registry the package is hosted in"
+    linkTo: PackageRegistry

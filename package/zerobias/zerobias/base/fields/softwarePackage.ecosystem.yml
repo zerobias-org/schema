@@ -1,0 +1,4 @@
+example: "npm"
+description: "Package ecosystem the software package belongs to (e.g. npm, maven, pypi, container)"
+displayName: "Ecosystem"
+type: "string"

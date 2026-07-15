@@ -1,0 +1,37 @@
+description: "An execution of a CI/CD Pipeline"
+tags:
+  - 971c3b42-4058-11ee-be56-0242ac120006
+links:
+  models:
+    # --- compliance features ---
+    - f_ab       # Automated Builds
+    - f_da       # Deployment Automation
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Status":
+    jsonata: status
+    sort: status
+  "Conclusion":
+    jsonata: conclusion
+    sort: conclusion
+  "Started":
+    jsonata: started
+    sort: started
+  "Completed":
+    jsonata: completed
+    sort: completed
+properties:
+  - status: "Current status of the pipeline run (e.g. queued, in progress, completed)"
+    field: pipelineRun.status
+  - conclusion: "Final conclusion of the pipeline run (e.g. success, failure, cancelled)"
+    field: pipelineRun.conclusion
+  - started:
+    field: timeStarted
+  - completed:
+    field: timeStopped
+# Links
+  - pipeline:
+    linkTo: Pipeline
+    required: true

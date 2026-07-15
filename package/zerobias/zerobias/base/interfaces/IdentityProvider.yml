@@ -1,6 +1,15 @@
 description: "A Federated Identity/Single-Sign On (SSO) Provider"
 icon: images/classes/auditmation/base/IdentityProvider.svg
 extends: Application
+links:
+  models:
+    # --- segments ---
+    - t_iam      # Identity and Access Management (IAM)
+    - t_idsec    # Identity Security (ID Sec)
+    # --- compliance features ---
+    - f_ssomfa   # Single Sign-On (SSO) and Multi-Factor Authentication (MFA)
+    - f_uaaa     # User Authentication and Authorization
+    - f_cupad    # Centralized user provisioning and de-provisioning
 properties:
   - serviceEndpoint:
     field: idp.serviceEndpoint

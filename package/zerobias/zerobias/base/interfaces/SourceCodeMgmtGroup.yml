@@ -3,6 +3,10 @@ icon: images/classes/auditmation/base/SourceCodeMgmtGroup.svg
 extends:
   - Group
   - SourceCodeMgmtPrincipal
+links:
+  models:
+    # --- compliance features ---
+    - f_acfcr    # Access Control (for Code Repositories)
 properties:
   - repo:
     multi: true

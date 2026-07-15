@@ -4,6 +4,19 @@ tags:
   - 971c3b42-4058-11ee-be56-0242ac120006
 extends:
   - Component
+links:
+  models:
+    # --- segments ---
+    - c_vcs      # Version Control Systems (VCS)
+    - t_vchp     # Version Control Hosting Platform
+    - t_dvcs     # Distributed VCS
+    # --- compliance features ---
+    - f_cvm2     # Code version management
+    - f_chfcr    # Centralized Hosting (for Code Repositories)
+    - f_acfcr    # Access Control (for Code Repositories)
+    - f_cbam     # Code Branching and Merging
+    - f_vhad     # Version History and Diffs
+    - f_dfcr     # Documentation (for Code Repositories)
 viewProperties:
   "Name":
     jsonata: name
@@ -83,4 +96,7 @@ properties:
     multi: true
   - pullRequests:
     linkTo: PullRequest
+    multi: true
+  - pipelines:
+    linkTo: Pipeline
     multi: true

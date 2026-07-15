@@ -1,0 +1,25 @@
+description: "An entry in an application's audit log"
+links:
+  models:
+    # --- compliance features ---
+    - f_al       # Audit Logs
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Actor":
+    jsonata: actor
+    sort: actor
+  "Action":
+    jsonata: action
+    sort: action
+  "Timestamp":
+    jsonata: timestamp
+    sort: timestamp
+properties:
+  - actor: "The actor (user, service, or system) that performed the recorded action"
+    field: auditLog.actor
+  - action: "The action recorded by the audit log entry"
+    field: auditLog.action
+  - timestamp:
+    field: timeCreated

@@ -1,4 +1,8 @@
 description: "A Pull Request against a Repository"
+links:
+  models:
+    # --- compliance features ---
+    - f_crfcr    # Code Review (Code Repositories)
 properties:
   - htmlUrl:
     field: scm.htmlUrl

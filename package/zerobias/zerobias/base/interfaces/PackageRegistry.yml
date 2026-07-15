@@ -1,0 +1,18 @@
+description: "A registry hosting software packages (e.g. an npm, container, or artifact registry)"
+extends: Application
+links:
+  models:
+    # --- segments ---
+    - s_phs      # Package Hosting Service
+    # --- compliance features ---
+    - f_chfsp    # Centralized Hosting (for Software Packages)
+    - f_am       # Artifact Management
+properties:
+  - registryUrl:
+    field: url
+  - ecosystem: "Package ecosystem the registry hosts (e.g. npm, maven, pypi, container)"
+    field: softwarePackage.ecosystem
+# Links
+  - packages:
+    multi: true
+    linkTo: SoftwarePackage

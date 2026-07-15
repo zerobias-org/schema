@@ -1,0 +1,15 @@
+description: "An AI assistant feature or deployment within an application (e.g. a coding assistant)"
+extends: Application
+links:
+  models:
+    # --- segments ---
+    - t_aica     # AI Coding Assistant
+    # --- compliance features ---
+    - f_aipf     # AI-powered features
+    - f_aicg     # AI Code Generation
+    - f_atg      # Automated Test Generation
+properties:
+  - model: "Identifier of the underlying AI model powering the assistant"
+    field: aiAssistant.model
+  - modelVersion:
+    field: artifact.version
