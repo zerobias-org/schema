@@ -1,5 +1,13 @@
 description: "A vulnerability or other issue that has been identified in a source code management system"
 extends: Finding
+links:
+  models:
+    # --- segments ---
+    - t_sca      # Software Composition Analysis (SCA)
+    # --- compliance features ---
+    - f_cs2      # Code Scanning
+    - f_ss       # Secret Scanning
+    - f_safsd    # Security Alerts (for Software Dependencies)
 properties:
   - branch:
     linkTo:

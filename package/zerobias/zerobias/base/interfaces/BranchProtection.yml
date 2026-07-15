@@ -11,7 +11,11 @@ viewProperties:
   "Enabled":
     jsonata: enabled
     sort: enabled
-extends: 
+extends:
+links:
+  models:
+    # --- compliance features ---
+    - f_sp       # Security Policies
 properties:
   - requiredSignatures:
     field:

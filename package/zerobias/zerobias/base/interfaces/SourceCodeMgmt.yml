@@ -1,6 +1,12 @@
 description: "Source Code Management (SCM) Tool, such as Github or Bitbucket"
 icon: images/classes/auditmation/base/SourceCodeMgmt.svg
 extends: Application
+links:
+  models:
+    # --- segments ---
+    - d_sd       # Software Development
+    # --- compliance features ---
+    - f_afcr     # Authentication (for Code Repositories)
 properties:
   - repositories:
     multi: true
