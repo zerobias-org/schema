@@ -17,7 +17,6 @@ links:
     - f_cbam     # Code Branching and Merging
     - f_vhad     # Version History and Diffs
     - f_dfcr     # Documentation (for Code Repositories)
-    - f_crfcr    # Code Review (Code Repositories)
 viewProperties:
   "Name":
     jsonata: name

@@ -1,6 +1,10 @@
 description: "A Review of a Pull Request"
-tags: 
+tags:
   - 971c3b42-4058-11ee-be56-0242ac120006
+links:
+  models:
+    # --- compliance features ---
+    - f_crfcr    # Code Review (Code Repositories)
 properties:
   - pullRequest:
     linkTo: PullRequest 
