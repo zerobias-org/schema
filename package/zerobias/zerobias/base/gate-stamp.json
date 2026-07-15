@@ -1,7 +1,7 @@
 {
   "version": "3.0.2-uat.0",
-  "branch": "feat/interface-catalog-links",
-  "sourceHash": "cad59a4d7811dc1f633cff07da7f581bea2f19f43a054155b21bc8f06b07002b",
+  "branch": "fix/base-gate-stamp",
+  "sourceHash": "64774f08034139e1b9790556d6652083012f3a378dfd4df0bde64fa31aa36b4d",
   "testHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "tasks": {
     "validate": "passed",
