@@ -1,0 +1,6 @@
+description: FIPS standard version this certificate was validated against
+displayName: Standard
+values:
+  - FIPS_140_1: 'FIPS 140-1'
+  - FIPS_140_2: 'FIPS 140-2'
+  - FIPS_140_3: 'FIPS 140-3'

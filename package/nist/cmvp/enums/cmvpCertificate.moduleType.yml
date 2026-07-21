@@ -1,0 +1,8 @@
+description: Physical/logical form of the validated module
+displayName: Module Type
+values:
+  - SOFTWARE: 'Software module'
+  - HARDWARE: 'Hardware module'
+  - FIRMWARE: 'Firmware module'
+  - SOFTWARE_HYBRID: 'Hybrid software/hardware module'
+  - FIRMWARE_HYBRID: 'Hybrid software/firmware module'

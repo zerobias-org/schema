@@ -1,0 +1,63 @@
+description: "A validation entry from NIST's Cryptographic Module Validation Program (CMVP) registry — the authoritative record of whether a cryptographic module is FIPS 140-1/140-2/140-3 validated, and the specific conditions (see caveatText) under which that validation applies."
+extends:
+  - Object
+properties:
+  - certificateNumber:
+    field: cmvpCertificate.certificateNumber
+  - moduleName:
+    field: cmvpCertificate.moduleName
+  - standard:
+    field: cmvpCertificate.standard
+  - status:
+    field: cmvpCertificate.status
+  - sunsetDate:
+    field: cmvpCertificate.sunsetDate
+  - overallLevel:
+    field: cmvpCertificate.overallLevel
+  - moduleType:
+    field: cmvpCertificate.moduleType
+  - embodiment:
+    field: cmvpCertificate.embodiment
+  - caveatText:
+    field: cmvpCertificate.caveatText
+  - overview:
+    field: cmvpCertificate.overview
+  - securityLevelExceptions:
+    field: cmvpCertificate.securityLevelExceptions
+  - vendorName:
+    field: cmvpCertificate.vendorName
+  - vendorAddress:
+    field: cmvpCertificate.vendorAddress
+  - vendorContact:
+    field: cmvpCertificate.vendorContact
+  - validationType:
+    field: cmvpCertificate.validationType
+  - validationLab:
+    field: cmvpCertificate.validationLab
+  - validationDate:
+    field: cmvpCertificate.validationDate
+  - securityPolicyUrl:
+    field: cmvpCertificate.securityPolicyUrl
+  - detailUrl:
+    field: cmvpCertificate.detailUrl
+  - rawEntryHtml:
+    field: cmvpCertificate.rawEntryHtml
+  - lastAcquired:
+    field: cmvpCertificate.lastAcquired
+  - productId:
+    field: cmvpCertificate.productId
+  - vendorId:
+    field: cmvpCertificate.vendorId
+viewProperties:
+  "Certificate #":
+    jsonata: certificateNumber
+    sort: certificateNumber
+  "Module":
+    jsonata: moduleName
+    sort: moduleName
+  "Vendor":
+    jsonata: vendorName
+    sort: vendorName
+  "Status":
+    jsonata: status
+    sort: status

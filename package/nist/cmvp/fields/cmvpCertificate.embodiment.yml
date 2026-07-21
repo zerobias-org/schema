@@ -1,0 +1,3 @@
+description: 'CMVP embodiment classification, e.g. MultiChipStand, SingleChip'
+displayName: 'Embodiment'
+type: string

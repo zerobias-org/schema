@@ -1,0 +1,3 @@
+description: 'Name of the validated cryptographic module, as printed by CMVP'
+displayName: 'Module Name'
+type: string

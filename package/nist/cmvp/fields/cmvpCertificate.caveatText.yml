@@ -1,0 +1,3 @@
+description: 'The Caveat field verbatim, unmodified from the source entry. States the specific conditions (e.g. required OS/software version, configuration, key types) under which this validation is actually valid — critical for correct use, never derive or summarize in place of this field'
+displayName: 'Caveat'
+type: string
