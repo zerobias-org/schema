@@ -9,7 +9,7 @@ links:
     - f_aicg     # AI Code Generation
     - f_atg      # Automated Test Generation
 properties:
-  - model: "Identifier of the underlying AI model powering the assistant"
+  - aiModel: "Identifier of the underlying AI model powering the assistant"
     field: aiAssistant.model
-  - modelVersion:
+  - aiModelVersion:
     field: artifact.version
