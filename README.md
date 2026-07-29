@@ -10,20 +10,36 @@ This monorepo hosts schema definitions (classes, interfaces, fields, documents, 
 
 ## Local development
 
+**Use `zbb`, not `./gradlew` directly.** `zbb` pins the JDK toolchain to Java 21; a bare `./gradlew`
+uses whatever JDK is on `PATH`, and on JDK 25 Gradle 8.10.2 aborts with an opaque `25.0.2` and
+nothing else. That failure means `zbb` was bypassed — not that you need a different JDK.
+
 ```bash
-# Validate + write gate stamp for a single schema
-./gradlew :{vendor}:{code}:gate           # depth 2 (e.g. :hl7:fhir)
-./gradlew :{vendor}:{group}:{code}:gate   # depth 3 (e.g. :zerobias:zerobias:base)
+# Validate + write gate stamp for a single schema.
+# zbb detects the subproject from cwd and prefixes the task for you.
+cd package/hl7/fhir && zbb gate
+
+# Or address it explicitly from the repo root:
+zbb :{vendor}:{code}:gate           # depth 2 (e.g. :hl7:fhir)
+zbb :{vendor}:{group}:{code}:gate   # depth 3 (e.g. :zerobias:zerobias:base)
+
+# Cheap stamp check — no build, no vault
+zbb gateCheck
 
 # Cross-cut: ensure no two schemas share a zerobias.package block name
-./gradlew validateUniquePackageNames
+zbb validateUniquePackageNames
 
-# zbb-driven (matches CI):
+# Whole-repo (matches CI) — note this rewrites every gate-stamp.json
 zbb gate
 zbb publish
 ```
 
-`testIntegrationDataloader` against a real Neon branch needs `NEON_API_KEY` and `NEON_PROJECT_ID` env vars; without them it is skipped (not failed). CI re-runs the full gate against an ephemeral branch on push.
+The gate's `testDataloader` step loads the schema into an ephemeral Neon branch via the remote
+dataloader service (`DATALOADER_SERVICE_URL`, default `https://app.zerobias.com/api/dataloader`),
+authenticated by **`ZB_TOKEN`**. No local Neon credentials are needed. If `ZB_TOKEN` is unset or
+blank the step is **skipped (not failed)** and the stamp is still written — it records
+`"testDataloader": "skipped"` rather than `"passed"`, so check that field before trusting a green
+gate. CI runs the full gate on push.
 
 ## Adding a new schema
 
@@ -35,7 +51,7 @@ zbb publish
 echo 'plugins { id("zb.schema") }' > package/{vendor}/{code}/build.gradle.kts
 
 # Run the gate (writes gate-stamp.json — commit it)
-./gradlew :{vendor}:{code}:gate
+cd package/{vendor}/{code} && zbb gate
 ```
 
 A new schema's `package.json` should depend on `@zerobias-org/schema-zerobias-zerobias-base@^3.0.0` and declare `zerobias.imports: ["zerobias.zerobias.platform.schema", "zerobias.zerobias.base.schema"]`. See [`CLAUDE.md`](CLAUDE.md) for the full definition reference.

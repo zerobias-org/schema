@@ -16,17 +16,43 @@ Build + publish pipeline: **gradle (`zb.schema` plugin) + `zbb-publish-reusable.
 - **Initial setup**: `npm install` (refreshes root lockfile for commitlint + tsx dev deps).
 
 ### Per-package validation
-Each schema package's gradle path mirrors its directory:
+
+**Run gates through `zbb`, never `./gradlew` directly.** `zbb` wraps the gradle wrapper and pins the
+JDK toolchain to Java 21. A bare `./gradlew` picks up whatever JDK is on `PATH`; on JDK 25 Gradle
+8.10.2 aborts with an opaque `25.0.2` and nothing else. That is **not** a missing-JDK problem and
+does **not** mean you should install a different JDK — it means `zbb` was bypassed.
+
+**Preferred — `cd` into the package and run the bare task.** `zbb` walks up to the gradle root,
+detects the current subproject from cwd, and prefixes the task name for you:
 ```bash
-./gradlew :{vendor}:{code}:gate                  # depth 2 (e.g. :hl7:fhir)
-./gradlew :{vendor}:{group}:{code}:gate          # depth 3 (e.g. :zerobias:zerobias:base)
+cd package/hl7/fhir && zbb gate          # runs :hl7:fhir:gate
 ```
-`gate` chains `validate` → `lint` → `compile` → `test*` → `buildArtifacts` → `testIntegrationDataloader` → `writeGateStamp`. Without `NEON_API_KEY` / `NEON_PROJECT_ID` in env, `testIntegrationDataloader` is skipped (not failed) and the stamp still gets written. CI re-runs the full gate against an ephemeral Neon branch on push.
+This works at any depth and needs no hand-typed gradle path.
+
+Explicit paths also work from the repo root. Each schema's gradle path mirrors its directory:
+```bash
+zbb :{vendor}:{code}:gate                  # depth 2 (e.g. :hl7:fhir)
+zbb :{vendor}:{group}:{code}:gate          # depth 3 (e.g. :zerobias:zerobias:base)
+```
+Either way, keep the gate scoped to one package. A bare `zbb gate` from the repo root runs every
+schema and rewrites every `gate-stamp.json`.
+
+`gate` chains `validate` → `lint` → `compile` → `test*` → `buildArtifacts` → `testDataloader` →
+`writeGateStamp`.
+
+`testDataloader` loads the schema into an ephemeral Neon branch via the **remote dataloader service**
+(`DATALOADER_SERVICE_URL`, default `https://app.zerobias.com/api/dataloader`), authenticated by
+`ZB_TOKEN`. No local Neon credentials are involved — `NEON_API_KEY` / `NEON_PROJECT_ID` are not read
+by the gate.
+
+> **If `ZB_TOKEN` is unset or blank, `testDataloader` is skipped (not failed) and the gate still
+> writes a stamp.** The stamp records this honestly as `"testDataloader": "skipped"` rather than
+> `"passed"` — so check that field before trusting a green gate. Skipped is not passed.
 
 ### Repo-wide tasks
-- `./gradlew validateUniquePackageNames` — fails if two schemas share the same `zerobias.package` block name.
-- `./gradlew projectPaths` — used by zbb to map gradle project paths to disk locations.
-- `./gradlew changedModules` — lists schemas modified since the last version tag.
+- `zbb validateUniquePackageNames` — fails if two schemas share the same `zerobias.package` block name.
+- `zbb projectPaths` — used by zbb to map gradle project paths to disk locations.
+- `zbb changedModules` — lists schemas modified since the last version tag.
 
 ### Lifecycle through `zbb`
 The same commands the CI workflow runs (per `zbb.yaml`):
@@ -139,8 +165,9 @@ values:
 
 ## Validation
 
-> **Always run `./gradlew :{...}:gate` (or `zbb gate`) before pushing.**
-> Local file-checks alone are not enough — schema correctness (class extends chains, field references, link bidirectionality, enum format, etc.) is only enforced by the dataloader. `gate` runs both the local validator AND the dataloader against an ephemeral Neon branch. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full validation workflow — required reading for third-party contributors working from a fork.
+> **Always gate your package before pushing** — `cd` into it and run `zbb gate` (see
+> [Per-package validation](#per-package-validation)). Do not invoke `./gradlew` directly.
+> Local file-checks alone are not enough — schema correctness (class extends chains, field references, link bidirectionality, enum format, etc.) is only enforced by the dataloader. `gate` runs the local validator, and runs the dataloader against an ephemeral Neon branch **provided `ZB_TOKEN` is set** — without it that step is silently skipped. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full validation workflow — required reading for third-party contributors working from a fork.
 
 ### Validator (in repo)
 
@@ -154,12 +181,16 @@ The repo-wide `:validateUniquePackageNames` task fails if two schemas share the 
 
 ### Gate (full validation)
 
-`./gradlew :{...}:gate` runs the full pipeline:
+`zbb gate` (from inside the package) runs the full pipeline:
 
 1. `validateContent` — the per-package validator above.
 2. `:validateUniquePackageNames` — repo-wide cross-cut.
-3. `testIntegrationDataloader` — loads the schema into an ephemeral Neon branch and validates everything the dataloader checks (extends chains, link bidirectionality, enum format, viewProperties, etc.). Skipped (not failed) when `NEON_API_KEY` is absent locally; CI runs it on every push.
-4. `writeGateStamp` — writes `gate-stamp.json`. **`publishGuard` rejects packages without a committed, valid stamp.**
+3. `testDataloader` — loads the schema into an ephemeral Neon branch via the remote dataloader service and validates everything the dataloader checks (extends chains, link bidirectionality, enum format, viewProperties, etc.). **Skipped (not failed) when `ZB_TOKEN` is unset or blank**; CI runs it on every push.
+4. `writeGateStamp` — writes `gate-stamp.json`, recording each step's status (`passed` / `skipped` / `up-to-date` / …). **`publishGuard` rejects packages without a committed, valid stamp.**
+
+To confirm the dataloader actually ran, check the stamp: `"testDataloader": "passed"` means it ran,
+`"skipped"` means it did not. Verify the stamp with `zbb gateCheck` (cheap — no build or vault
+needed).
 
 ### Package Naming
 - npm name: `@zerobias-org/schema-{parts joined with -}` (e.g. `@zerobias-org/schema-hl7-fhir`, `@zerobias-org/schema-zerobias-zerobias-base`).
@@ -177,7 +208,8 @@ The repo-wide `:validateUniquePackageNames` task fails if two schemas share the 
    plugins { id("zb.schema") }
    ```
 4. Define schema content under `classes/`, `interfaces/`, `fields/`, `enums/`, `documents/`.
-5. Run `./gradlew :{vendor}:{code}:gate` and commit the generated `gate-stamp.json`.
+5. `cd package/{vendor}/{code}` and run `zbb gate`, then commit the generated `gate-stamp.json`.
+   (Not `./gradlew` — see [Per-package validation](#per-package-validation).)
 
 ### Dependencies
 
