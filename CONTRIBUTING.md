@@ -72,6 +72,13 @@ Install once per machine:
   ```
   Source: [`zerobias-org/util`](https://github.com/zerobias-org/util/tree/main/packages/zbb) (`packages/zbb`).
 
+Verify the installs:
+
+```sh
+dataloader --help
+zbb --version
+```
+
 ## Setting up `zbb`
 
 Bare lifecycle commands (`zbb gate`, `zbb gateCheck`, `zbb publish`) run inside a **slot** — a named
@@ -103,12 +110,6 @@ shows what exists. This repo defines no long-running services, so **no stack nee
 >
 > Layer 2 (the local scratch-DB dataloader below) also needs no slot, and remains the reliable
 > local check from a fork.
-
-Verify the install:
-
-```sh
-dataloader --help
-```
 
 ## Local dataloader setup
 
