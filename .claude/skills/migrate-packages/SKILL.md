@@ -50,6 +50,8 @@ cd <package> && zbb gate
 ```
 **Use `zbb`, never `./gradlew` directly** — `zbb` pins the JDK toolchain to Java 21. A bare `./gradlew` uses whatever JDK is on `PATH`, and on JDK 25 Gradle 8.10.2 aborts with a bare `25.0.2` and no other output. That means zbb was bypassed, not that a different JDK is needed. Run from inside the package directory and `zbb` prefixes the task with the right project path automatically.
 
+**A loaded slot is required** for the bare `zbb gate` form. If you see `Not inside a loaded slot. Run: zbb slot load <name>`, run `zbb slot create local` (first time only) then `zbb slot load local`, and re-run the gate from inside the resulting subshell. Alternatively use the explicitly-pathed form `zbb :<project:path>:gate`, which passes straight through to gradle and needs no slot. See the repo's CLAUDE.md → "zbb setup" for detail.
+
 **Why full `gate` matters:** the publish workflow's preflight rejects any package without a committed `gate-stamp.json`. The stamp is written by `writeGateStamp` at the end of `gate`. `validateContent` alone does NOT produce a stamp — the package will pass local file-checks but fail in CI with `gate-stamp.json is missing or invalid`.
 
 If **`ZB_TOKEN`** is unset or blank, `testDataloader` is skipped (not failed) — and TS-twin generation is skipped along with it (it's a post-load action inside the same task). The stamp still gets written, recording `"testDataloader": "skipped"` instead of `"passed"`. Check that field before assuming the package validated; CI re-runs the full gate on push.

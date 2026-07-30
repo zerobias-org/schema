@@ -10,6 +10,21 @@ This monorepo hosts schema definitions (classes, interfaces, fields, documents, 
 
 ## Local development
 
+Build and validation go through **`zbb`**, the ZeroBias build CLI
+([`zerobias-org/util`](https://github.com/zerobias-org/util/tree/main/packages/zbb), `packages/zbb`):
+
+```bash
+npm i -g @zerobias-org/zbb
+
+# First time on a machine — lifecycle commands need a loaded slot
+zbb slot create local     # allocates ports, pulls env/secrets from every zbb.yaml
+zbb slot load local       # preflight checks, then a subshell with slot env loaded
+```
+
+`zbb slot load` drops you into a subshell (`[zb:local]:path$`); run everything below from inside it.
+Without a loaded slot, `zbb gate` exits with `Not inside a loaded slot. Run: zbb slot load <name>`.
+Schema is a content repo with no long-running services, so no stack needs starting.
+
 **Use `zbb`, not `./gradlew` directly.** `zbb` pins the JDK toolchain to Java 21; a bare `./gradlew`
 uses whatever JDK is on `PATH`, and on JDK 25 Gradle 8.10.2 aborts with an opaque `25.0.2` and
 nothing else. That failure means `zbb` was bypassed — not that you need a different JDK.

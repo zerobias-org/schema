@@ -39,6 +39,14 @@ zbb gate
 Use `zbb`, never `./gradlew` directly: `zbb` pins the JDK toolchain to Java 21, and a bare
 `./gradlew` on JDK 25 fails with an opaque `25.0.2` and nothing else.
 
+`zbb gate` requires a **loaded slot** — see [Setting up `zbb`](#setting-up-zbb) below. If you cannot
+create one, use the explicitly-pathed form instead, which is passed straight through to gradle and
+needs no slot:
+
+```sh
+zbb :<vendor>:<code>:gate      # from the repo root, e.g. zbb :hl7:fhir:gate
+```
+
 > **`zbb gate`'s dataloader step needs `ZB_TOKEN`.** If it is unset or blank, the step is
 > **skipped, not failed**, and the gate still writes `gate-stamp.json`. The stamp records
 > `"testDataloader": "skipped"` rather than `"passed"` — check that field. Skipped is not passed.
@@ -58,6 +66,43 @@ Install once per machine:
   ```sh
   npm i -g @zerobias-com/platform-dataloader@latest
   ```
+- **`zbb`**, the ZeroBias build CLI — runs the gate, and wraps gradle with a pinned Java 21 toolchain:
+  ```sh
+  npm i -g @zerobias-org/zbb
+  ```
+  Source: [`zerobias-org/util`](https://github.com/zerobias-org/util/tree/main/packages/zbb) (`packages/zbb`).
+
+## Setting up `zbb`
+
+Bare lifecycle commands (`zbb gate`, `zbb gateCheck`, `zbb publish`) run inside a **slot** — a named
+local environment holding port allocations, generated secrets, and the env vars declared across the
+repo's `zbb.yaml` files. Without one you get:
+
+```
+Not inside a loaded slot. Run: zbb slot load <name>
+```
+
+Create and enter one:
+
+```sh
+zbb slot create local     # scans zbb.yaml files, allocates ports, pulls env/secrets
+zbb slot load local       # preflight tool checks, then a subshell with slot env loaded
+```
+
+`slot load` spawns a subshell with the prompt `[zb:local]:path$` — run the gate from inside it.
+`exit` returns to your normal shell; `zbb slot load local` reconnects instantly. `zbb slot list`
+shows what exists. This repo defines no long-running services, so **no stack needs to be started**.
+
+> **If you cannot create a slot** — `zbb slot create` pulls some values from internal infrastructure
+> that external contributors may not be able to reach — skip it and use the explicitly-pathed form,
+> which bypasses the slot requirement entirely:
+>
+> ```sh
+> zbb :<vendor>:<code>:gate
+> ```
+>
+> Layer 2 (the local scratch-DB dataloader below) also needs no slot, and remains the reliable
+> local check from a fork.
 
 Verify the install:
 

@@ -15,6 +15,37 @@ Build + publish pipeline: **gradle (`zb.schema` plugin) + `zbb-publish-reusable.
 ### Setup and Installation
 - **Initial setup**: `npm install` (refreshes root lockfile for commitlint + tsx dev deps).
 
+### zbb setup — do this before any gate
+
+`zbb` is the build CLI for this repo ([`zerobias-org/util`](https://github.com/zerobias-org/util/tree/main/packages/zbb),
+`packages/zbb`). Install/upgrade with `npm i -g @zerobias-org/zbb`.
+
+**Lifecycle commands require a loaded slot.** A slot is a named local environment holding port
+allocations, generated secrets, and the env vars declared across every `zbb.yaml`. Without one,
+`zbb gate` refuses:
+
+```
+Not inside a loaded slot. Run: zbb slot load <name>
+```
+
+First time on a machine:
+```bash
+zbb slot create local     # scans zbb.yaml files, allocates ports, pulls env/secrets
+zbb slot load local       # runs preflight tool checks, spawns a subshell with env loaded
+```
+`slot load` drops you into a subshell with the prompt `[zb:local]:path$`. Work normally inside it —
+gradle, npm, and docker all see the slot env. `exit` leaves; `zbb slot load local` reconnects
+instantly. Re-running `zbb slot load` with no args re-evaluates from the current directory, picking
+up newly-declared vars. `zbb slot list` shows existing slots.
+
+Schema is a content repo — it defines no long-running services, so **no stack needs to be started**.
+A loaded slot is sufficient.
+
+> **Exception:** explicitly-pathed gradle tasks (`zbb :hl7:fhir:gate`) are passed straight through to
+> gradle and work **without** a slot. Bare lifecycle names (`zbb gate`, `zbb gateCheck`,
+> `zbb publish`) are the ones that require it. If you get the "not inside a loaded slot" error, that
+> is what you hit.
+
 ### Per-package validation
 
 **Run gates through `zbb`, never `./gradlew` directly.** `zbb` wraps the gradle wrapper and pins the
