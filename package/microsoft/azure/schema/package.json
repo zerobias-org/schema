@@ -1,0 +1,38 @@
+{
+  "name": "@zerobias-org/schema-microsoft-azure",
+  "description": "Suite level schema for Microsoft Azure",
+  "version": "1.0.0",
+  "author": "ctamas@auditmation.io",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zerobias-org/schema.git",
+    "directory": "package/microsoft/azure/schema"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "files": [
+    "classes/**",
+    "interfaces/**",
+    "fields/**",
+    "documents/**",
+    "enums/**",
+    "catalog.yml",
+    "deprecated.yml",
+    "README.md"
+  ],
+  "dependencies": {
+    "@zerobias-org/suite-microsoft-azure": "^2.0.1",
+    "@zerobias-org/schema-zerobias-zerobias-base": "^3.0.0"
+  },
+  "zerobias": {
+    "import-artifact": "schema",
+    "dataloader-version": "0.5.4",
+    "package": "microsoft.azure.schema",
+    "imports": [
+      "zerobias.zerobias.base.schema",
+      "auditmation.platform.schema"
+    ]
+  }
+}

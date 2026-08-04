@@ -1,0 +1,18 @@
+description: An Azure Subscription
+extends:
+ - CloudService
+properties:
+  - state:
+    field: azureSubscriptionState
+  # Links
+  - tenant:
+    linkTo: AzureTenant
+  - resoruceGroups:
+    linkTo: AzureResourceGroup
+    multi: true
+  - resources:
+    linkTo: AzureResource
+    multi: true
+  - inventoryItems:
+    linkTo: AzureInventoryItem
+    multi: true

@@ -1,0 +1,19 @@
+description: An Azure Resource
+extends:
+  - Asset
+properties:
+  # Links
+  - subscription:
+    linkTo: AzureSubscription
+  - resourceGroup:
+    linkTo: AzureResourceGroup
+  - resourceProvider:
+    linkTo: AzureResourceProvider
+  - resourceType:
+    linkTo: AzureResourceType
+# - location:
+#   linkTo: AzureLocation
+# - availabilityZones:
+#   linkTo: AzureAvailabilityZone
+#   multi: true
+  
