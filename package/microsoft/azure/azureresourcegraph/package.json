@@ -1,0 +1,37 @@
+{
+  "name": "@zerobias-org/schema-microsoft-azure-azureresourcegraph",
+  "description": "Schemas for the package microsoft.azure.azureresourcegraph",
+  "version": "1.0.0",
+  "author": "team@zerobias.com",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zerobias-org/schema.git",
+    "directory": "package/microsoft/azure/azureresourcegraph"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "files": [
+    "enums/**",
+    "documents/**",
+    "classes/**",
+    "catalog.yml",
+    "README.md",
+    "deprecated.yml"
+  ],
+  "dependencies": {
+    "@zerobias-org/product-microsoft-azure-azureresourcegraph": "^2.0.2",
+    "@zerobias-org/schema-microsoft-azure": "^1.0.0",
+    "@zerobias-org/schema-zerobias-zerobias-base": "^3.0.0"
+  },
+  "zerobias": {
+    "import-artifact": "schema",
+    "dataloader-version": "0.5.4",
+    "package": "microsoft.azure.azureresourcegraph.schema",
+    "imports": [
+      "zerobias.zerobias.base.schema",
+      "microsoft.azure.schema"
+    ]
+  }
+}

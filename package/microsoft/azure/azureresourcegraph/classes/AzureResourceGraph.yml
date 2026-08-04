@@ -1,0 +1,7 @@
+description: Azure Resource Graph
+extends:
+  # Second extends entry (AzureService-equivalent) pending the suite-schema
+  # decision owned by Dan Simonca — the Azure suite schema has no AzureService
+  # interface yet, unlike AwsService which AwsResourceExplorer extends.
+  - InventoryApplication
+properties:

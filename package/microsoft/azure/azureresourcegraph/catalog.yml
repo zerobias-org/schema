@@ -1,0 +1,5 @@
+Schema:
+  name: "Microsoft Azure Resource Graph Schema"
+  package: "microsoft.azure.azureresourcegraph.schema"
+  description: |-
+    AuditgraphDB schema for Azure Resource Graph.

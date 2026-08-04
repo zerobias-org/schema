@@ -1,0 +1,5 @@
+description: An Azure Inventory Item collected by Azure Resource Graph
+displayName: Azure Resource Graph Resource
+extends:
+  - AzureInventoryItem
+properties:
