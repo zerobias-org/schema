@@ -1,0 +1,4 @@
+description: The Azure Resource Graph inventory application for an Azure AD tenant
+extends:
+  - AzureResourceManagement
+properties:

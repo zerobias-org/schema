@@ -1,0 +1,3 @@
+description: 'Resource kind qualifier as returned by Azure Resource Graph (resource-type specific)'
+displayName: 'Kind'
+type: string

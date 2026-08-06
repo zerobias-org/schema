@@ -1,0 +1,4 @@
+description: An Azure subscription collected from the Azure Resource Graph ResourceContainers table
+extends:
+  - AzureSubscription
+properties:

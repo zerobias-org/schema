@@ -1,0 +1,8 @@
+description: An Azure Tenant
+properties:
+  # Links
+  - inventoryApp:
+    linkTo: AzureResourceManagement
+  - subscriptions:
+    linkTo: AzureSubscription
+    multi: true

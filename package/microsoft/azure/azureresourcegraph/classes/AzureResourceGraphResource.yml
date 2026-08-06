@@ -1,0 +1,10 @@
+description: An Azure resource collected from the Azure Resource Graph Resources table
+extends:
+  - AzureInventoryItem
+properties:
+  - region:
+    field: cloud.region
+  - kind:
+    field: azureResource.kind
+  - managedBy:
+    field: azureResource.managedBy

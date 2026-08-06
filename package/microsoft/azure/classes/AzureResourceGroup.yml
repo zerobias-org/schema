@@ -1,0 +1,11 @@
+description: An Azure Resource Group
+properties:
+  # Links
+  - subscription:
+    linkTo: AzureSubscription
+  - resources:
+    linkTo: AzureResource
+    multi: true
+  - inventoryItems:
+    linkTo: AzureInventoryItem
+    multi: true

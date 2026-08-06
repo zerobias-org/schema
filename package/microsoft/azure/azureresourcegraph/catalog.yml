@@ -1,0 +1,7 @@
+Schema:
+  name: "Microsoft Azure Resource Graph Schema"
+  package: "microsoft.azure.azureresourcegraph.schema"
+  description: |-
+    AuditgraphDB schema for Microsoft Azure Resource Graph asset inventory —
+    resources, subscriptions, resource groups and management groups collected
+    from the ARG Resources and ResourceContainers tables.
