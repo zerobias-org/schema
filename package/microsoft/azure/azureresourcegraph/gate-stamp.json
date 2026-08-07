@@ -1,7 +1,7 @@
 {
   "version": "1.0.0-uat.0",
   "branch": "feat/schema-microsoft-azure-azureresourcegraph",
-  "sourceHash": "a65537e5731fa666ebabea0564d004a770ad74b9dbe66c692d6cae1f2afb5d0f",
+  "sourceHash": "41b1c5419098fc7e06483e995efa8d885c70a0da928ad627f219fe6318719393",
   "testHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "tasks": {
     "validate": "passed",

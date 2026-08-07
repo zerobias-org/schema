@@ -1,6 +1,10 @@
 description: An Azure resource collected from the Azure Resource Graph Resources table
+# The dataloader resolves `extends` against interfaces only; the suite's
+# AzureResource interface carries the subscription / resourceGroup /
+# resourceProvider / resourceType links.
 extends:
   - InventoryItem
+  - AzureResource
 properties:
   - region:
     field: cloud.region
@@ -8,19 +12,3 @@ properties:
     field: azureResource.kind
   - managedBy:
     field: azureResource.managedBy
-  # Links declared locally: the dataloader resolves `extends` against
-  # interfaces only (ConcreteClassFileHandler), so AzureInventoryItem's
-  # links cannot be inherited. Same targets, correct spelling. uniLink
-  # because the suite classes cannot grow reverse links in this package.
-  - subscription:
-    linkTo: AzureSubscription
-    uniLink: true
-  - resourceGroup:
-    linkTo: AzureResourceGroup
-    uniLink: true
-  - resourceProvider:
-    linkTo: AzureResourceProvider
-    uniLink: true
-  - resourceType:
-    linkTo: AzureResourceType
-    uniLink: true
