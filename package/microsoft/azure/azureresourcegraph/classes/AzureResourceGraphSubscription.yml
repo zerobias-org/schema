@@ -1,4 +1,7 @@
 description: An Azure subscription collected from the Azure Resource Graph ResourceContainers table
 extends:
-  - AzureSubscription
+  - CloudService
 properties:
+  - tenant:
+    linkTo: AzureTenant
+    uniLink: true

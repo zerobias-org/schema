@@ -1,4 +1,7 @@
 description: The Azure Resource Graph inventory application for an Azure AD tenant
 extends:
-  - AzureResourceManagement
+  - InventoryApplication
 properties:
+  - tenant:
+    linkTo: AzureTenant
+    uniLink: true

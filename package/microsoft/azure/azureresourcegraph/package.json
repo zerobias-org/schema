@@ -23,6 +23,7 @@
     "README.md"
   ],
   "dependencies": {
+    "@auditlogic/schema-microsoft-azure": "^1.0.0",
     "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
     "@zerobias-org/product-microsoft-azure-azureresourcegraph": "latest",
     "@zerobias-org/schema-zerobias-zerobias-base": "latest"

@@ -1,6 +1,7 @@
 description: An Azure resource group collected from the Azure Resource Graph ResourceContainers table
-extends:
-  - AzureResourceGroup
 properties:
   - region:
     field: cloud.region
+  - subscription:
+    linkTo: AzureSubscription
+    uniLink: true
