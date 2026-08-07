@@ -1,0 +1,6 @@
+description: Current validation status of a CMVP certificate
+displayName: Status
+values:
+  - ACTIVE: 'Currently valid'
+  - HISTORICAL: 'No longer active but not revoked; may still be cited for prior use'
+  - REVOKED: 'Invalidated by NIST/CMVP'
