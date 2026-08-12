@@ -6,9 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Open-source monorepo for AuditgraphDB schema packages under the `@zerobias-org` organization. Schema packages define object types (classes, interfaces, fields, documents, enums) that are loaded into AuditgraphDB by the dataloader.
 
-Build + publish pipeline: **gradle (`zb.schema` plugin) + `zbb-publish-reusable.yml`** — no lerna, no nx. The proprietary counterpart is `auditlogic/schema` (`@auditlogic` scope).
+Build + publish pipeline: **gradle (`zb.schema` plugin) + `zbb-publish-reusable.yml`** — no lerna, no nx. Proprietary schemas are published separately under the `@auditlogic` npm scope from a private repository.
 
-**NOTE:** For best results, run Claude Code from meta-repo root (`~/zerobias`) to ensure access to all platform context and cross-module documentation.
+**NOTE:** For best results, run Claude Code from the `zerobias-org` meta-repo root to ensure access to all platform context and cross-module documentation.
 
 ## Common Development Commands
 
@@ -379,4 +379,4 @@ zb.package:    {vendor}.{code}.schema
 - **Vendor repo:** `../vendor/CLAUDE.md`
 - **Product repo:** `../product/`
 - **Collector bot repo:** `../collectorbot/`
-- **Existing schema examples:** `../../auditlogic/schema/package/` (e.g., `github/github/`)
+- **Existing schema examples:** `package/` in this repo — pick any published package as a reference
