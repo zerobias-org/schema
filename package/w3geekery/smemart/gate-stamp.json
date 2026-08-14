@@ -1,7 +1,7 @@
 {
-  "version": "2.0.6-uat.0",
-  "branch": "feat/mp-schema-batch-vendor-provenance",
-  "sourceHash": "1cb6859b9e89feed3263366858094604987034211963bb9c7ba78d3e6ed45bda",
+  "version": "2.0.8-uat.0",
+  "branch": "feat/security-credential-issuer-multi",
+  "sourceHash": "c2f631b38ab6effbd6b68098de1d874270e3696fc41496a2cbd11df5c63d35bf",
   "testHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "tasks": {
     "validate": "passed",
