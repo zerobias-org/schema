@@ -1,7 +1,7 @@
 {
-  "version": "2.0.11",
-  "branch": "refactor/provider-to-vendor-rename",
-  "sourceHash": "f3578de26309bf6f91ed2778b0c7aa31e49b43748b8919df572cc4323bcdb5bb",
+  "version": "3.0.0-uat.0",
+  "branch": "feat/microsoft-azure-schema",
+  "sourceHash": "5614f1b56dbb553f3106ed8089a1f3cbb9d073d8a07c63c4918eb1fcdf23196d",
   "testHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "tasks": {
     "validate": "passed",
