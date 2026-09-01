@@ -1,0 +1,38 @@
+id: e65a7906-cccf-5614-b547-f2109b08b460
+# Evidence a party holds, asserted by the holder ahead of anyone demanding it — the supply side
+# of a Requirement. Concrete implementations follow the Standard / StandardResource pattern.
+# Subclass rather than adding a `type` value only where the property set genuinely diverges: a
+# license carries jurisdiction and disciplinary state, a degree never expires.
+description: "Evidence that a party holds an assessed competency, conformity or standing — a certification, accreditation, license, degree, clearance or registration. Asserted by the holder ahead of any requirement demanding it."
+icon: images/classes/auditmation/base/Certification.svg
+extends:
+  - Object
+properties:
+  - code:
+    field:
+      type: string
+      description: 'Namespaced identifier for the qualification (e.g. "ISC2.CISSP", "CMMC.CCA")'
+
+  - type:
+    field: qualificationType
+
+  - scope:
+    field: qualificationScope
+
+  - status:
+    field: qualificationStatus
+
+  # Links
+  - vendors:
+    linkTo: Vendor.id.qualifications
+    multi: true
+    defered: true
+
+  - standards:
+    linkTo: Standard.id.qualifications
+    multi: true
+    defered: true
+
+  - qualifiesForRoles:
+    linkTo: Role.id.qualifications
+    multi: true
