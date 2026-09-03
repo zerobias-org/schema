@@ -1,0 +1,5 @@
+id: 7d40ddc5-ae95-4891-80d3-fa58f57e0a8a
+example: true
+description: "Indicates whether the commit carries a signature that the SCM platform verified against a known key"
+displayName: "Verified"
+type: boolean
