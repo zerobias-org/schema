@@ -85,3 +85,6 @@ properties:
   - pullRequests:
     linkTo: PullRequest
     multi: true
+  - commits:
+    linkTo: Commit
+    multi: true

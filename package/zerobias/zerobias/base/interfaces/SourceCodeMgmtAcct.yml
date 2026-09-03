@@ -21,3 +21,7 @@ properties:
     linkTo: CodeReview
     hidden: true
     multi: true
+  - commits:
+    linkTo: Commit.id.author
+    hidden: true
+    multi: true

@@ -1,0 +1,49 @@
+id: 8f5b80d9-3429-5069-84d2-db188c6797d6
+description: "A commit (revision) recorded in a source-control repository"
+tags:
+  - 971c3b42-4058-11ee-be56-0242ac120006
+links:
+  models:
+    # --- segments ---
+    - c_vcs      # Version Control Systems (VCS)
+    - t_dvcs     # Distributed VCS
+    # --- compliance features ---
+    - f_cvm2     # Code version management
+    - f_vhad     # Version History and Diffs
+viewProperties:
+  "SHA":
+    jsonata: sha
+    sort: sha
+  "Message":
+    jsonata: description
+    sort: description
+  "Author E-Mail":
+    jsonata: authorEmail
+    sort: authorEmail
+  "Committed":
+    jsonata: committed
+    sort: committed
+  "Verified":
+    jsonata: verified
+    sort: verified
+  "Repository Id":
+    jsonata: repo
+    sort: repo
+properties:
+  - sha:
+    field: scm.sha
+    required: true
+  - authorEmail:
+    field: email
+  - committed:
+    field: timeCreated
+  - htmlUrl:
+    field: scm.htmlUrl
+  - verified:
+    field: commit.isVerified
+# Links
+  - repo:
+    linkTo: Repository
+    required: true
+  - author:
+    linkTo: SourceCodeMgmtAcct.id.commits
