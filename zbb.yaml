@@ -8,7 +8,9 @@ version: "1.0.0"
 #
 # The TS twin is generated at gate time inside the same Neon branch
 # that dataloader uses (only place where the schema is queryable by
-# schema-ts-generator). Plugin: zb.schema.
+# schema-ts-generator). Plugin: zb.schema. The branch is provisioned
+# through the dataloader-service with ZB_TOKEN — no NEON_* credentials
+# are read by the gate (they were removed here 2026-09-03).
 
 # ── Shared dev credentials — inherited, not redeclared ───────────────
 # ZB_TOKEN / ZB_API_KEY / ZB_ORG_ID / ZB_PLATFORM_URL / KNOWLEDGE_MCP_URL /
@@ -49,30 +51,6 @@ env:
       PROD DEFAULT even for non-prod org targets: the step auths with the
       prod-issued ZB_TOKEN, and a per-env override makes that key 401.
       The org load never reads this (it uses ZB_PLATFORM_URL + ZB_API_KEY).
-
-  NEON_API_KEY:
-    source: vault
-    vault: "operations-kv/neon/content.api-key"
-    mask: true
-
-  NEON_PROJECT_ID:
-    source: vault
-    vault: "operations-kv/neon/content.project-id"
-
-  NEON_PARENT_BRANCH:
-    type: string
-    default: "content-master"
-    description: Neon parent branch to create test branches from
-
-  NEON_DB_ROLE:
-    type: string
-    default: "neondb_owner"
-    description: Neon database role
-
-  NEON_DB_NAME:
-    type: string
-    default: "zerobias"
-    description: Neon database name
 
 # ── Lifecycle ────────────────────────────────────────────────────────
 # Schema packages have no Docker phase. The TS-twin publish runs inside

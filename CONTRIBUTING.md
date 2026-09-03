@@ -15,10 +15,14 @@ environment branches kept in sync by the publish workflow, never PR bases.
 
 ## Lane 2 — ZeroBias platform users (org-first delivery)
 
-Your schema is loaded into your own org and verified there **before** any PR.
-`publishOrg` publishes an org-private rc (`X.Y.Z-rc.<orgId>.<n>`) and queues an
-org dataloader load, visible only to your org — so if the schema is
-org-internal, you can stop there; the PR back to `main` is how you share it.
+A **new** schema package is loaded into your own org and verified there
+**before** any PR. `publishOrg` publishes an org-private rc
+(`X.Y.Z-rc.<orgId>.<n>`) and queues an org dataloader load, visible only to
+your org — so if the schema is org-internal, you can stop there; the PR back
+to `main` is how you share it. Org publish is for artifacts that exist only
+inside your org: changes to the shared base schema (new interfaces) or to an
+already-published package follow Lane 1 — gate → PR — and become visible in
+the dev environment after merge.
 
 1. One-time credential setup + session launch (owns all the credential homes,
    verifies your API key is an org **owner** key, then starts Claude Code

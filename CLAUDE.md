@@ -69,10 +69,13 @@ schema and rewrites every `gate-stamp.json`.
 `gate` chains `validate` → `lint` → `compile` → `test*` → `buildArtifacts` → `testDataloader` →
 `writeGateStamp`.
 
-`testDataloader` loads the schema into an ephemeral Neon branch via the **remote dataloader service**
-(`DATALOADER_SERVICE_URL`, default `https://app.zerobias.com/api/dataloader`), authenticated by
-`ZB_TOKEN`. No local Neon credentials are involved — `NEON_API_KEY` / `NEON_PROJECT_ID` are not read
-by the gate.
+`testDataloader` (task `dataloaderExec`) asks the **dataloader-service** (`DATALOADER_SERVICE_URL`,
+default `https://app.zerobias.com/api/dataloader`, authenticated by `ZB_TOKEN`) for an ephemeral Neon
+branch, then runs `@zerobias-com/platform-dataloader@prod` **locally on your machine** against that
+remote branch and deletes the branch afterwards. No Neon credentials are involved — `NEON_API_KEY` /
+`NEON_PROJECT_ID` are not read by the gate. Every statement is a round trip to us-east-1, so the step
+takes minutes for a vendor package and **1–3 hours for base** (~500 files) depending on your link; it
+is not hanging — tail the log. For fast iteration use the local scratch DB in `CONTRIBUTING.md`.
 
 > **If `ZB_TOKEN` is unset or blank, `testDataloader` is skipped (not failed) and the gate still
 > writes a stamp.** The stamp records this honestly as `"testDataloader": "skipped"` rather than
@@ -685,7 +688,7 @@ The repo-wide `:validateUniquePackageNames` task fails if two schemas share the 
 
 1. `validateContent` — the per-package validator above.
 2. `:validateUniquePackageNames` — repo-wide cross-cut.
-3. `testDataloader` — loads the schema into an ephemeral Neon branch via the remote dataloader service and validates everything the dataloader checks (extends chains, link bidirectionality, enum format, viewProperties, etc.). **Skipped (not failed) when `ZB_TOKEN` is unset or blank**; CI runs it on every push.
+3. `testDataloader` — provisions an ephemeral Neon branch through the dataloader-service and runs the dataloader locally against it, validating everything the dataloader checks (declared ids, extends chains, link bidirectionality, enum format, viewProperties, etc.). **Skipped (not failed) when `ZB_TOKEN` is unset or blank.** No PR workflow runs it — the committed stamp is what the publish workflow checks after merge.
 4. `writeGateStamp` — writes `gate-stamp.json`, recording each step's status (`passed` / `skipped` / `up-to-date` / …). **`publishGuard` rejects packages without a committed, valid stamp.**
 
 To confirm the dataloader actually ran, check the stamp: `"testDataloader": "passed"` means it ran,
@@ -714,8 +717,13 @@ substitute tooling, no alternative paths).
 The content SDLC (the skill owns the details — don't restate them here):
 
 1. scaffold → author → `zbb --slot <slot> gate` (never bare `./gradlew`) → commit `gate-stamp.json`
-2. `publishOrg` (org-private rc `X.Y.Z-rc.<orgId>.<n>` + org dataloader load) → verify in YOUR org → 🙋 explicit user sign-off
+2. **new packages only:** `publishOrg` (org-private rc `X.Y.Z-rc.<orgId>.<n>` + org dataloader load) → verify in YOUR org → 🙋 explicit user sign-off → delete `zerobias.orgId` → re-gate
 3. only then PR → base **`main`**
+
+**Base changes (new interfaces) and extensions of already-published packages are PR-only:** org
+publish is refused for any package that already has catalog versions ("Org publish is for artifacts
+that exist only inside your org"). Their verification is the gate plus review of the YAML; the change
+becomes visible in the dev environment after the PR merges and publishes.
 
 **No ZeroBias org?** (external contributors): stop after the gate and open the
 PR against `main` — maintainers run the org verification on their side. See

@@ -17,27 +17,38 @@ description: >-
 
 Schema packages define the AuditgraphDB object model (classes, interfaces,
 fields, enums, documents) that the dataloader loads and that collectors
-target. This skill delivers schema changes **org-first**: the default
+target. This skill delivers NEW schema packages **org-first**: the default
 deliverable is the schema loaded into the user's own org; the PR to `main`
-happens only after the user signs off on the org-loaded result.
+happens only after the user signs off on the org-loaded result. Changes to
+already-published packages — the shared base above all — are **PR-only**:
+gate → review → PR, visible in the dev environment after merge.
 
 ```
 Phase 0 prerequisites (hard gate — /prerequisites must report READY)
 Phase 1 resolve + existence check (mode, names, dependency chain, dupes)
 Phase 2 branch (from main)
-Phase 3 scaffold + author content   ← id: on EVERY file; zerobias.orgId BEFORE the gate
-Phase 4 gate                        ← git add BEFORE gating
-Phase 5 publishOrg + org load       ← publishes the YAML package AND its -ts twin
-Phase 6 user verifies org artifact  ← 🙋 explicit sign-off required
-Phase 7 PR --base main              ← only after sign-off
+Phase 3 scaffold + author content   ← id: on EVERY file; Mode A: zerobias.orgId BEFORE the gate
+Phase 4 gate                        ← git add BEFORE gating; minutes for a vendor pkg, HOURS for base
+Phase 5 publishOrg + org load       ← Mode A ONLY (new, org-only packages); YAML + -ts twin
+Phase 6 user verifies               ← A: the org artifact · B: the YAML + gate result  🙋 sign-off
+Phase 7 PR --base main              ← A: drop orgId + RE-GATE first · B: straight to PR
 ```
 
 **Two request shapes (decide in Phase 1, before touching files):**
 
-| Mode | What | Where | Typical ask |
-|---|---|---|---|
-| **A — vendor schema package** | new/extended package of concrete classes (+ package-local interfaces/fields/enums) | `package/<vendor>/[<group>/]<code>/` | "add a schema for Stellar Cyber findings" |
-| **B — base schema extension** | new generic INTERFACE (+ fields/enums it needs) in the shared base schema | `package/zerobias/zerobias/base/` | "collectors need a Backup interface" |
+| Mode | What | Where | Typical ask | SDLC tail |
+|---|---|---|---|---|
+| **A — vendor schema package** | NEW package of concrete classes (+ package-local interfaces/fields/enums) | `package/<vendor>/[<group>/]<code>/` | "add a schema for Stellar Cyber findings" | **org-first**: gate → publishOrg → verify in org → PR |
+| **B — base schema extension** | new generic INTERFACE (+ fields/enums it needs) in the shared base schema | `package/zerobias/zerobias/base/` | "collectors need a Backup interface" | **PR-only**: gate → review → PR → visible in dev after merge |
+
+**Org publish is for NEW artifacts only.** build-tools refuses to
+org-publish any package that already has catalog versions
+(`resolveOrgVersion: … Org publish is for artifacts that exist only inside
+your org`), and the dataloader's ownership scope refuses org-private content
+that shadows public names. So Mode B — and any extension of an
+already-released vendor package — never reaches Phase 5: its verification is
+the gate (`testDataloader: passed`) plus review of the YAML, and the change
+becomes visible in the dev environment once the PR merges and publishes.
 
 **Interface-first (the platform model).** Collectors and modules target base
 **interfaces**; the dataloader materializes `Dynamic<Interface>` concrete
@@ -61,7 +72,8 @@ Same flow, three hard rules:
 - **Pre-flight first**: run the `prerequisites` skill (Phase 0) before
   touching anything. If anything is missing, print the exact setup
   instructions and exit — never fail mid-flow.
-- **The run ENDS after Phase 5** (org load). Print what was created, how to
+- **The run ENDS after Phase 5** (Mode A org load) or **after Phase 4**
+  (Mode B gate). Print what was created, how to
   verify, and: *"verify the org artifact, then run
   `claude -p 'open the PR for schema <vendor>/<code>'` (or continue
   interactively)"*. Phases 6–7 are human-gated and never run headless.
@@ -210,14 +222,15 @@ No scaffold — edit `package/zerobias/zerobias/base/` directly:
 - Additive changes only: never rename/remove/retype anything published —
   that is a platform-team-coordinated event, not a PR.
 
-### Both modes — set the org target BEFORE the first gate
+### Mode A only — set the org target BEFORE the first gate
 
-**Set `zerobias.orgId: "<target-org-uuid>"` in the package's
-`package.json` now** (yes, in the base package too for Mode B — it is
-deleted again in Phase 7). With orgId present the gate's dataloader step
-runs org-scoped, matching how org-scoped tokens authorize. The gate-stamp's
-sourceHash does not cover `package.json`, so setting (and later deleting)
-orgId never invalidates the stamp.
+**Set `zerobias.orgId: "<target-org-uuid>"` in the NEW package's
+`package.json` now.** With orgId present the gate's dataloader step seeds
+your org into the ephemeral branch and runs org-scoped, matching how
+org-scoped tokens authorize. ⚠ The gate-stamp's sourceHash DOES cover
+`package.json`: deleting orgId later (Phase 7) invalidates the stamp, so
+budget one more gate at the end. **Mode B never sets orgId** — base is a
+shared package and cannot be org-published (rule above).
 
 ## Phase 4 — gate (git add FIRST, always via zbb)
 
@@ -236,15 +249,25 @@ zbb gate --check                         # validate the stamp (no slot needed)
 ```
 
 ⚠ Write EVERY `zbb gate` / `publishOrg` as `cd <absolute-path> && zbb …`
-in ONE command — never rely on inherited shell cwd.
+in ONE command — never rely on inherited shell cwd (background shells
+reset it, and a repo-root run targets the wrong project).
 
 `gate` = `validateContent` (file/name triangulation) +
-`:validateUniquePackageNames` + `testDataloader` (loads the schema into an
-ephemeral Neon branch via the REMOTE dataloader service, authed by
-`ZB_TOKEN` — this is where extends chains, link bidirectionality, enum
-format, and viewProperties are actually enforced) + the TS-twin generation
-+ `writeGateStamp`. On success **commit `gate-stamp.json`** — CI's
-publishGuard rejects publishes without a valid committed stamp.
+`:validateUniquePackageNames` + `dataloaderExec`/`testDataloader` + the
+TS-twin generation + `writeGateStamp`. The dataloader step asks the
+dataloader-service (authed by `ZB_TOKEN`) for an ephemeral Neon branch, then
+runs `@zerobias-com/platform-dataloader@prod` **locally on your machine**
+against that remote branch — this is where declared ids, extends chains,
+link bidirectionality, enum format, and viewProperties are actually
+enforced. Every statement is a round trip to us-east-1, so **duration scales
+with package size and your link**: a vendor package takes minutes; base
+(~500 files) takes ~1 h on a good link and 2–3 h on a slow one. It is not
+hanging — tail the log. Two `✗ vault-connection` lines at the top are
+harmless preflight noise. To iterate quickly before the gate, use the local
+scratch-DB flow in `CONTRIBUTING.md` (seconds, same dataloader checks, no
+stamp). On success **commit `gate-stamp.json`** — CI's publishGuard rejects
+publishes without a valid committed stamp, and **no PR workflow runs the
+gate for you**.
 
 ⚠ **Skipped ≠ passed**: with `ZB_TOKEN` absent the dataloader step is
 SKIPPED and the stamp records `"testDataloader": "skipped"` — fine for an
@@ -256,13 +279,19 @@ gate runs on the BASE package
 (`cd package/zerobias/zerobias/base && zbb --slot <slot> gate`) and
 re-writes its stamp — a changed stamp after your edit is expected.
 
-## Phase 5 — publishOrg + load into the user's org
+## Phase 5 — publishOrg + load into the user's org (Mode A only)
+
+**Mode B skips this phase — go to Phase 6.** Org publish is refused for any
+package that already has catalog versions, with no override.
 
 Publishes an org-private rc version (`<X.Y.Z+1>-rc.<orgIdStripped>.<n>`,
-computed by zbb — never hand-authored) of the schema package **and its
+computed by zbb — never hand-authored) of the NEW schema package **and its
 `-ts` twin**, and queues a dataloader job into the target org — no PR, no
-shared catalog involved. This works on top of an already-loaded catalog
-version: the org rc layers over the shared release the org already has.
+shared catalog involved. Publishing re-runs the dataloader step to
+regenerate the TS twin, so budget the same time as the gate. `zbb
+publishOrg` needs `lifecycle.publishOrg` in the repo's `zbb.yaml` — on a
+branch that predates it, zbb falls back to the meta-repo and dies with
+`bash: ./gradlew: No such file or directory`; rebase onto `main`.
 
 1. Confirm `"zerobias": { …, "orgId": "<org-uuid>" }` is in the package's
    `package.json` — set in Phase 3, where it belongs.
@@ -293,9 +322,7 @@ the requested version against the target env's dist-tag, falling back to
 `latest`. A FIRST `publishOrg` of a package works because the registry
 force-assigns `latest` to that rc. But subsequent rc's only get the
 `NPM_CONFIG_TAG` tag (`dev`) while `latest` stays put — so the org load of
-`-rc.<org>.1+` can be REJECTED ("greater than latest"). **For base (Mode B)
-and any already-released package this bites on the FIRST publishOrg too**:
-`latest` already points at the shared release. If the load is rejected, the
+`-rc.<org>.1+` can be REJECTED ("greater than latest"). If the load is rejected, the
 fix is a one-time
 `npm dist-tag add <pkg>@<new-rc> latest --registry=https://pkg.zerobias.org`
 (run by the user — and note it must be undone is NOT true: the next shared
@@ -303,10 +330,10 @@ release reassigns `latest` on publish) before re-loading. Apply to the
 YAML package; the `-ts` twin only needs it if a consumer resolves it by
 `latest`.
 
-**Sequencing (Mode B → Mode A):** a vendor package whose gate must resolve
-a base interface that only exists as your org rc needs base's rc reachable
-as `latest` (landmine above) — publishOrg base first, verify its load, then
-gate the dependent package.
+**Sequencing (Mode B → Mode A):** a vendor package whose classes `extends`
+a base interface that is not yet on `main` cannot gate until the base PR
+has merged and published (the gate resolves base from the registry). Open
+the base PR first; build the vendor package on top once it is out.
 
 Notes: org users can only queue org-private (`-rc.<org>`) loads — a plain
 catalog-semver load is 403 (platform-admin only). Org loads need
@@ -316,13 +343,19 @@ copy in `~/.m2` can shadow the release).
 
 ## Phase 6 — user verification + sign-off  ⭐
 
-Show the user the org-loaded schema:
+**Mode A** — show the user the org-loaded schema:
 - the completed org dataloader job (id + status),
-- the loaded artifacts in the app (model/schema browser) — for Mode B, the
-  new interface present in the org's model; for Mode A, the classes and
-  their `extends` bindings,
+- the loaded classes and their `extends` bindings in the app (model/schema
+  browser),
 - the published rc versions of BOTH npm artifacts
   (`npm view <pkg> versions` / `<pkg>-ts`).
+
+**Mode B** — there is no org artifact to show. Present the definition
+itself: a compact table of the interface (name, description, `extends`,
+properties → fields, link targets, `links.models` codes) plus the gate
+evidence (`"testDataloader": "passed"` and the `Interface '<Name>' added` /
+`validated` lines from the gate log). The interface becomes visible in the
+dev environment after the PR merges and publishes.
 
 Have them judge names, descriptions, property shapes, and link targets —
 schema mistakes are expensive later (published names can't be renamed).
@@ -333,10 +366,13 @@ stop after Phase 5 by design.
 
 ## Phase 7 — PR to main (after sign-off only)
 
-1. Flip ownership to the shared catalog: **delete `zerobias.orgId` from
-   `package.json`**. No re-gate needed — the gate-stamp's sourceHash
-   covers the `files` payload, not `package.json`. Leftover
-   `-rc.<org>.<n>` npm versions don't collide with catalog semver.
+1. **Mode A:** flip ownership to the shared catalog — **delete
+   `zerobias.orgId` from `package.json`, then RE-GATE**
+   (`cd <pkg> && zbb --slot <slot> gate`): the stamp's sourceHash covers
+   `package.json`, so without a fresh gate the publish workflow rejects the
+   stamp (`source-hash-changed`) after merge. Leftover `-rc.<org>.<n>` npm
+   versions don't collide with catalog semver. **Mode B:** nothing to flip —
+   the Phase 4 stamp is the one you commit.
 2. Commit — selective staging, conventional message, no co-authors:
 
 ```bash
@@ -409,6 +445,19 @@ calls): re-run the identical command ONCE before diagnosing or escalating.
   org in `zerobias.orgId`; non-prod targets REQUIRE `ZB_API_KEY`.
 - **Org load rejected "greater than latest"** → the dist-tag landmine in
   Phase 5.
+- **`resolveOrgVersion: … already has catalog versions` / `doesn't fit the
+  org-publish format`** → the package is a shared catalog artifact (base, or
+  any released vendor package): it cannot be org-published, by design. Skip
+  Phase 5; gate → review → PR (the Mode B path).
+- **`zbb publishOrg` → `bash: ./gradlew: No such file or directory`** → the
+  repo's `zbb.yaml` on your branch has no `lifecycle.publishOrg` (branch
+  predates it); rebase onto `main`.
+- **Gate "hangs" for an hour or more** → it is loading every file of the
+  package into a remote Neon branch; base takes 1–3 h. Check the log tail
+  before assuming a hang. A Neon connection timeout / `No route to host` is
+  a network drop — re-run the identical command once.
+- **`gateCheck`: `source-hash-changed` right after editing `package.json`**
+  → package.json IS hashed (orgId add/remove included); re-gate.
 - **`dataloaderOrgJob` fails with `npm … 401 Unauthorized`** (server-side,
   `/root/.npm` in the log) → the TARGET env's dataloader pod fetches with
   its OWN `ZB_TOKEN` — no client-side fix. Retry once; then escalate to

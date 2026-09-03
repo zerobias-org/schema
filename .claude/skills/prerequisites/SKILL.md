@@ -60,6 +60,7 @@ Two paths through this table:
 | 3 | Java JDK 17+ (gradle gate; zbb pins the toolchain to 21 itself) | `java -version` | install a JDK (e.g. `brew install temurin`) |
 | 4 | Node + `npm` | `npm --version` | install Node LTS |
 | 5 | `yq` | `yq --version` | install via package manager (e.g. `brew install yq`) |
+| 5b | `python3` (mints the UUIDv5/v4 ids every definition file needs — see create-schema `templates.md`) | `python3 --version` | ships with macOS CLT / Ubuntu; else `brew install python` |
 | 6 | `zbb` CLI | `command -v zbb && zbb --version` | `npm install -g @zerobias-org/zbb@latest` |
 | 7 | **`zb` MCP connected** (`.mcp.json` + profile) | `mcp__zb__zerobias_*` tools in session | credentials setup below |
 | 8 | **`zb-knowledge` MCP connected** (`.mcp.json` + launch env vars) | `mcp__zb-knowledge__*` tools in session; `health_check` succeeds. Diagnose from the REPO cwd (`claude mcp get zb-knowledge`) — a user-scope entry can mask the project one when checked from `~` | export `ZB_ORG_ID`/`ZB_API_KEY` **and `KNOWLEDGE_MCP_URL`** — the `.mcp.json` URL defaults to the PROD endpoint, and keys are per-env, so a non-prod key with `KNOWLEDGE_MCP_URL` unset 401s at every launch (hit 2026-08-19); relaunch claude (`--launch` exports all of them, derived from the slot) |
