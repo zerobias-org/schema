@@ -1,8 +1,51 @@
 # Contributing to `zerobias-org/schema`
 
-This guide is for **third-party contributors** working from a fork of this repository (e.g. `your-org/schema`). It explains how to validate a schema package end-to-end before opening a pull request, and what to expect from CI once the PR is open.
+Anyone can author and validate a schema package. There are two lanes, depending
+on whether you have a ZeroBias platform org. AI-assisted contributors: the
+[`create-schema` skill](.claude/skills/create-schema/SKILL.md) encodes both
+lanes end to end — just say "add a schema for X" in Claude Code.
 
-If you are a ZeroBias employee with access to internal tooling, you may have additional shortcuts available — but everything in this document works with only:
+| Lane | You have | Flow |
+|---|---|---|
+| **1 — fork** | A GitHub account | author → gate → cross-fork PR against `main`; maintainers run the org-side verification |
+| **2 — org-first** | A ZeroBias platform org | author → gate → `publishOrg` → load + verify in YOUR org → PR against `main` |
+
+Either way, PRs target **`main`** — the `dev`/`qa`/`uat` branches are
+environment branches kept in sync by the publish workflow, never PR bases.
+
+## Lane 2 — ZeroBias platform users (org-first delivery)
+
+A **new** schema package is loaded into your own org and verified there
+**before** any PR. `publishOrg` publishes an org-private rc
+(`X.Y.Z-rc.<orgId>.<n>`) and queues an org dataloader load, visible only to
+your org — so if the schema is org-internal, you can stop there; the PR back
+to `main` is how you share it. Org publish is for artifacts that exist only
+inside your org: changes to the shared base schema (new interfaces) or to an
+already-published package follow Lane 1 — gate → PR — and become visible in
+the dev environment after merge.
+
+1. One-time credential setup + session launch (owns all the credential homes,
+   verifies your API key is an org **owner** key, then starts Claude Code
+   through your zbb slot):
+
+   ```sh
+   ./scripts/setup-org-credentials.sh --launch
+   ```
+
+2. In the session, say **"add a schema for \<X\>"** (or run `/create-schema`).
+   The skill runs the full SDLC: scaffold → gate → `publishOrg` (org-private
+   load) → you verify the org artifact → sign-off → PR against `main`. Step 0
+   is the [`prerequisites` skill](.claude/skills/prerequisites/SKILL.md) — a
+   missing tool/credential gets installed or waited for, never worked around.
+
+Everything below is **Lane 1** — it needs no ZeroBias account, and it is also
+the local-validation playbook Lane 2 relies on.
+
+## Lane 1 — working from a fork
+
+This lane is for **third-party contributors** working from a fork of this repository (e.g. `your-org/schema`). It explains how to validate a schema package end-to-end before opening a pull request, and what to expect from CI once the PR is open.
+
+Everything in this lane works with only:
 
 - A fork of this repo
 - A valid `ZB_TOKEN` for `pkg.zerobias.org`
@@ -212,7 +255,7 @@ If either condition is unmet, the dataloader job is **skipped**.
 
 Only ZeroBias maintainers can add the `approved` label. External contributors cannot self-approve. The expected flow is:
 
-1. You open the PR against `dev`.
+1. You open the PR against `main`.
 2. A maintainer reviews the changes.
 3. The maintainer adds the `approved` label.
 4. CI runs. The job appears as `Test` in the PR's checks.
@@ -269,11 +312,11 @@ Before opening a PR:
   - [ ] Connection env vars are exported (`PGHOST`, `PGPORT=15432`, `PGUSER`, `PGPASSWORD`, `PGDATABASE=content_dev`, `PGSSLMODE=disable`).
   - [ ] `dataloader --content-dev --skip-pgboss --skip-dynamo -d ./` ends with `Importer finished successfully` and exit code `0`.
 - [ ] Commit follows Conventional Commits (`feat:`, `fix:`, `docs:`, …).
-- [ ] PR is opened **cross-fork** against `zerobias-org/schema:dev`, not against your fork's `dev`. From a fork checkout, the explicit command is:
+- [ ] PR is opened **cross-fork** against `zerobias-org/schema:main`, not against your fork's `main`. From a fork checkout, the explicit command is:
   ```sh
   gh pr create \
     --repo zerobias-org/schema \
-    --base dev \
+    --base main \
     --head <your-fork-owner>:<your-branch> \
     --title "..." \
     --body "..."

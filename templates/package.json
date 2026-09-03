@@ -1,6 +1,6 @@
 {
-  "name": "@zerobias-org/schema-{code}",
-  "version": "1.0.0-rc.1",
+  "name": "@zerobias-org/schema-{dashed}",
+  "version": "1.0.0",
   "description": "{name}",
   "author": "team@zerobias.com",
   "license": "ISC",
@@ -8,7 +8,7 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:zerobias-org/schema.git",
-    "directory": "package/{vendor}/{code}/"
+    "directory": "package/{path}/"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
@@ -23,12 +23,13 @@
     "README.md"
   ],
   "dependencies": {
-    "@zerobias-org/schema-zerobias-zerobias-base": "^3.0.0"
+    "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
+    "@zerobias-org/schema-zerobias-zerobias-base": "latest"
   },
   "zerobias": {
     "dataloader-version": "1.0.0",
     "import-artifact": "schema",
-    "package": "{vendor}.{code}.schema",
+    "package": "{dotted}.schema",
     "imports": [
       "zerobias.zerobias.platform.schema",
       "zerobias.zerobias.base.schema"

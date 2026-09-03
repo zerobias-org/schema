@@ -1,5 +1,5 @@
 Schema:
   name: "{name}"
-  package: "{vendor}.{code}.schema"
+  package: "{dotted}.schema"
   description: |-
     {description}
