@@ -1,6 +1,6 @@
 {
   "name": "@zerobias-org/schema-{code}",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "description": "{name}",
   "author": "team@zerobias.com",
   "license": "ISC",
@@ -11,7 +11,7 @@
     "directory": "package/{vendor}/{code}/"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://pkg.zerobias.org/"
   },
   "files": [
     "classes/**",
@@ -32,6 +32,7 @@
     "imports": [
       "zerobias.zerobias.platform.schema",
       "zerobias.zerobias.base.schema"
-    ]
+    ],
+    "orgId": "{target-org-uuid}"
   }
 }
