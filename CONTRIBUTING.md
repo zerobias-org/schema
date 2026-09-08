@@ -20,9 +20,12 @@ A **new** schema package is loaded into your own org and verified there
 (`X.Y.Z-rc.<orgId>.<n>`) and queues an org dataloader load, visible only to
 your org — so if the schema is org-internal, you can stop there; the PR back
 to `main` is how you share it. Org publish is for artifacts that exist only
-inside your org: changes to the shared base schema (new interfaces) or to an
-already-published package follow Lane 1 — gate → PR — and become visible in
-the dev environment after merge.
+inside your org — which is why **you never edit the shared base schema**: what
+base lacks (an interface, a property, a link) is declared in your package as a
+`<Vendor><Base>Base` interface that extends the base one, and your classes
+extend that. It works end to end for you at once; zb owners decide at PR
+review whether to promote it into base (they edit the PR — nothing for you to
+redo). See `CLAUDE.md` → Extending the base schema.
 
 1. One-time credential setup + session launch (owns all the credential homes,
    verifies your API key is an org **owner** key, then starts Claude Code

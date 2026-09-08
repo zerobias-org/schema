@@ -1,86 +1,75 @@
 ---
 name: create-schema
 description: >-
-  Create or extend AuditgraphDB schema packages and take them through the full
-  content SDLC — scaffold/author → gradle gate → publishOrg + org load → user
-  verifies in their org → PR to main only after explicit sign-off. Covers BOTH
-  vendor/product schema packages AND extending the base schema with new
-  interfaces (interface-first: when a generic concept is missing, add it to
-  base and PR it). USE THIS when the user says "add a schema for X", "add
-  classes/interfaces/fields for Y", "add an interface to the base schema",
-  "extend the graph model", or a ZeroBias task asks for a schema package.
-  Standalone: works in this repo alone; no platform task required (task-driven
-  mode is optional).
+  Create a vendor/product schema package (concrete classes + package-local
+  interfaces) and take it through the full content SDLC — scaffold/author →
+  gradle gate → publishOrg + org load → user verifies in their org → PR to
+  main only after explicit sign-off. Anything the base schema lacks (an
+  interface, a property, a link) is declared IN THE PACKAGE as a
+  `<Vendor><Base>Base` interface extending base; the base itself is never
+  edited by contributors — zb owners promote at review. USE THIS when the
+  user says "add a schema for X", "add classes/interfaces/fields for Y",
+  "we need a link between A and B", "extend the graph model", or a ZeroBias
+  task asks for a schema package. Standalone: works in this repo alone; no
+  platform task required (task-driven mode is optional).
 ---
 
-# create-schema — schema packages & base interfaces, org-first SDLC
+# create-schema — vendor schema packages, org-first SDLC
 
 Schema packages define the AuditgraphDB object model (classes, interfaces,
 fields, enums, documents) that the dataloader loads and that collectors
-target. This skill delivers NEW schema packages **org-first**: the default
+emit into. This skill delivers a **new schema package org-first**: the
 deliverable is the schema loaded into the user's own org; the PR to `main`
-happens only after the user signs off on the org-loaded result. Changes to
-already-published packages — the shared base above all — are **PR-only**:
-gate → review → PR, visible in the dev environment after merge.
+happens only after the user signs off on the org-loaded result.
 
 ```
 Phase 0 prerequisites (hard gate — /prerequisites must report READY)
-Phase 1 resolve + existence check (mode, names, dependency chain, dupes)
+Phase 1 resolve + existence check (names, dependency chain, dupes)
 Phase 2 branch (from main)
-Phase 3 scaffold + author content   ← id: on EVERY file; Mode A: zerobias.orgId BEFORE the gate
-Phase 4 gate                        ← git add BEFORE gating; minutes for a vendor pkg, HOURS for base
-Phase 5 publishOrg + org load       ← Mode A ONLY (new, org-only packages); YAML + -ts twin
-Phase 6 user verifies               ← A: the org artifact · B: the YAML + gate result  🙋 sign-off
-Phase 7 PR --base main              ← A: drop orgId + RE-GATE first · B: straight to PR
+Phase 3 scaffold + author          ← id: on EVERY file; zerobias.orgId BEFORE the gate;
+                                     base gaps → <Vendor>XBase interfaces, never base edits
+Phase 4 local scratch DB, then gate ← git add BEFORE gating
+Phase 5 publishOrg + org load      ← YAML package AND its -ts twin
+Phase 6 user verifies org artifact ← 🙋 explicit sign-off required
+Phase 7 PR --base main             ← drop orgId + RE-GATE first
+        └─ zb review: promote package interfaces into base, or keep them vendor-local
 ```
 
-**Two request shapes (decide in Phase 1, before touching files):**
+**One path for everyone.** Internal and external contributors, zb staff
+included, author a package and org-load it. **Nobody edits
+`package/zerobias/zerobias/base/` in a contribution PR.** Two facts make
+this the only workable path: build-tools refuses to org-publish any package
+that already has catalog versions (`resolveOrgVersion: … Org publish is for
+artifacts that exist only inside your org`), and the dataloader refuses
+org-private content that shadows public names. A new package has neither
+problem. What base lacks is expressed inside the package (Phase 3) and
+promoted into base by zb owners at review, in a second step — for zb's own
+work too, so the schema is seen and collected to before it becomes shared.
 
-| Mode | What | Where | Typical ask | SDLC tail |
-|---|---|---|---|---|
-| **A — vendor schema package** | NEW package of concrete classes (+ package-local interfaces/fields/enums) | `package/<vendor>/[<group>/]<code>/` | "add a schema for Stellar Cyber findings" | **org-first**: gate → publishOrg → verify in org → PR |
-| **B — base schema extension** | new generic INTERFACE (+ fields/enums it needs) in the shared base schema | `package/zerobias/zerobias/base/` | "collectors need a Backup interface" | **PR-only**: gate → review → PR → visible in dev after merge |
-
-**Org publish is for NEW artifacts only.** build-tools refuses to
-org-publish any package that already has catalog versions
-(`resolveOrgVersion: … Org publish is for artifacts that exist only inside
-your org`), and the dataloader's ownership scope refuses org-private content
-that shadows public names. So Mode B — and any extension of an
-already-released vendor package — never reaches Phase 5: its verification is
-the gate (`testDataloader: passed`) plus review of the YAML, and the change
-becomes visible in the dev environment once the PR merges and publishes.
-
-**Interface-first (the platform model).** Collectors and modules target base
-**interfaces**; the dataloader materializes `Dynamic<Interface>` concrete
-classes at ingest, and segment declarations create schema obligations. So
-when the generic concept you need is missing from
-`package/zerobias/zerobias/base/interfaces/`, the RIGHT move is Mode B: add
-the interface to base and PR it — this is the default path, not an
-exception, and proposing it proactively is encouraged. Reserve Mode A for
-genuinely vendor-specific shapes; its classes should `extends` base
-interfaces wherever one fits. When a Mode A package needs a base interface
-that doesn't exist yet, do Mode B FIRST (own branch + PR + org load), then
-build the vendor package on top — sequencing note in Phase 5.
+**Concrete classes, not interface-targeting.** Anyone can generate the
+concrete classes their collector emits, so collectors target the package's
+classes. Base interfaces are what those classes `extends` — they give the
+data its generic meaning (a `WizUser` *is a* `User`), they are not the
+ingest target.
 
 **Modes of invocation.** Default is **request-driven**: the user describes
 the schema need; no platform task required. If the user references a
 ZeroBias task (UUID or task name), additionally follow the **task-driven
 appendix** at the end.
 
-**Headless runs (`claude -p "add a backup interface to the base schema"`).**
-Same flow, three hard rules:
+**Headless runs (`claude -p "add a schema for Wiz findings"`).** Same flow,
+three hard rules:
 - **Pre-flight first**: run the `prerequisites` skill (Phase 0) before
   touching anything. If anything is missing, print the exact setup
   instructions and exit — never fail mid-flow.
-- **The run ENDS after Phase 5** (Mode A org load) or **after Phase 4**
-  (Mode B gate). Print what was created, how to
+- **The run ENDS after Phase 5** (org load). Print what was created, how to
   verify, and: *"verify the org artifact, then run
   `claude -p 'open the PR for schema <vendor>/<code>'` (or continue
   interactively)"*. Phases 6–7 are human-gated and never run headless.
-- **Decision forks stop the run**: schema/interface already exists (or is
-  in an open PR), dependency chain incomplete, mode ambiguous, gate
-  conflict → print a structured report of the state and the decision
-  needed, exit cleanly, change nothing further.
+- **Decision forks stop the run**: schema already exists (or is in an open
+  PR), dependency chain incomplete, gate conflict → print a structured
+  report of the state and the decision needed, exit cleanly, change nothing
+  further.
 
 **Skill-vs-reality conflicts.** If observed tool behavior contradicts this
 skill, STOP: verify against the primary source (`settings.gradle.kts`,
@@ -104,18 +93,12 @@ in, re-run `/prerequisites`, and resume only from `READY`.
 
 ## Phase 1 — resolve inputs + existence check
 
-**Pick the mode** (table above). If the request is ambiguous ("add a schema
-for backups" could be a base interface or a vendor package), ask — the two
-modes produce different artifacts with different blast radii.
-
-**Naming (both modes):** `<vendor>` and `<code>` segments must match
-`^[a-z0-9]+$` — lowercase alphanumeric only, no hyphens/underscores/dots
-(the platform `vspCodeValidator` constraint). Interface/class names are
-PascalCase; fields are camelCase dot-notation. **NEVER rename** a published
-schema package or its registered classes without platform-team
-coordination — the dataloader cannot reassign class ownership.
-
-### Mode A — vendor schema package
+**Naming:** `<vendor>` and `<code>` segments must match `^[a-z0-9]+$` —
+lowercase alphanumeric only, no hyphens/underscores/dots (the platform
+`vspCodeValidator` constraint). Interface/class names are PascalCase;
+fields are camelCase dot-notation. **NEVER rename** a published schema
+package or its registered classes — the dataloader cannot reassign class
+ownership; retire via `deprecated.yml` and add the new name instead.
 
 The data workflow chain is `vendor → [suite] → [product] → schema`. The
 schema attaches to a catalog entry and depends on its package:
@@ -137,27 +120,22 @@ Then check the schema itself doesn't already exist:
 - Locally: `ls package/<vendor>/` (any depth).
 - Registry: `npm view @zerobias-org/schema-<vendor>-<code> versions`
   (404 = free).
-- If it exists (anywhere), STOP and ask the user what to do (extend /
-  nothing).
+- If it exists (anywhere), STOP and ask the user what to do. An
+  already-released package cannot be org-published; extending it is a
+  PR-only change reviewed by zb — say so.
 
-### Mode B — base schema extension
-
-- **Read the neighbors first**: `ls package/zerobias/zerobias/base/interfaces/`
-  and READ the 3–5 nearest-by-concept interfaces (their `extends` and
-  properties) — the base has 125+ interfaces and the concept may already
-  be covered or nearly covered (in which case extending an existing
-  interface with a field beats adding a near-duplicate).
-- **Check in-flight work**: `gh pr list --state open --search "<concept>"`
-  — customers add base interfaces by PR too; never duplicate an open one.
-- Confirm base fields/enums to reuse: `ls package/zerobias/zerobias/base/fields/`
-  — prefer reusing an existing field definition over minting a synonym.
+**Read base before designing.** `ls package/zerobias/zerobias/base/interfaces/`
+and READ the 3–5 interfaces nearest to each concept the package needs
+(their `extends`, properties and links) — base has 125+ interfaces and the
+concept is usually there or nearly there. Also skim
+`package/zerobias/zerobias/base/fields/` for reusable fields. What you
+find decides Phase 3: extend directly, or extend-and-add.
 
 ## Phase 2 — branch first (never commit on main)
 
 ```bash
 git fetch origin
-git switch -c feat/schema-<vendor>-<code> origin/main    # Mode A
-git switch -c feat/base-<concept> origin/main            # Mode B, e.g. feat/base-backup-interface
+git switch -c feat/schema-<vendor>-<code> origin/main
 ```
 
 **This repo's PRs target `main`** — `main` is the default branch and the
@@ -166,7 +144,7 @@ publish workflow's sync job propagates main → uat → qa → dev. Branch from
 
 ## Phase 3 — scaffold + author
 
-### Mode A — scaffold the package
+### Scaffold the package
 
 ```bash
 mkdir -p package/<vendor>/<code>          # or package/<vendor>/<group>/<code>
@@ -180,10 +158,12 @@ required for gradle discovery. You fill `{name}` / `{description}` in
 `ls -A package/<path>` must show `package.json`, `catalog.yml`, `.npmrc`
 (dotfile!), `build.gradle.kts`. Exact file shapes: [templates.md](templates.md).
 
-Then author the definitions under `classes/` `interfaces/` `fields/`
-`enums/` `documents/` per the **Schema Definition Reference in
-[CLAUDE.md](../../../CLAUDE.md)** (per-artifact rules, link patterns,
-viewProperties, enum ALL_CAPS, field reuse order). Non-negotiables:
+### Author the definitions
+
+Under `classes/` `interfaces/` `fields/` `enums/` `documents/`, per the
+**Schema Definition Reference in [CLAUDE.md](../../../CLAUDE.md)**
+(per-artifact rules, link patterns, viewProperties, enum ALL_CAPS, field
+reuse order). Non-negotiables:
 
 - Never hand-edit `version` after creation — CI owns bumps (new packages
   start at `1.0.0`).
@@ -194,45 +174,99 @@ viewProperties, enum ALL_CAPS, field reuse order). Non-negotiables:
 - `zerobias.package` MUST equal the dot-joined directory path + `.schema`;
   `zerobias.imports` lists `zerobias.zerobias.platform.schema` +
   `zerobias.zerobias.base.schema`.
-- Concrete classes `extends` base interfaces wherever one fits (that's
-  what makes the data reachable by interface-targeting collectors);
-  extending `Element` enables framework linking.
 - **Every definition file starts with `id:`** (enums and documents also
   `fieldId:`) — the dataloader refuses a file without one
-  (`Unable to handle interface 'X', id is missing`), and the gate's
-  `testDataloader` step is where it surfaces. Classes/interfaces:
+  (`Unable to handle interface 'X', id is missing`). Classes/interfaces:
   `UUIDv5(NIL, Name)` — deterministic from the name; fields/enums/
   documents: a fresh UUIDv4. Recipes in
   [templates.md → Generating ids](templates.md#generating-ids). Never
-  change a published id and never mint a second id for an existing name
-  (the load refuses the mismatch instead of duplicating the row).
+  change a published id and never mint a second id for an existing name.
+- Every concrete class `extends` a base interface where one fits (that is
+  what makes a `WizUser` count as a `User` for every base-level consumer);
+  extending `Element` enables framework linking.
 
-### Mode B — author in the base package
+### When base lacks something — extend it inside the package
 
-No scaffold — edit `package/zerobias/zerobias/base/` directly:
-- `interfaces/<Name>.yml` — `description`, `extends` (an existing base or
-  platform interface), `properties` referencing fields, `viewProperties`.
-  Match the style of a freshly-read neighbor exactly (the YAML property
-  shape is quirky — copy a real one).
-- New `fields/*.yml` / `enums/*.yml` only where nothing reusable exists.
-- `id:` on every NEW file, same rule as Mode A (interface →
-  `UUIDv5(NIL, Name)`; field → v4; enum/document → `id` + `fieldId`, both
-  v4). Existing base files keep their ids untouched — when you add a
-  property to an existing interface you edit the file, not its `id`.
-- Additive changes only: never rename/remove/retype anything published —
-  that is a platform-team-coordinated event, not a PR.
+This is the heart of the skill. **Never edit base.** Declare a
+package-local interface that `extends` the base one and carries the
+missing part; concrete classes extend the package interface, not the base
+one. Name it `<Vendor><Base>Base` when the plain `<Vendor><Base>` name is
+the concrete class (the common case), otherwise `<Vendor><Base>`.
 
-### Mode A only — set the org target BEFORE the first gate
+| Base lacks… | Declare in the package |
+|---|---|
+| a **property** on `User` | `interfaces/WizUserBase.yml: extends [User]` + the property; `classes/WizUser.yml: extends [WizUserBase]` |
+| a **link** between `User` and `App` | `WizUserBase.secondApprovedBy → WizAppBase.id.secondApprover` and `WizAppBase.secondApprover → WizUserBase.id.secondApprovedBy` — a normal two-way link, both ends inside the package |
+| a whole **generic interface** (a `Finding`) | `interfaces/WizFindingBase.yml: extends [Object]` (or the nearest base interface) with its properties; classes extend it |
+| a link from that new interface **to a base type** | `uniLink: true` on the package side only — base never links back to a package. It becomes two-way if and when zb promotes the interface |
 
-**Set `zerobias.orgId: "<target-org-uuid>"` in the NEW package's
+```yaml
+# interfaces/WizAppBase.yml — what App should have had, for Wiz
+id: <UUIDv5(NIL, "WizAppBase")>
+description: "Wiz application: App plus the second-approver relationship"
+extends:
+  - App
+properties:
+  - secondApprover:
+    linkTo: WizUserBase.id.secondApprovedBy
+
+# interfaces/WizUserBase.yml
+id: <UUIDv5(NIL, "WizUserBase")>
+description: "Wiz user: User plus the applications it second-approves"
+extends:
+  - User
+properties:
+  - secondApprovedBy:
+    multi: true
+    linkTo: WizAppBase.id.secondApprover
+
+# classes/WizUser.yml — the collector emits THIS
+id: <UUIDv5(NIL, "WizUser")>
+description: "A user in Wiz"
+extends:
+  - WizUserBase          # not User
+properties:
+  - wizId:
+    field: wiz.id
+```
+
+The data works end to end at the interface level for the developer — no
+waiting on base — and `WizUser` is still a `User` everywhere base is
+consumed. At PR review zb owners decide whether `secondApprover` /
+`secondApprovedBy` (or all of `WizFindingBase`) belong in base; if so, **zb
+updates the PR**: the promoted parts move to base, the package interfaces
+lose them, the classes extend base directly, and unilinks can become
+two-way. Nothing for the contributor to redo.
+
+### Set the org target BEFORE the first gate
+
+**Set `zerobias.orgId: "<target-org-uuid>"` in the package's
 `package.json` now.** With orgId present the gate's dataloader step seeds
 your org into the ephemeral branch and runs org-scoped, matching how
 org-scoped tokens authorize. ⚠ The gate-stamp's sourceHash DOES cover
 `package.json`: deleting orgId later (Phase 7) invalidates the stamp, so
-budget one more gate at the end. **Mode B never sets orgId** — base is a
-shared package and cannot be org-published (rule above).
+budget one more gate at the end.
 
-## Phase 4 — gate (git add FIRST, always via zbb)
+## Phase 4 — local scratch DB, then gate (git add FIRST, always via zbb)
+
+### 4a — iterate locally (seconds per run)
+
+The gate loads through a remote Neon branch and takes minutes for a small
+package; the local scratch DB runs the same dataloader checks in seconds.
+Iterate here until the load is clean, then gate once. Needs Docker.
+
+```bash
+npx @zerobias-org/util-content-dev-schema          # separate terminal: Postgres 17 on :15432, db content_dev
+export PGHOST=localhost PGPORT=15432 PGUSER=postgres PGPASSWORD=postgres PGDATABASE=content_dev PGSSLMODE=disable
+cd package/<path> && dataloader --content-dev --skip-pgboss --skip-dynamo -d ./
+# clean = "Importer finished successfully", exit 0
+```
+
+What it catches: missing/invalid ids, unresolved `extends`, one-sided
+links, unresolved `t3`, enum case, `viewProperties` JSONata, field
+references. Full recipe and its differences from CI: `CONTRIBUTING.md`.
+
+### 4b — gate
 
 All builds go through `zbb` — **never invoke `./gradlew` directly**. Only
 zbb injects the slot env AND pins the JDK (a bare `./gradlew` on JDK 25
@@ -260,32 +294,24 @@ runs `@zerobias-com/platform-dataloader@prod` **locally on your machine**
 against that remote branch — this is where declared ids, extends chains,
 link bidirectionality, enum format, and viewProperties are actually
 enforced. Every statement is a round trip to us-east-1, so **duration scales
-with package size and your link**: a vendor package takes minutes; base
-(~500 files) takes ~1 h on a good link and 2–3 h on a slow one. It is not
-hanging — tail the log. Two `✗ vault-connection` lines at the top are
-harmless preflight noise. To iterate quickly before the gate, use the local
-scratch-DB flow in `CONTRIBUTING.md` (seconds, same dataloader checks, no
-stamp). On success **commit `gate-stamp.json`** — CI's publishGuard rejects
-publishes without a valid committed stamp, and **no PR workflow runs the
-gate for you**.
+with package size and your link**: a vendor package takes minutes (base,
+for reference, takes 1–3 h). It is not hanging — tail the log. Two
+`✗ vault-connection` lines at the top are harmless preflight noise. On
+success **commit `gate-stamp.json`** — CI's publishGuard rejects publishes
+without a valid committed stamp, and **no PR workflow runs the gate for
+you**.
 
 ⚠ **Skipped ≠ passed**: with `ZB_TOKEN` absent the dataloader step is
 SKIPPED and the stamp records `"testDataloader": "skipped"` — fine for an
 external contributor's PR, NOT fine for this flow: the org-first path
 requires a stamp that says `"passed"`. Check it before proceeding.
 
-If you gated before adding new files, re-gate after `git add`. Mode B: the
-gate runs on the BASE package
-(`cd package/zerobias/zerobias/base && zbb --slot <slot> gate`) and
-re-writes its stamp — a changed stamp after your edit is expected.
+If you gated before adding new files, re-gate after `git add`.
 
-## Phase 5 — publishOrg + load into the user's org (Mode A only)
-
-**Mode B skips this phase — go to Phase 6.** Org publish is refused for any
-package that already has catalog versions, with no override.
+## Phase 5 — publishOrg + load into the user's org
 
 Publishes an org-private rc version (`<X.Y.Z+1>-rc.<orgIdStripped>.<n>`,
-computed by zbb — never hand-authored) of the NEW schema package **and its
+computed by zbb — never hand-authored) of the schema package **and its
 `-ts` twin**, and queues a dataloader job into the target org — no PR, no
 shared catalog involved. Publishing re-runs the dataloader step to
 regenerate the TS twin, so budget the same time as the gate. `zbb
@@ -322,18 +348,12 @@ the requested version against the target env's dist-tag, falling back to
 `latest`. A FIRST `publishOrg` of a package works because the registry
 force-assigns `latest` to that rc. But subsequent rc's only get the
 `NPM_CONFIG_TAG` tag (`dev`) while `latest` stays put — so the org load of
-`-rc.<org>.1+` can be REJECTED ("greater than latest"). If the load is rejected, the
-fix is a one-time
+`-rc.<org>.1+` can be REJECTED ("greater than latest"). If the load is
+rejected, the fix is a one-time
 `npm dist-tag add <pkg>@<new-rc> latest --registry=https://pkg.zerobias.org`
-(run by the user — and note it must be undone is NOT true: the next shared
-release reassigns `latest` on publish) before re-loading. Apply to the
-YAML package; the `-ts` twin only needs it if a consumer resolves it by
-`latest`.
-
-**Sequencing (Mode B → Mode A):** a vendor package whose classes `extends`
-a base interface that is not yet on `main` cannot gate until the base PR
-has merged and published (the gate resolves base from the registry). Open
-the base PR first; build the vendor package on top once it is out.
+(run by the user; the next shared release reassigns `latest` on publish)
+before re-loading. Apply to the YAML package; the `-ts` twin only needs it
+if a consumer resolves it by `latest`.
 
 Notes: org users can only queue org-private (`-rc.<org>`) loads — a plain
 catalog-semver load is 403 (platform-admin only). Org loads need
@@ -343,19 +363,13 @@ copy in `~/.m2` can shadow the release).
 
 ## Phase 6 — user verification + sign-off  ⭐
 
-**Mode A** — show the user the org-loaded schema:
+Show the user the org-loaded schema:
 - the completed org dataloader job (id + status),
 - the loaded classes and their `extends` bindings in the app (model/schema
-  browser),
+  browser) — including the package's `<Vendor>XBase` interfaces and the
+  links between them,
 - the published rc versions of BOTH npm artifacts
   (`npm view <pkg> versions` / `<pkg>-ts`).
-
-**Mode B** — there is no org artifact to show. Present the definition
-itself: a compact table of the interface (name, description, `extends`,
-properties → fields, link targets, `links.models` codes) plus the gate
-evidence (`"testDataloader": "passed"` and the `Interface '<Name>' added` /
-`validated` lines from the gate log). The interface becomes visible in the
-dev environment after the PR merges and publishes.
 
 Have them judge names, descriptions, property shapes, and link targets —
 schema mistakes are expensive later (published names can't be renamed).
@@ -366,23 +380,17 @@ stop after Phase 5 by design.
 
 ## Phase 7 — PR to main (after sign-off only)
 
-1. **Mode A:** flip ownership to the shared catalog — **delete
-   `zerobias.orgId` from `package.json`, then RE-GATE**
-   (`cd <pkg> && zbb --slot <slot> gate`): the stamp's sourceHash covers
-   `package.json`, so without a fresh gate the publish workflow rejects the
-   stamp (`source-hash-changed`) after merge. Leftover `-rc.<org>.<n>` npm
-   versions don't collide with catalog semver. **Mode B:** nothing to flip —
-   the Phase 4 stamp is the one you commit.
+1. Flip ownership to the shared catalog: **delete `zerobias.orgId` from
+   `package.json`, then RE-GATE** (`cd <pkg> && zbb --slot <slot> gate`):
+   the stamp's sourceHash covers `package.json`, so without a fresh gate
+   the publish workflow rejects the stamp (`source-hash-changed`) after
+   merge. Leftover `-rc.<org>.<n>` npm versions don't collide with catalog
+   semver.
 2. Commit — selective staging, conventional message, no co-authors:
 
 ```bash
-# Mode A
 git add package/<vendor>/<code>/
 git commit -m "feat(<vendor>-<code>): add <Name> schema"
-# Mode B
-git add package/zerobias/zerobias/base/
-git commit -m "feat(base): add <Interface> interface"
-
 git push -u origin <branch>
 ```
 
@@ -391,8 +399,10 @@ git push -u origin <branch>
 ```bash
 gh pr create --base main \
   --title "<same conventional subject>" \
-  --body "…summary (what the schema/interface models and WHY — for Mode B:
-          the generic concept, its consumers, the neighbors considered),
+  --body "…summary (what the schema models and WHY), the package-local
+          interfaces that extend base and what each ADDS to base (this is
+          the promotion review list — name each <Vendor>XBase, the
+          property/link it carries, and the unilinks toward base),
           validation checklist (gate ✓ with testDataloader passed ✓,
           gate-stamp committed ✓, org-loaded + user-verified ✓), and
           anything needing SME review (naming calls, extends choices,
@@ -400,11 +410,21 @@ gh pr create --base main \
 ```
 
 The PR is how the schema reaches the shared catalog; the org-private
-artifact from Phase 5 stays in the user's org either way. ⚠ A Mode A
-package whose base interface is still org-only must WAIT for the base PR
-to merge and publish first — CI resolves `latest` from the registry.
-An org that wants to keep a schema private simply never opens the PR —
-that IS the customer own-schema path, fully supported.
+artifact from Phase 5 stays in the user's org either way. An org that
+wants to keep a schema private simply never opens the PR — that IS the
+customer own-schema path, fully supported.
+
+### What happens at review (zb owners)
+
+Anyone with owner access on the zb org reviews the `<Vendor>XBase`
+interfaces and decides, per interface or per property, whether to
+**promote** it into base or keep it vendor-local. Promotion is zb's change,
+made on the same PR: base gains the interface/property/link, the package
+interface drops the promoted part (or is removed if now empty), the
+classes `extends` the base interface directly, and unilinks toward base
+become two-way. The contributor is told what moved; nothing to redo. The
+same two-step applies to zb's own additions — new base concepts are
+authored as a package first, seen and collected to, then promoted.
 
 ## Common issues
 
@@ -430,11 +450,15 @@ calls): re-run the identical command ONCE before diagnosing or escalating.
   id re-minted). Reuse the existing id — an existing resource cannot be
   re-keyed.
 - **`'<name>': that name is already taken by an existing resource … this
-  package does not own`** (org loads) → your org-private package collides
-  with a PUBLIC name. Pick a different name, or change the public package
-  through a PR (Mode B) — private content cannot shadow public names.
+  package does not own`** (org loads) → your package collides with a
+  PUBLIC name. Rename yours (the `<Vendor>` prefix exists for this) —
+  private content cannot shadow public names.
+- **`Left/Right link property 'x' already exists on extended class`** →
+  you redeclared a property that base already has on the interface you
+  extend. Drop it from the package interface; base has it.
 - **Dataloader rejects a link** → links must be bidirectional and target
-  an existing class/interface — see the link catalog in CLAUDE.md.
+  an existing class/interface — see the link catalog in CLAUDE.md. A link
+  from a package interface to a BASE type must be `uniLink: true`.
 - **`testDataloader` errored (not skipped)** → slot misconfigured; check
   the stack is added and the slot resolves `ZB_TOKEN`
   (`zbb --slot <slot> env get ZB_TOKEN | tail -n1` from INSIDE the repo).
@@ -446,16 +470,16 @@ calls): re-run the identical command ONCE before diagnosing or escalating.
 - **Org load rejected "greater than latest"** → the dist-tag landmine in
   Phase 5.
 - **`resolveOrgVersion: … already has catalog versions` / `doesn't fit the
-  org-publish format`** → the package is a shared catalog artifact (base, or
-  any released vendor package): it cannot be org-published, by design. Skip
-  Phase 5; gate → review → PR (the Mode B path).
+  org-publish format`** → the package is already a shared catalog artifact:
+  it cannot be org-published, by design. Extending it is a PR-only change
+  for zb review; new work goes in a new package.
 - **`zbb publishOrg` → `bash: ./gradlew: No such file or directory`** → the
   repo's `zbb.yaml` on your branch has no `lifecycle.publishOrg` (branch
   predates it); rebase onto `main`.
-- **Gate "hangs" for an hour or more** → it is loading every file of the
-  package into a remote Neon branch; base takes 1–3 h. Check the log tail
-  before assuming a hang. A Neon connection timeout / `No route to host` is
-  a network drop — re-run the identical command once.
+- **Gate seems to hang** → it is loading every file of the package into a
+  remote Neon branch. Check the log tail before assuming a hang. A Neon
+  connection timeout / `No route to host` is a network drop — re-run the
+  identical command once.
 - **`gateCheck`: `source-hash-changed` right after editing `package.json`**
   → package.json IS hashed (orgId add/remove included); re-gate.
 - **`dataloaderOrgJob` fails with `npm … 401 Unauthorized`** (server-side,
@@ -481,9 +505,9 @@ calls): re-run the identical command ONCE before diagnosing or escalating.
 
 - [`CLAUDE.md`](../../../CLAUDE.md) — Schema Definition Reference (artifact
   rules, link catalog, viewProperties, validation-error table), naming
-  rules, publish workflow.
-- [templates.md](templates.md) — exact file shapes.
-- [`CONTRIBUTING.md`](../../../CONTRIBUTING.md) — external-contributor lane
-  (fork → gate → PR; maintainers verify org-side).
+  rules, publish workflow, the extend-don't-edit rule for base.
+- [templates.md](templates.md) — exact file shapes, id recipes.
+- [`CONTRIBUTING.md`](../../../CONTRIBUTING.md) — local scratch-DB recipe
+  and the external-contributor lane (fork → gate → PR).
 - [`scripts/createNewSchema.sh`](../../../scripts/createNewSchema.sh) —
   scaffold script.

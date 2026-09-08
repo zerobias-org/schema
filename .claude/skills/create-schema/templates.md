@@ -88,26 +88,30 @@ rather than typing from memory.
 **Every file starts with `id:`** (enums/documents also `fieldId:`) — the
 dataloader refuses files without one. See [Generating ids](#generating-ids).
 
-### interfaces/<Name>.yml (PascalCase)
+### interfaces/<Vendor><Base>Base.yml (PascalCase) — extend base, don't edit it
 
 ```yaml
-id: 8f5b80d9-3429-5069-84d2-db188c6797d6   # UUIDv5(NIL, "Commit") — deterministic from the name
-description: A single revision in a source-control repository
+id: 38b71044-207d-5497-8a9d-31125bb37f08   # UUIDv5(NIL, "WizUserBase") — deterministic from the name
+description: "Wiz user: User plus the applications it second-approves"
 extends:
-  - Component
+  - User                # the base interface this refines — NEVER edit User itself
 properties:
-  - sha:
-    field: scm.sha
-  - committed:
-    field: timeCreated
-  - repo:
-    linkTo: Repository
-    required: true
+  - secondApprovedBy:   # what base lacked — a two-way link to another package interface
+    multi: true
+    linkTo: WizAppBase.id.secondApprover
+  - lastSeen:           # or a plain property base lacked
+    field: timeModified
+  - owner:              # a link TO a base type from a package interface is uniLink only
+    linkTo: Organization
+    uniLink: true
 viewProperties:
-  "SHA":
-    jsonata: sha
-    sort: sha
+  "Login":
+    jsonata: login
+    sort: login
 ```
+
+Concrete classes extend the package interface (`WizUser extends WizUserBase`), not `User`.
+At review zb may promote `secondApprovedBy` into `User`; they edit the PR, you redo nothing.
 
 ### classes/<Name>.yml (PascalCase — concrete, extends interfaces)
 
@@ -115,8 +119,8 @@ viewProperties:
 id: b746fd06-5b16-5feb-bdcd-62a48b50bafc   # UUIDv5(NIL, "GitHubRepository")
 description: Describes a GitHub Repository
 extends:
-  - Repository        # base interface — what collectors target
-  - GitHubObject      # package-local interface for shared vendor props
+  - GitHubRepositoryBase   # the package interface (extends Repository) — collectors emit THIS class
+  - GitHubObject           # package-local mixin for shared vendor props
 properties:
   - fullName:
     field: repository.fullName
@@ -136,7 +140,7 @@ type: string          # string|boolean|number|integer|date|datetime
 ```
 
 Reuse order: an existing base field → a new package field → only then a
-new base field (Mode B). Check `package/zerobias/zerobias/base/fields/`
+new package field with a `<vendor>.` prefix. Check `package/zerobias/zerobias/base/fields/`
 before minting anything.
 
 ### enums/<prefix>.<name>.yml — values MUST be ALL_CAPS

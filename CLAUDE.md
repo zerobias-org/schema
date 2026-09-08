@@ -217,7 +217,7 @@ Real examples: `package/w3geekery/smemart/classes/Bid.yml`,
 
 Interfaces define shared property contracts that classes and other interfaces extend. They enable
 polymorphism — and on this platform they are the primary integration surface (see
-[Extending the base schema](#extending-the-base-schema--interfaces-first)).
+[Extending the base schema](#extending-the-base-schema--extend-it-in-your-package-never-edit-it)).
 
 **Filename:** PascalCase matching the interface name (e.g. `Account.yml`).
 
@@ -548,8 +548,9 @@ This is the schema half of "segment declarations create schema obligations": a p
 under a segment must yield objects of the interfaces that segment is `modeled_by`. The annotation
 pass currently lives on the `dev` branch (19 base interfaces, e.g.
 `git show origin/dev:package/zerobias/zerobias/base/interfaces/Repository.yml`) and lands on `main`
-with the next base publish. When adding a base interface, include a `models` block if the matching
-segment/feature codes exist in the catalog.
+with the next base publish. When declaring a `<Vendor><Base>Base` interface that may be promoted,
+include a `models` block if the matching segment/feature codes exist in the catalog — it travels
+with the interface into base.
 
 ### How the dataloader processes a schema package
 
@@ -599,53 +600,68 @@ Three behaviors to internalize:
 | `'<name>': it already exists as <id>, but this artifact declares id <other>` | Name already loaded under another id (renamed file, re-minted id) | Reuse the existing id — an existing resource cannot be re-keyed |
 | `'<name>': that name is already taken by an existing resource … this package does not own` | Org-private load collides with a public name | Pick a different name, or change the public package via PR — private content cannot shadow public names |
 
-## Extending the base schema — interfaces first
+## Extending the base schema — extend it in your package, never edit it
 
 The base schema — `package/zerobias/zerobias/base` — is **interface-heavy by design**: 125+
 interfaces (`Account`, `Asset`, `Repository`, `Application`, `Backup`, `Pipeline`, …) and only a
-handful of concrete classes. That is not an accident; it is how data reaches the platform:
+handful of concrete classes. Vendor packages give those interfaces concrete classes; the interfaces
+give the vendor data its generic meaning (a `WizUser` *is a* `User` for every base-level consumer).
+Collectors emit the package's **concrete classes**, not interfaces — anyone can generate the classes
+they need, so interface-targeting is not the path.
 
-- **Collectors and modules target base interfaces, not concrete classes.** A collector for a new
-  product declares the interface(s) it emits (`Backup`, `Principal`, `Repository`, …) and ships
-  data immediately — no vendor schema package required first.
-- **The platform materializes a `Dynamic<Interface>` concrete class per interface** (e.g.
-  `DynamicBackup` for `Backup`), routed by a discriminator field on the emitted objects — so
-  interface-targeted data has a concrete home from day one.
-- **Vendor concrete classes come later**, once the data shape stabilizes: they `extends` the base
-  interface (plus an optional vendor mixin) and take over from the dynamic class.
-- **Segment declarations create schema obligations.** A product categorized under a segment must be
-  able to yield the objects that segment implies ("a backup tool better give me a list of
-  backups"). The base interface *is* that contract, and
-  [`links.models`](#linksmodels--interface--segment--compliance-feature-pre-release-on-dev) wires
-  each interface to the segment/compliance-feature codes it models.
+**Nobody edits base in a contribution PR — zb staff included.** Two platform facts force this: an
+already-published package cannot take a `zerobias.orgId` and be org-published (build-tools:
+"Org publish is for artifacts that exist only inside your org"), and the dataloader refuses
+org-private content that shadows public names. A new package has neither problem. So:
 
-**When a generic concept is missing from `package/zerobias/zerobias/base/interfaces/`, the right
-move — for agents and humans alike — is to add a new interface to the base schema and open a PR to
-`main`.** This is the default path, not an exception: base grows exactly this way (recent
-additions: `AuditLogEntry`, `PipelineRun`, `SoftwarePackage`, `PackageRegistry`). Do not park a
-generic concept in a vendor package because a base PR feels heavyweight — it isn't, and a generic
-interface hidden inside a vendor package is invisible to every other integration. The
-[`create-schema` skill](.claude/skills/create-schema/SKILL.md) covers this flow end to end.
+**When base lacks an interface, a property or a link, declare it in your package as an interface
+that `extends` the base one, and make your concrete classes extend that.** Name it
+`<Vendor><Base>Base` when `<Vendor><Base>` is the concrete class.
+
+```yaml
+# interfaces/WizAppBase.yml        # interfaces/WizUserBase.yml       # classes/WizUser.yml
+extends: [App]                     extends: [User]                    extends: [WizUserBase]   # not User
+properties:                        properties:
+  - secondApprover:                  - secondApprovedBy:
+    linkTo: WizUserBase.id.secondApprovedBy    multi: true
+                                       linkTo: WizAppBase.id.secondApprover
+```
+
+| Base lacks… | In your package |
+|---|---|
+| a property on `User` | `WizUserBase extends User` + the property |
+| a link `User ↔ App` | `WizUserBase ↔ WizAppBase`, a normal two-way link, both ends in the package |
+| a generic interface (`Finding`) | `WizFindingBase extends Object` (or the nearest base interface) |
+| a link from that interface to a **base** type | `uniLink: true` on your side only — base never links back to a package |
+
+The data works end to end at the interface level for you, immediately. **Promotion into base is a
+zb-owner decision at PR review**: per interface or property, zb either promotes it — editing the
+same PR so base gains it, your interface drops it, your classes extend base directly and unilinks
+become two-way — or keeps it vendor-local. Nothing for you to redo. zb's own new base concepts take
+the same two steps (package first, promote later), so a schema is seen and collected to before it is
+shared.
 
 ### Where a new type belongs
 
 | You are adding | Put it in |
 |---|---|
-| A generic concept any vendor could yield (audit-log entry, pipeline run, secret, ticket) | **New base interface** → PR to `main` |
-| Vendor-specific properties/links over an existing concept | Concrete class (+ optional vendor mixin interface) in `package/<vendor>/…` |
-| Properties shared only across one vendor's classes | Vendor mixin interface in that vendor's package |
-| Org-internal types that should not enter the public catalog | Your own schema package in your fork, loaded into **your org** via `publishOrg` — no PR needed |
+| A generic concept any vendor could yield (audit-log entry, pipeline run, secret, ticket) | `interfaces/<Vendor><Concept>Base.yml` in **your package**, extending the nearest base interface; zb may promote it |
+| Vendor-specific properties/links over an existing concept | `<Vendor><Base>Base extends <Base>` in your package; concrete classes extend it |
+| Properties shared only across one vendor's classes | The same vendor interface (it is the mixin) |
+| Org-internal types that should not enter the public catalog | Your own schema package, loaded into **your org** via `publishOrg` — no PR needed |
 
-### Designing a base interface
+### Designing a package interface that may be promoted
+
+Write it as if it were already in base, so promotion is a move, not a rewrite:
 
 - Model the **concept**, not one vendor's API. Property names stay generic; prefer existing base
   fields (`name`, `email`, `url`, `timeCreated`, …) over minting new ones.
-- `extends` other base interfaces where a real hierarchy exists (`Account extends Principal`);
-  keep chains shallow.
+- `extends` the base interface the concept refines; keep chains shallow.
 - `description` is required; add `viewProperties` for the columns a human would want.
+- Links to base types are `uniLink: true`; links between your own interfaces are two-way.
 - Add a `links: models:` block when matching segment/compliance-feature codes exist (see above).
 
-### Blast radius of touching base
+### Blast radius of touching base (zb owners, at promotion)
 
 Every schema package (and every collector) depends on base, so:
 
@@ -658,13 +674,9 @@ Every schema package (and every collector) depends on base, so:
 - **Never redefine a published field's type** or rewrite enum values in place — collected data
   already conforms to them.
 - **Version bumps are CI's job** (single-writer on main). No manual bumps in the PR.
-
-### Targeting an interface from a collector or concrete class
-
-Concrete classes target interfaces through `extends` (multiple inheritance supported — base
-interface + vendor mixin). Collectors declare the interface they emit and stamp each object with a
-discriminator field (e.g. `principalType`) that routes it into the interface's dynamic class until
-a concrete class exists.
+- **Promotion edits the contributor's PR**: move the interface/property/link into base, drop it from
+  the package interface, point the classes at base, flip unilinks to two-way. Base is gated once
+  (1–3 h); the package still gates in minutes.
 
 ## Validation
 
@@ -702,10 +714,11 @@ needed).
 
 ## Creating a new schema package
 
-Say "add a schema for X" / "add an interface for Y" (or run `/create-schema`) —
-the [create-schema skill](.claude/skills/create-schema/SKILL.md) handles the
-whole org-first flow, for vendor schema packages AND base-interface additions;
-a ZeroBias task id is optional.
+Say "add a schema for X" / "we need a link between A and B" (or run
+`/create-schema`) — the [create-schema skill](.claude/skills/create-schema/SKILL.md)
+handles the whole org-first flow for a vendor schema package, including the
+`<Vendor><Base>Base` interfaces that carry what base lacks; a ZeroBias task id
+is optional.
 
 Hard prerequisites live in the
 [`prerequisites` skill](.claude/skills/prerequisites/SKILL.md) — run
@@ -717,13 +730,13 @@ substitute tooling, no alternative paths).
 The content SDLC (the skill owns the details — don't restate them here):
 
 1. scaffold → author → `zbb --slot <slot> gate` (never bare `./gradlew`) → commit `gate-stamp.json`
-2. **new packages only:** `publishOrg` (org-private rc `X.Y.Z-rc.<orgId>.<n>` + org dataloader load) → verify in YOUR org → 🙋 explicit user sign-off → delete `zerobias.orgId` → re-gate
+2. `publishOrg` (org-private rc `X.Y.Z-rc.<orgId>.<n>` + org dataloader load) → verify in YOUR org → 🙋 explicit user sign-off → delete `zerobias.orgId` → re-gate
 3. only then PR → base **`main`**
 
-**Base changes (new interfaces) and extensions of already-published packages are PR-only:** org
-publish is refused for any package that already has catalog versions ("Org publish is for artifacts
-that exist only inside your org"). Their verification is the gate plus review of the YAML; the change
-becomes visible in the dev environment after the PR merges and publishes.
+**Base is never edited in a contribution PR.** What base lacks is declared in your package as a
+`<Vendor><Base>Base` interface extending base (see [Extending the base schema](#extending-the-base-schema--extend-it-in-your-package-never-edit-it));
+zb owners promote at review. Extensions of any already-published package are likewise PR-only
+changes for zb review — org publish is refused for packages with catalog versions.
 
 **No ZeroBias org?** (external contributors): stop after the gate and open the
 PR against `main` — maintainers run the org verification on their side. See

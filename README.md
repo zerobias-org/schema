@@ -17,12 +17,13 @@ Opening a PR afterwards is how you *share* the schema with everyone else — opt
 models, encouraged for anything generic. The `/create-schema` skill drives the whole flow; see
 [`CONTRIBUTING.md`](CONTRIBUTING.md) (Lane 2) and [`CLAUDE.md`](CLAUDE.md).
 
-**Base-interface PRs are welcome.** The base schema
+**Don't edit the base schema — extend it in your package.** The base schema
 ([`package/zerobias/zerobias/base`](package/zerobias/zerobias/base)) is deliberately
-interface-heavy — collectors target its interfaces, and the platform materializes dynamic concrete
-classes at ingest. If a generic concept is missing (an audit-log entry, a pipeline run, …), the
-right move is to add a new interface to base and PR it to `main` — see
-[`CLAUDE.md` → Extending the base schema](CLAUDE.md#extending-the-base-schema--interfaces-first).
+interface-heavy; your concrete classes `extends` its interfaces, and your collector emits your
+classes. If base lacks an interface, a property or a link, declare a `<Vendor><Base>Base` interface
+in your package that extends the base one and carries the addition (links toward base types are
+`uniLink` only); zb owners decide at PR review whether to promote it into base — see
+[`CLAUDE.md` → Extending the base schema](CLAUDE.md#extending-the-base-schema--extend-it-in-your-package-never-edit-it).
 
 ## Local development
 
