@@ -1,0 +1,5 @@
+id: 0f554c30-ed23-4216-b91d-bb309a932ed9
+example: 0.7
+description: "Fraction of the space the device is declared to cover, 0 to 1"
+displayName: "Coverage Fraction"
+type: number

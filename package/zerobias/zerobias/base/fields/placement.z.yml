@@ -1,0 +1,5 @@
+id: a88c5574-fb18-45cf-bb79-2811a245b857
+example: 1.2
+description: "Offset along the parent's z axis, metres"
+displayName: "Z"
+type: number

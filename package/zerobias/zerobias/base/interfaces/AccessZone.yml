@@ -3,6 +3,7 @@ description: A logical grouping of access points within a site, representing are
 extends:
   - Asset
   - Resource
+  - PhysicalObject
 properties:
   - capacity:
     field: accessZone.capacity

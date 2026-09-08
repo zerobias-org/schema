@@ -1,0 +1,5 @@
+id: 39697f0c-2097-45e6-924a-c5fa558e0167
+example: 10
+description: "Reach of a CONE along the owner's facing direction, metres"
+displayName: "Range"
+type: number

@@ -1,0 +1,5 @@
+id: 2a546af1-18e3-4883-aee5-9b4ce3a96076
+example: 7.2
+description: "Metres above the site datum where this plan's z = 0 lies"
+displayName: "Floor Elevation"
+type: number

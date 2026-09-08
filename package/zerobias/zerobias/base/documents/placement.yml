@@ -1,0 +1,19 @@
+id: 73be81c3-2da9-4a2d-804a-160802060157
+fieldId: c0cec10a-c1b9-4522-af99-d2aaf6528190
+description: "Position and orientation of an object in its parent's frame: metres, degrees, right-handed, z up. Carried on the placedIn / contains link (t3)."
+displayName: "Placement"
+properties:
+  - x:
+    field: placement.x
+  - y:
+    field: placement.y
+  - z:
+    field: placement.z
+  - yaw:
+    field: placement.yaw
+  - pitch:
+    field: placement.pitch
+  - roll:
+    field: placement.roll
+  - slot:
+    field: placement.slot

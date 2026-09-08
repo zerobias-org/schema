@@ -1,0 +1,5 @@
+id: ac8b5fbd-85bf-4930-81a1-4452ebc99afa
+example: 2
+description: "Storey number for FLOOR spaces; 0 is ground, negative is below"
+displayName: "Level"
+type: integer

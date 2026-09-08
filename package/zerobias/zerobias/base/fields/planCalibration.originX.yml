@@ -1,0 +1,5 @@
+id: 59220dfa-80fb-41c3-a7b6-c5b64188876e
+example: 60
+description: "Pixel column of the space's origin in the drawing"
+displayName: "Origin X"
+type: number

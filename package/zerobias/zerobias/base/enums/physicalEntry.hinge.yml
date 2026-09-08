@@ -1,0 +1,9 @@
+id: 5cccf050-25f0-4638-9737-138aeccba76b
+fieldId: fdabd2c0-6da7-4d2a-a58e-bee1ed27a08a
+description: "Side the leaf is hung on, seen from the space this opening link belongs to"
+displayName: "Hinge"
+values:
+  - LEFT: "Hinges on the left"
+  - RIGHT: "Hinges on the right"
+  - TOP: "Hung from the top: sectional overhead, roll-up, awning window"
+  - NONE: "No hinge: sliding, revolving, fixed, no leaf"

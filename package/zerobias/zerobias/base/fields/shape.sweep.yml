@@ -1,0 +1,5 @@
+id: 5e73f679-9f63-408b-8841-6b50d613ae74
+example: 110
+description: "Total angle of a SECTOR, degrees"
+displayName: "Sweep"
+type: number

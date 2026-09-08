@@ -1,0 +1,11 @@
+id: 0b4e0c8f-29f2-49f4-acd9-0adb698d82fc
+fieldId: d31cd413-3c2a-4f63-b3f1-8ab381347718
+description: "How an opening relates to one of the spaces it joins: which side that space is on, and how the leaf hangs and opens seen from it. Carried on the connects / openings link (t3), because a door's inside is the other room's outside."
+displayName: "Opening"
+properties:
+  - side:
+    field: openingSide
+  - hinge:
+    field: physicalEntry.hinge
+  - swing:
+    field: physicalEntry.swing

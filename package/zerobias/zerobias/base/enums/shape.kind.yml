@@ -1,0 +1,11 @@
+id: 332539d5-b411-4d04-b3d7-352038096359
+fieldId: be748d02-fe07-468e-8e7c-0830397692c2
+description: "Geometry of a shape; every shape is a volume, the plan view is its projection"
+displayName: "Shape Kind"
+values:
+  - POLYGON: "Prism: closed outline from vertices, extruded zMin to zMax"
+  - CIRCLE: "Cylinder of radius r, from zMin to zMax"
+  - SECTOR: "Wedge of a cylinder: radius, heading, sweep, zMin to zMax"
+  - CONE: "Frustum along the owner's facing direction: range, heading, hFov, vFov"
+  - BOX: "Box in the owner's frame: width, depth, height, standing on z = 0"
+  - SPHERE: "Ball of radius r centred on the owner's origin"

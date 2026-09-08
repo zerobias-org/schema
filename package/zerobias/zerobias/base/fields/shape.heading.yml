@@ -1,0 +1,5 @@
+id: 7bca5cda-9824-4523-b3b2-23bc2765500a
+example: 0
+description: "Direction of a SECTOR or CONE, degrees relative to the owner's yaw (normally 0)"
+displayName: "Heading"
+type: number

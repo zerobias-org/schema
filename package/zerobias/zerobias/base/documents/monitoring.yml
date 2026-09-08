@@ -1,0 +1,9 @@
+id: 538ef2aa-aebc-45f7-8214-a27bb441d5c2
+fieldId: 3e1c7aa2-cbee-4ef4-87b3-1b5714a3a5f1
+description: "What a device is declared to see or sense in a space. Carried on the monitors / monitoredBy link (t3)."
+displayName: "Monitoring"
+properties:
+  - level:
+    field: monitoring.level
+  - coverageFraction:
+    field: monitoring.coverageFraction

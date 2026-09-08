@@ -1,0 +1,14 @@
+id: 8dc05216-5a89-4a19-8c8a-e5a483e1762d
+fieldId: 48b50915-5036-4b58-aff2-31460c39a32c
+description: "What kind of body a physical object is; devices, openings and spaces have their own interfaces"
+displayName: "Physical Object Kind"
+values:
+  - EQUIPMENT: "Server, switch, UPS, printer or other equipment"
+  - NETWORK_DEVICE: "Access point, router or other network device"
+  - FURNITURE: "Desk, chair, shelving"
+  - FIXTURE: "Fixed installation such as lighting or plumbing"
+  - CONTAINER: "Box, crate or bin"
+  - SAFETY_EQUIPMENT: "Fire extinguisher, first-aid kit, AED"
+  - SIGNAGE: "Sign or label"
+  - VEHICLE: "Vehicle"
+  - OTHER: "Other"

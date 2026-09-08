@@ -1,0 +1,9 @@
+id: 8865d9ce-9066-479b-998c-44345542c73b
+fieldId: 29b648a4-890a-426b-90a7-d619c2cb653e
+description: "What a monitoring device can establish about what it sees or senses (IEC 62676-4 for cameras)"
+displayName: "Monitoring Level"
+values:
+  - PRESENCE: "Something is there"
+  - DETECTION: "A person or event can be detected"
+  - RECOGNITION: "A known person or object can be recognised"
+  - IDENTIFICATION: "An individual can be identified"

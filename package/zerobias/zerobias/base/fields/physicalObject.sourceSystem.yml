@@ -1,0 +1,5 @@
+id: d13b6526-66c0-41e4-a044-3d6ae10f6227
+example: "verkada"
+description: "System the object was collected from, e.g. ifc, nlyte, verkada, zerobias-app"
+displayName: "Source System"
+type: string

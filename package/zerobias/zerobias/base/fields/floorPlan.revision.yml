@@ -1,0 +1,5 @@
+id: f82c8fbf-ec09-4da2-8bc0-e352f52134ea
+example: "Rev C"
+description: "Drawing revision as issued"
+displayName: "Revision"
+type: string

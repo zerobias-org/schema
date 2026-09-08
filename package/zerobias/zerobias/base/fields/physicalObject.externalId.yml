@@ -1,0 +1,6 @@
+id: 1286d678-8566-40cb-a030-59de2e9874f4
+example: "verkada:cam_8f3a"
+description: "The source system's identifier for this object (IfcGUID, DCIM id, device id)"
+displayName: "External ID"
+type: string
+keyed: true

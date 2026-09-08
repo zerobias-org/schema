@@ -1,0 +1,5 @@
+id: f1bc47c3-6b58-4d82-9c95-1cd8c460ae3b
+example: 5
+description: "Radius of a CIRCLE, SECTOR or SPHERE, metres"
+displayName: "Radius"
+type: number

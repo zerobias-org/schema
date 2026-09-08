@@ -1,0 +1,32 @@
+id: 79270295-502b-576b-84bc-82faa8608d62
+description: "A drawing of a space and the calibration that maps it onto the space's frame. The plan's name is the drawing number as issued."
+links:
+  models:
+    - c_physical
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Space":
+    jsonata: space.name
+  "Revision":
+    jsonata: revision
+    sort: revision
+  "Scale":
+    jsonata: calibration.pixelsPerMetre & " px/m"
+properties:
+  - format:
+    field: floorPlan.format
+  - revision:
+    field: floorPlan.revision
+  - issued:
+    field: timeIssued
+  - calibration:
+    field: planCalibration
+# Links
+  - space:
+    linkTo: PhysicalSpace.id.plan
+    required: true
+  - file:
+    linkTo: File
+    uniLink: true

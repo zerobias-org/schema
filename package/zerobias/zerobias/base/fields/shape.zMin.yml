@@ -1,0 +1,5 @@
+id: 636417f6-d29e-4dca-95fe-38e6a525fd61
+example: -2.9
+description: "Bottom of a prism shape, metres, relative to the owner's origin"
+displayName: "Z Min"
+type: number

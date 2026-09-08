@@ -1,0 +1,40 @@
+id: c4faad22-0bd5-5159-ae70-6975d5685092
+description: "A physical object that contains others: site, building, floor, room, zone, rack. Its frame is what children are placed in; its plan says how that frame maps onto a drawing."
+extends:
+  - PhysicalObject
+  - Location
+links:
+  models:
+    - c_physical
+    - s_facilityaccess
+    - s_envmon
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Type":
+    jsonata: spaceType
+    sort: spaceType
+  "Level":
+    jsonata: level
+    sort: level
+  "Openings":
+    jsonata: $count(openings)
+  "Contains":
+    jsonata: $count(contains)
+properties:
+  - spaceType:
+    field: physicalSpace.type
+  - level:
+    field: physicalSpace.level
+# Links
+  - plan:
+    linkTo: FloorPlan.id.space
+  - openings:
+    multi: true
+    linkTo: PhysicalEntry.id.connects
+    t3: opening
+  - monitoredBy:
+    multi: true
+    linkTo: SecurityDevice.id.monitors
+    t3: monitoring

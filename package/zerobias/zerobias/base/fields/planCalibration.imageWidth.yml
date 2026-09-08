@@ -1,0 +1,5 @@
+id: 65214fc8-7a96-491b-bae2-372a333e2831
+example: 840
+description: "Drawing width in pixels"
+displayName: "Image Width"
+type: integer

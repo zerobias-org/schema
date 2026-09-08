@@ -1,0 +1,12 @@
+id: 1f0b6b56-4e6a-4faa-a207-14a46424da8f
+fieldId: 12b02ce6-4816-4374-b22c-e4d57c93a878
+description: "How a physical object is mounted"
+displayName: "Mount"
+values:
+  - CEILING: "Mounted on the ceiling, facing down"
+  - WALL: "Mounted on a wall, facing away from it"
+  - FLOOR: "Standing on or mounted to the floor"
+  - POLE: "Mounted on a pole or mast"
+  - RACK: "Mounted in a rack"
+  - DESK: "Placed on a desk or table"
+  - OTHER: "Other"

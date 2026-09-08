@@ -1,0 +1,5 @@
+id: dbf0b575-6db0-4c3e-9899-0aa8e9ac417b
+example: 400
+description: "Pixel row of the space's origin in the drawing (image y grows downward)"
+displayName: "Origin Y"
+type: number
