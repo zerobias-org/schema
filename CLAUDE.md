@@ -804,6 +804,9 @@ not substitute a different registry config. Auth comes from the environment (`ZB
   `main` publishes `latest` and is the default branch. After a main publish the sync workflow
   propagates main → uat → qa → dev. The promotion-order check warns on PRs that skip a step —
   never PR a feature branch straight at `qa`, `uat` or `main`.
+- **Exception — non-package work** (skills, docs, scripts, `zbb.yaml`, workflows) may PR
+  straight to `main`: nothing publishes, and the sync carries it down to `dev`. The advisory
+  comment the promotion check leaves on such a PR is expected.
 
 ## Authentication
 - Set `ZB_TOKEN` environment variable for NPM registry authentication (the slot provides it — see
@@ -886,7 +889,7 @@ zb.package:    {vendor}.{code}.schema
 - `npm install` at the repo root only refreshes the lockfile for the commitlint dev deps. Commitlint
   is configured (`.commitlintrc.json`), but there is no `.husky/` directory and no `prepare` script,
   so **nothing enforces commit-message format locally** — follow the convention by hand.
-- **All PRs target `dev`** — `qa`/`uat`/`main` are promotion targets reached by merging up the chain (see [Branches](#branches)), never feature-PR bases.
+- **Package PRs target `dev`**; non-package work (skills, docs, scripts) may go straight to `main` — see [Branches](#branches).
 - Versions are managed by gradle (`zbb version`), not by hand. New packages scaffold at `1.0.0`;
   packages migrated from the old lerna flow took a major bump on their first gradle publish, so
   live versions are `2.x` / `3.x`.
