@@ -4,7 +4,7 @@ description: >-
   Create a vendor/product schema package (concrete classes + package-local
   interfaces) and take it through the full content SDLC — scaffold/author →
   gradle gate → publishOrg + org load → user verifies in their org → PR to
-  main only after explicit sign-off. Anything the base schema lacks (an
+  dev only after explicit sign-off. Anything the base schema lacks (an
   interface, a property, a link) is declared IN THE PACKAGE as a
   `<Vendor><Base>Base` interface extending base; the base itself is never
   edited by contributors — zb owners promote at review. USE THIS when the
@@ -19,19 +19,19 @@ description: >-
 Schema packages define the AuditgraphDB object model (classes, interfaces,
 fields, enums, documents) that the dataloader loads and that collectors
 emit into. This skill delivers a **new schema package org-first**: the
-deliverable is the schema loaded into the user's own org; the PR to `main`
+deliverable is the schema loaded into the user's own org; the PR to `dev`
 happens only after the user signs off on the org-loaded result.
 
 ```
 Phase 0 prerequisites (hard gate — /prerequisites must report READY)
 Phase 1 resolve + existence check (names, dependency chain, dupes)
-Phase 2 branch (from main)
+Phase 2 branch (from dev)
 Phase 3 scaffold + author          ← id: on EVERY file; zerobias.orgId BEFORE the gate;
                                      base gaps → <Vendor>XBase interfaces, never base edits
 Phase 4 local scratch DB, then gate ← git add BEFORE gating
 Phase 5 publishOrg + org load      ← YAML package AND its -ts twin
 Phase 6 user verifies org artifact ← 🙋 explicit sign-off required
-Phase 7 PR --base main             ← drop orgId + RE-GATE first
+Phase 7 PR --base dev              ← drop orgId + RE-GATE first
         └─ zb review: promote package interfaces into base, or keep them vendor-local
 ```
 
@@ -131,16 +131,18 @@ concept is usually there or nearly there. Also skim
 `package/zerobias/zerobias/base/fields/` for reusable fields. What you
 find decides Phase 3: extend directly, or extend-and-add.
 
-## Phase 2 — branch first (never commit on main)
+## Phase 2 — branch first (never commit on dev or main)
 
 ```bash
 git fetch origin
-git switch -c feat/schema-<vendor>-<code> origin/main
+git switch -c feat/schema-<vendor>-<code> origin/dev
 ```
 
-**This repo's PRs target `main`** — `main` is the default branch and the
-publish workflow's sync job propagates main → uat → qa → dev. Branch from
-`origin/main`, PR back to `main`.
+**This repo's PRs target `dev`** — the bottom of the promotion chain
+`dev → qa → uat → main`. A merge to `dev` publishes the `dev` prerelease line
+(dist-tag `dev`); promotion up the chain is a later, separate merge, and only
+`main` publishes `latest`. The promotion-order check warns on any PR that
+skips a step. Branch from `origin/dev`, PR back to `dev`.
 
 ## Phase 3 — scaffold + author
 
@@ -156,7 +158,9 @@ names, and writes the `build.gradle.kts` marker (`plugins { id("zb.schema") }`)
 required for gradle discovery. You fill `{name}` / `{description}` in
 `catalog.yml` and `package.json`. **Verify the scaffold immediately**:
 `ls -A package/<path>` must show `package.json`, `catalog.yml`, `.npmrc`
-(dotfile!), `build.gradle.kts`. Exact file shapes: [templates.md](templates.md).
+(dotfile!), `build.gradle.kts`. The scaffolded `package.json` already
+carries `"registry": "https://pkg.zerobias.org/"` and an `orgId`
+placeholder (filled below). Exact file shapes: [templates.md](templates.md).
 
 ### Author the definitions
 
@@ -240,8 +244,11 @@ two-way. Nothing for the contributor to redo.
 
 ### Set the org target BEFORE the first gate
 
-**Set `zerobias.orgId: "<target-org-uuid>"` in the package's
-`package.json` now.** With orgId present the gate's dataloader step seeds
+**Replace the scaffolded `zerobias.orgId: "{target-org-uuid}"` in the
+package's `package.json` with the real org UUID now** (`zbb --slot <slot>
+env get ZB_ORG_ID | tail -n1` from inside the repo). A leftover placeholder
+fails the gate (`zerobias.orgId "{target-org-uuid}" is not a valid UUID`).
+With orgId present the gate's dataloader step seeds
 your org into the ephemeral branch and runs org-scoped, matching how
 org-scoped tokens authorize. ⚠ The gate-stamp's sourceHash DOES cover
 `package.json`: deleting orgId later (Phase 7) invalidates the stamp, so
@@ -317,7 +324,7 @@ shared catalog involved. Publishing re-runs the dataloader step to
 regenerate the TS twin, so budget the same time as the gate. `zbb
 publishOrg` needs `lifecycle.publishOrg` in the repo's `zbb.yaml` — on a
 branch that predates it, zbb falls back to the meta-repo and dies with
-`bash: ./gradlew: No such file or directory`; rebase onto `main`.
+`bash: ./gradlew: No such file or directory`; rebase onto `dev`.
 
 1. Confirm `"zerobias": { …, "orgId": "<org-uuid>" }` is in the package's
    `package.json` — set in Phase 3, where it belongs.
@@ -378,7 +385,7 @@ schema mistakes are expensive later (published names can't be renamed).
 sign-off — if unclear, ask. Headless runs never reach this phase — they
 stop after Phase 5 by design.
 
-## Phase 7 — PR to main (after sign-off only)
+## Phase 7 — PR to dev (after sign-off only)
 
 1. Flip ownership to the shared catalog: **delete `zerobias.orgId` from
    `package.json`, then RE-GATE** (`cd <pkg> && zbb --slot <slot> gate`):
@@ -394,10 +401,10 @@ git commit -m "feat(<vendor>-<code>): add <Name> schema"
 git push -u origin <branch>
 ```
 
-3. PR against **main**:
+3. PR against **dev**:
 
 ```bash
-gh pr create --base main \
+gh pr create --base dev \
   --title "<same conventional subject>" \
   --body "…summary (what the schema models and WHY), the package-local
           interfaces that extend base and what each ADDS to base (this is
@@ -475,7 +482,7 @@ calls): re-run the identical command ONCE before diagnosing or escalating.
   for zb review; new work goes in a new package.
 - **`zbb publishOrg` → `bash: ./gradlew: No such file or directory`** → the
   repo's `zbb.yaml` on your branch has no `lifecycle.publishOrg` (branch
-  predates it); rebase onto `main`.
+  predates it); rebase onto `dev`.
 - **Gate seems to hang** → it is loading every file of the package into a
   remote Neon branch. Check the log tail before assuming a hang. A Neon
   connection timeout / `No route to host` is a network drop — re-run the

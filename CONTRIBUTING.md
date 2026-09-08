@@ -7,11 +7,12 @@ lanes end to end — just say "add a schema for X" in Claude Code.
 
 | Lane | You have | Flow |
 |---|---|---|
-| **1 — fork** | A GitHub account | author → gate → cross-fork PR against `main`; maintainers run the org-side verification |
-| **2 — org-first** | A ZeroBias platform org | author → gate → `publishOrg` → load + verify in YOUR org → PR against `main` |
+| **1 — fork** | A GitHub account | author → gate → cross-fork PR against `dev`; maintainers run the org-side verification |
+| **2 — org-first** | A ZeroBias platform org | author → gate → `publishOrg` → load + verify in YOUR org → PR against `dev` |
 
-Either way, PRs target **`main`** — the `dev`/`qa`/`uat` branches are
-environment branches kept in sync by the publish workflow, never PR bases.
+Either way, PRs target **`dev`** — the bottom of the promotion chain
+`dev → qa → uat → main`. `qa`/`uat`/`main` are reached by promoting upward,
+never by a feature PR.
 
 ## Lane 2 — ZeroBias platform users (org-first delivery)
 
@@ -37,7 +38,7 @@ redo). See `CLAUDE.md` → Extending the base schema.
 
 2. In the session, say **"add a schema for \<X\>"** (or run `/create-schema`).
    The skill runs the full SDLC: scaffold → gate → `publishOrg` (org-private
-   load) → you verify the org artifact → sign-off → PR against `main`. Step 0
+   load) → you verify the org artifact → sign-off → PR against `dev`. Step 0
    is the [`prerequisites` skill](.claude/skills/prerequisites/SKILL.md) — a
    missing tool/credential gets installed or waited for, never worked around.
 
@@ -258,7 +259,7 @@ If either condition is unmet, the dataloader job is **skipped**.
 
 Only ZeroBias maintainers can add the `approved` label. External contributors cannot self-approve. The expected flow is:
 
-1. You open the PR against `main`.
+1. You open the PR against `dev`.
 2. A maintainer reviews the changes.
 3. The maintainer adds the `approved` label.
 4. CI runs. The job appears as `Test` in the PR's checks.
@@ -315,11 +316,11 @@ Before opening a PR:
   - [ ] Connection env vars are exported (`PGHOST`, `PGPORT=15432`, `PGUSER`, `PGPASSWORD`, `PGDATABASE=content_dev`, `PGSSLMODE=disable`).
   - [ ] `dataloader --content-dev --skip-pgboss --skip-dynamo -d ./` ends with `Importer finished successfully` and exit code `0`.
 - [ ] Commit follows Conventional Commits (`feat:`, `fix:`, `docs:`, …).
-- [ ] PR is opened **cross-fork** against `zerobias-org/schema:main`, not against your fork's `main`. From a fork checkout, the explicit command is:
+- [ ] PR is opened **cross-fork** against `zerobias-org/schema:dev`, not against your fork's `dev`. From a fork checkout, the explicit command is:
   ```sh
   gh pr create \
     --repo zerobias-org/schema \
-    --base main \
+    --base dev \
     --head <your-fork-owner>:<your-branch> \
     --title "..." \
     --body "..."

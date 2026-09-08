@@ -24,7 +24,7 @@ constraints, viewProperties, validation errors) live in the repo
     "url": "git@github.com:zerobias-org/schema.git",
     "directory": "package/<v>/<c>/"
   },
-  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
+  "publishConfig": { "registry": "https://pkg.zerobias.org/" },
   "files": [
     "classes/**", "interfaces/**", "fields/**", "documents/**", "enums/**",
     "catalog.yml", "README.md"
@@ -43,9 +43,10 @@ constraints, viewProperties, validation errors) live in the repo
     "imports": [
       "zerobias.zerobias.platform.schema",
       "zerobias.zerobias.base.schema"
-    ]
-    // + "orgId": "<target-org-uuid>" during the org-first flow (Phase 3);
-    //   DELETED again before the PR (Phase 7)
+    ],
+    "orgId": "{target-org-uuid}"                 // scaffolded placeholder — replace with
+                                                 // your org UUID (Phase 3); DELETE the
+                                                 // line before the PR (Phase 7), then re-gate
   }
 }
 ```

@@ -2,7 +2,7 @@
 
 Open-source AuditgraphDB schema packages for the ZeroBias platform.
 
-This monorepo hosts schema definitions (classes, interfaces, fields, documents, enums) that are published to npm and loaded into AuditgraphDB by the dataloader. All PRs target **`main`** (`dev`/`qa`/`uat` are environment branches synced automatically after each main publish).
+This monorepo hosts schema definitions (classes, interfaces, fields, documents, enums) that are published to npm and loaded into AuditgraphDB by the dataloader. All PRs target **`dev`** (bottom of the promotion chain `dev → qa → uat → main`; `main` publishes `latest` and is synced back down after each publish).
 
 - **Build pipeline:** gradle + [`zbb-publish-reusable`](https://github.com/zerobias-org/devops/blob/main/.github/workflows/zbb-publish-reusable.yml) (no lerna / no nx)
 - **Per-package plugin:** [`zb.schema`](https://github.com/zerobias-org/util/blob/main/packages/build-tools/src/main/kotlin/zb.schema.gradle.kts) — extends `zb.content` with TS-twin generation against an ephemeral Neon Postgres branch

@@ -731,7 +731,7 @@ The content SDLC (the skill owns the details — don't restate them here):
 
 1. scaffold → author → `zbb --slot <slot> gate` (never bare `./gradlew`) → commit `gate-stamp.json`
 2. `publishOrg` (org-private rc `X.Y.Z-rc.<orgId>.<n>` + org dataloader load) → verify in YOUR org → 🙋 explicit user sign-off → delete `zerobias.orgId` → re-gate
-3. only then PR → base **`main`**
+3. only then PR → base **`dev`**
 
 **Base is never edited in a contribution PR.** What base lacks is declared in your package as a
 `<Vendor><Base>Base` interface extending base (see [Extending the base schema](#extending-the-base-schema--extend-it-in-your-package-never-edit-it));
@@ -739,7 +739,7 @@ zb owners promote at review. Extensions of any already-published package are lik
 changes for zb review — org publish is refused for packages with catalog versions.
 
 **No ZeroBias org?** (external contributors): stop after the gate and open the
-PR against `main` — maintainers run the org verification on their side. See
+PR against `dev` — maintainers run the org verification on their side. See
 [CONTRIBUTING.md](CONTRIBUTING.md).
 
 One-time credential setup (all credential homes, check-first):
@@ -798,9 +798,12 @@ not substitute a different registry config. Auth comes from the environment (`ZB
 
 ## Branches
 
-- `main` — default, **all PRs target it**
-- `dev`, `qa`, `uat` — environment branches kept in sync by the publish workflow after every
-  successful main publish (`publish.yml` dispatches `sync-env-branches.yml`). Never PR against them.
+- `dev` — **all PRs target it**; the bottom of the promotion chain. A merge publishes the `dev`
+  prerelease line (dist-tag `dev`).
+- `qa`, `uat`, `main` — promotion targets, reached by merging the branch below (`dev → qa → uat → main`);
+  `main` publishes `latest` and is the default branch. After a main publish the sync workflow
+  propagates main → uat → qa → dev. The promotion-order check warns on PRs that skip a step —
+  never PR a feature branch straight at `qa`, `uat` or `main`.
 
 ## Authentication
 - Set `ZB_TOKEN` environment variable for NPM registry authentication (the slot provides it — see
@@ -883,7 +886,7 @@ zb.package:    {vendor}.{code}.schema
 - `npm install` at the repo root only refreshes the lockfile for the commitlint dev deps. Commitlint
   is configured (`.commitlintrc.json`), but there is no `.husky/` directory and no `prepare` script,
   so **nothing enforces commit-message format locally** — follow the convention by hand.
-- **All PRs target `main`** — `dev`/`qa`/`uat` are synced environment branches (see [Branches](#branches)), not PR bases.
+- **All PRs target `dev`** — `qa`/`uat`/`main` are promotion targets reached by merging up the chain (see [Branches](#branches)), never feature-PR bases.
 - Versions are managed by gradle (`zbb version`), not by hand. New packages scaffold at `1.0.0`;
   packages migrated from the old lerna flow took a major bump on their first gradle publish, so
   live versions are `2.x` / `3.x`.
