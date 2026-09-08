@@ -16,13 +16,11 @@ version: "1.0.0"
 # ZB_TOKEN / ZB_API_KEY / ZB_ORG_ID / ZB_PLATFORM_URL / KNOWLEDGE_MCP_URL /
 # NPM_CONFIG_TAG live ONCE per slot on the shared `dev` stack
 # (@zerobias-org/dev-stack, auto-pulled from the registry at
-# `zbb stack add`) and are IMPORTED here — the same
-# depends/imports/exports pattern the platform and hub stacks use to
-# inherit Dana's env. scripts/setup-org-credentials.sh seeds the dev
-# stack once per slot; `zbb --slot <s> --stack schema env get ZB_ORG_ID`
-# then resolves transitively. `optional:` = an unseeded slot yields
-# empty vars (exactly like an unseeded local declaration used to)
-# instead of a hard resolve error.
+# `zbb stack add`) and are IMPORTED here — the same depends/imports
+# pattern vendor / suite / product / framework use.
+# scripts/setup-org-credentials.sh seeds the dev stack once per slot;
+# every importing stack then resolves transitively. `optional:` = an
+# unseeded slot yields empty vars instead of a hard resolve error.
 # ⚠ Never `env set` these six on THIS stack: a per-stack override
 # permanently shadows the import, so credential rotation on the dev
 # stack stops propagating here (zbb never clobbers user overrides).
@@ -71,9 +69,10 @@ lifecycle:
   publish:   ./gradlew publish
   # Org-first SDLC: publish an org-private rc + queue the org dataloader
   # job. The -PorgPublish=true flag is what flips the shared publish
-  # pipeline into org mode — zbb does not inject it on its own. The TS
-  # twin follows automatically (zb.schema handles org mode for the -ts
-  # artifact too).
+  # pipeline into org mode — zbb does not inject it on its own, and the
+  # zb.base `publishOrg` alias reads the flag at CONFIGURATION time, so
+  # without this entry zbb falls back to a bare `./gradlew publishOrg`
+  # that hard-fails.
   publishOrg: ./gradlew publishOrg -PorgPublish=true
 
 require:
