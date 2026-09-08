@@ -81,11 +81,18 @@ MUST equal the registry's latest: compare `npm view <pkg> version` against
 the installed one. Behind → update with consent (`npm i -g <pkg>@latest`)
 or stop and wait — never continue on stale tooling. Documented pins beat
 freshness: never bump a pinned version to satisfy this rule.
-⚠ Run the `@zerobias-com/*` view/install commands from `$HOME`, not the
-repo cwd — this repo's project `.npmrc` reroutes that scope to GitHub
-Packages (SAML 403); the user-level `~/.npmrc` mapping to pkg.zerobias.org
-(`ZB_TOKEN`) is the working route, and project `.npmrc` beats user config
-even for `-g` installs.
+⚠ Run the `@zerobias-com/*` `npm view` freshness checks from `$HOME`, not
+the repo cwd — this repo's project `.npmrc` reroutes that scope to GitHub
+Packages (SAML 403), and for non-global commands project config beats
+`~/.npmrc`. `npm i -g` is the opposite: npm ≥ 7 IGNORES the project
+`.npmrc` in global mode and reads only `~/.npmrc` (verified 2026-09-08),
+whose `pkg.zerobias.org` scopes need `ZB_TOKEN` in the environment — in a
+plain shell the token is not exported (it lives in the slot), so install
+through the slot (`zbb --slot <slot> --stack dev exec npm i -g <pkg>@latest`)
+or pass it inline (`ZB_TOKEN=<registry-key> npm i -g <pkg>@latest`). Always
+use the full scoped package name (`@zerobias-org/zbb`, not `zbb` — none of
+these packages exist on public npm). Full rule and the list of global CLIs:
+[meta-repo `docs/RegistrySetup.md`](https://github.com/zerobias-org/zerobias/blob/main/docs/RegistrySetup.md#global-cli-installs).
 
 **Slot naming (consistent, derived — never invent).** One slot per target
 org/env, canonically named `<env>-<org first 8>` (env = platform-host
