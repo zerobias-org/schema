@@ -35,6 +35,30 @@ Phase 7 PR --base dev              ← drop orgId + RE-GATE first
         └─ zb review: promote package interfaces into base, or keep them vendor-local
 ```
 
+## Autonomy contract — one sentence in, an org-loaded package out
+
+The expected invocation is a single sentence: *"make a Snyk model with
+org, project, target, user and issue"*. From that, run Phases 0–5 **without
+asking anything** and stop at Phase 6 with the loaded model in front of the
+user. Everything else is derived, decided and recorded — not asked:
+
+| You need | Derive it |
+|---|---|
+| vendor / product code | lowercase-alnum of the name (`Snyk` → `snyk`); confirm with `store.Vendor.get`; product: the vendor's only product, else the one whose name matches the request, else the vendor's flagship (same code as the vendor) |
+| target org | the slot's `ZB_ORG_ID` (Phase 3) |
+| what the entities look like | the source order in Phase 1 → *Learn the vendor model* |
+| class names, parents, properties, links, enums | the decision procedure in Phase 1 — decide, then record the decision in the package `README.md` |
+| ids, branch name, package path, dependencies | mechanical, per Phase 2–3 and `templates.md` |
+
+**Exactly four stop points.** (1) a prerequisite is missing (Phase 0);
+(2) the vendor or product is not in the catalog — say which and which leaf
+skill creates it; (3) the schema package already exists, locally, in the
+registry or in an open PR; (4) the Phase 6 sign-off before the PR. A design
+question is never a stop point: pick the option the decision procedure
+gives, note it under *Decisions* in the README, and let the user overrule
+at Phase 6. The package + stamp commits in Phases 4–7 are part of the
+flow, not separate approvals.
+
 **One path for everyone.** Internal and external contributors, zb staff
 included, author a package and org-load it. **Nobody edits
 `package/zerobias/zerobias/base/` in a contribution PR.** Two facts make
@@ -43,8 +67,23 @@ that already has catalog versions (`resolveOrgVersion: … Org publish is for
 artifacts that exist only inside your org`), and the dataloader refuses
 org-private content that shadows public names. A new package has neither
 problem. What base lacks is expressed inside the package (Phase 3) and
-promoted into base by zb owners at review, in a second step — for zb's own
-work too, so the schema is seen and collected to before it becomes shared.
+promoted into base by zb owners at review, in a second step.
+
+⚠ **Editing base directly is the promotion path, and it is slow by design.**
+A change made in `package/zerobias/zerobias/base/` cannot be used, loaded
+or checked by anyone until zb reviews it, merges it and the publish reaches
+an environment — there is no org-first shortcut for base. Prefer the
+package extension: it works in your org today and can still be promoted.
+Commit straight to base only if you accept that wait (zb owners doing a
+reviewed promotion; see "Authoring into base" at the end) — and then the
+full gate still runs, like everywhere else.
+
+**The gate is not optional.** Every schema change — package or base,
+contributor or owner — passes `zbb gate`, which runs the real dataloader
+against an ephemeral branch exactly as modules, collectors and products do.
+Without a passed gate and its committed stamp nothing publishes and nothing
+works downstream. The local scratch DB (Phase 4a) only makes the gate pass
+on the first try; it never replaces it.
 
 **Concrete classes, not interface-targeting.** Anyone can generate the
 concrete classes their collector emits, so collectors target the package's
@@ -57,8 +96,8 @@ the schema need; no platform task required. If the user references a
 ZeroBias task (UUID or task name), additionally follow the **task-driven
 appendix** at the end.
 
-**Headless runs (`claude -p "add a schema for Wiz findings"`).** Same flow,
-three hard rules:
+**Headless runs (`claude -p "add a schema for Wiz findings"`).** Same flow
+and the same autonomy contract; three hard rules:
 - **Pre-flight first**: run the `prerequisites` skill (Phase 0) before
   touching anything. If anything is missing, print the exact setup
   instructions and exit — never fail mid-flow.
@@ -124,6 +163,60 @@ Then check the schema itself doesn't already exist:
   already-released package cannot be org-published; extending it is a
   PR-only change reviewed by zb — say so.
 
+### Learn the vendor model
+
+The request names concepts (*org, project, target, user, issue*); the
+package needs their real shape. Sources, in this order — stop at the first
+that covers every named concept, and never ask the user for what a source
+can tell you:
+
+1. **The Hub module**, if one exists: `module/package/<vendor>/<product>/api.yml`
+   in the sibling checkout, or `npm view @zerobias-org/module-<vendor>-<product>`
+   → its bundled spec. Its schemas are exactly what a collector will emit,
+   so property names, types and enum values come from here verbatim.
+2. **The collectorbot** for the vendor (`collectorbot/package/…/src/Mappers.ts`):
+   shows which module fields already map to which base properties.
+3. **The vendor's public API reference** (fetch the REST/GraphQL docs for
+   each named entity): the entity's fields, its identifiers, its
+   relationships to the other named entities, every documented status /
+   type / severity value.
+4. Only if 1–3 leave a named concept undefined: ask, once, listing exactly
+   what could not be established.
+
+### Decision procedure (decide, record, don't ask)
+
+- **Class per named concept**, `<Vendor><Concept>` in PascalCase
+  (`SnykOrganization`, `SnykIssue`); one class per file.
+- **Parent**: for each concept, grep base interfaces by the concept and its
+  synonyms (issue → `Finding`, `Vulnerability`, `SecurityFinding`;
+  org → `Tenant`, `Organization`, `Party`; project → `Project`,
+  `Repository`, `Application`; user → `User`, `Account`, `Principal`) and
+  read the 3–5 nearest. Extend the one whose description matches the
+  vendor's meaning; when two fit, the more specific one. Nothing fits →
+  `<Vendor><Concept>Base extends` the nearest structural interface
+  (`Component`, `Asset`, `Principal`), never bare `Object` when a base
+  interface is close.
+- **Properties**: the vendor's identifier (`keyed`), name/title, status or
+  state, severity/type, timestamps (created/updated/resolved), owner /
+  organization, URL — then whatever the source marks as core. Reuse a base
+  field when one exists (`name`, `url`, `timeCreated`, `severity`, …);
+  inline fields for one-off vendor attributes; `fields/` for anything two
+  classes share. Skip volatile counters and pagination noise.
+- **Links**: model every relationship *between the named entities*
+  (org ⟷ projects, project ⟷ issues, project → target, org ⟷ users) as
+  two-way links between the package's own classes/interfaces; links to
+  base types are `uniLink: true`.
+- **Enums**: every value the source documents, ALL_CAPS, no `UNKNOWN` or
+  `OTHER` catch-all unless the vendor itself has one — completeness is the
+  point (a collector must never invent a value).
+- **Package-local `<Vendor><Base>Base` interfaces** only where you add a
+  property or link base lacks; otherwise classes extend base directly.
+- **`links: models:`** on a package interface only when the product's
+  `segments` (its catalog `index.yml`) name a code that interface models.
+- Write every non-obvious choice under **Decisions** in the package
+  `README.md` (parent chosen and why, base gaps declared, sources used).
+  That section is what the user reviews at Phase 6.
+
 **Read base before designing.** `ls package/zerobias/zerobias/base/interfaces/`
 and READ the 3–5 interfaces nearest to each concept the package needs
 (their `extends`, properties and links) — base has 125+ interfaces and the
@@ -157,8 +250,10 @@ The script copies the templates + `.npmrc`, substitutes the path-derived
 names, and writes the `build.gradle.kts` marker (`plugins { id("zb.schema") }`)
 required for gradle discovery. You fill `{name}` / `{description}` in
 `catalog.yml` and `package.json`. **Verify the scaffold immediately**:
-`ls -A package/<path>` must show `package.json`, `catalog.yml`, `.npmrc`
-(dotfile!), `build.gradle.kts`. The scaffolded `package.json` already
+`ls -A package/<path>` must show `package.json`, `catalog.yml`, `README.md`,
+`.npmrc` (dotfile!), `build.gradle.kts`. The README is in `files` (so it is
+stamp-hashed) and carries the **Decisions** section the user reviews at
+Phase 6 — fill its tables as you author, not afterwards. The scaffolded `package.json` already
 carries `"registry": "https://pkg.zerobias.org/"` and an `orgId`
 placeholder (filled below). Exact file shapes: [templates.md](templates.md).
 
@@ -188,6 +283,17 @@ reuse order). Non-negotiables:
 - Every concrete class `extends` a base interface where one fits (that is
   what makes a `WizUser` count as a `User` for every base-level consumer);
   extending `Element` enables framework linking.
+- **Retiring a definition: never rename, never delete in place.** Ids are
+  derived from names, so a rename is a delete + create and the dataloader
+  soft-deletes whatever your package stops mentioning. The pattern (real
+  example: `package/w3geekery/smemart/deprecated.yml`): keep the old file
+  untouched until the retirement commit, add the new name as a NEW file
+  with its own id, then list the old name under the right key in
+  `deprecated.yml` with a comment saying **why** (absorbed by a platform
+  primitive, renamed to X, duplicate of Y) — "no longer needed" is not a
+  reason. Keys: `classes:`, `interfaces:`, `fields:`, `enums:`,
+  `documents:`; strings only. A name cannot be both `skip: true` and
+  deprecated.
 
 ### When base lacks something — extend it inside the package
 
@@ -242,6 +348,43 @@ updates the PR**: the promoted parts move to base, the package interfaces
 lose them, the classes extend base directly, and unilinks can become
 two-way. Nothing for the contributor to redo.
 
+### Pitfalls the gate finds last — read for them first
+
+Learned authoring the physical-space model (schema #87); each one costs a
+gate run if found late. There is no script for these — read the chain.
+
+- **Redeclaring an inherited property is an overload, not an override.** If
+  any interface in the `extends` chain already has `capacity`, your
+  interface must not declare `capacity` again — the dataloader refuses
+  (`… already exists on extended class`). Read the whole chain, not just
+  the parent.
+- **Diamonds bring duplicate properties.** `Asset` and `Location` both
+  define `inventoryItems`; an interface extending both (directly or through
+  parents) collides. `Environment` on `main` gets away with it, so the
+  loader tolerates this pair today — don't rely on it; pick one parent.
+- **`skip: true` interfaces are not loaded** (e.g. `Datacenter`). Don't
+  extend them, don't edit them expecting an effect.
+- **T3 must be identical on both link halves** when both declare it
+  (`t3 fields do not match` otherwise); declaring it on one side is fine.
+- **Geometry and quantities use the platform `number` type**; counts use
+  `integer`. Both resolve without a local field file.
+- **`viewProperties` cannot read a link attribute (T3) yet** — a column
+  that needs one has to wait; show the linked object's `name` instead.
+- **Top-level `links: models:` blocks load** (deferred resolution to
+  catalog codes) — a clean gate proves the block is well-formed, not that
+  the codes exist; verify codes in the segment / compliance_feature repos.
+- **Resource links do not inherit.** A `models` block lands on the
+  declaring interface only, never on what extends it. Put it on the most
+  abstract interface whose *name* still entails the capability
+  (`Repository` ⇒ VCS, `IdentityProvider` ⇒ IAM), never on structural roots
+  (`Object`, `Component`, `Asset`, `Application`, `Principal`, `Party`).
+- **A new interface needs at least two properties.** Single-property
+  interfaces break the platform's GraphQL builder (the `FederatedIdentity`
+  lesson); give it a second real property or fold it into its parent.
+- **A package `README.md` is stamp-hashed** (it is in `files`). A docs-only
+  README edit invalidates `gate-stamp.json` like any content change — re-gate
+  or ship it with the next content commit.
+
 ### Set the org target BEFORE the first gate
 
 **Replace the scaffolded `zerobias.orgId: "{target-org-uuid}"` in the
@@ -273,7 +416,7 @@ What it catches: missing/invalid ids, unresolved `extends`, one-sided
 links, unresolved `t3`, enum case, `viewProperties` JSONata, field
 references. Full recipe and its differences from CI: `CONTRIBUTING.md`.
 
-### 4b — gate
+### 4b — gate (mandatory — nothing publishes without it)
 
 All builds go through `zbb` — **never invoke `./gradlew` directly**. Only
 zbb injects the slot env AND pins the JDK (a bare `./gradlew` on JDK 25
@@ -429,9 +572,35 @@ interfaces and decides, per interface or per property, whether to
 made on the same PR: base gains the interface/property/link, the package
 interface drops the promoted part (or is removed if now empty), the
 classes `extends` the base interface directly, and unilinks toward base
-become two-way. The contributor is told what moved; nothing to redo. The
-same two-step applies to zb's own additions — new base concepts are
-authored as a package first, seen and collected to, then promoted.
+become two-way. The contributor is told what moved; nothing to redo.
+
+### Authoring into base (zb owners only)
+
+Sometimes zb owners promote a reviewed design straight into
+`package/zerobias/zerobias/base/` (schema #87, the physical-space model, is
+the exemplar). Accept the trade-off first: **the change is unusable and
+unverifiable by anyone until it is merged and published** — no org load, no
+early collection. If that wait is a problem, author it as a package and
+promote later; that is the default even for zb.
+
+When you do edit base:
+1. Branch off `origin/dev`; the PR targets **`dev`** like every package PR
+   (base is a package: it publishes the `dev` prerelease line first and is
+   promoted dev → qa → uat → main). Only an owner who explicitly accepts
+   publishing `latest` on merge targets `main`.
+2. Additive only: new interfaces/fields/enums/documents, new properties,
+   new parents on existing interfaces. Never rename, remove or retype
+   anything published; retire via `deprecated.yml`.
+3. Every new file carries its id (interfaces `UUIDv5(NIL, Name)`).
+4. Walk the pitfalls list above by hand — read every `extends` chain you
+   touch, all the way up.
+5. **Run the gate.** Base is ~550 files and takes 1–3 hours through a
+   remote Neon branch; that is the cost of touching base, not a reason to
+   skip it. The stamp must be refreshed and committed **before** the PR is
+   mergeable — CI's publish guard rejects a stale stamp, and no PR workflow
+   runs the gate for you.
+6. PR body: what each new interface/property/link adds, why base and not a
+   package, and the gate evidence (`"testDataloader": "passed"`).
 
 ## Common issues
 
@@ -447,8 +616,10 @@ calls): re-run the identical command ONCE before diagnosing or escalating.
 - **`package.json name expected '@zerobias-org/schema-<…>'` /
   `zerobias.package expected '<…>'`** → name/dir triangulation; fix the
   fields, never rename the dir.
-- **Enum values rejected** → must be ALL_CAPS `[A-Z][A-Z0-9_]*` — the
-  dataloader enforces it at load time.
+- **Enum value not ALL_CAPS** → rejected at review, even though the gate
+  passed: the dataloader only checks for a leading letter
+  (`Enumeration value must start with letter`). Every value is
+  `[A-Z][A-Z0-9_]*`; fix it before the PR, not after.
 - **`Unable to handle <kind> '<name>', id is missing` / `… is not a valid
   UUID`** → the file lacks `id:` (or an enum/document lacks `fieldId:`);
   mint it per [templates.md → Generating ids](templates.md#generating-ids).
@@ -489,6 +660,9 @@ calls): re-run the identical command ONCE before diagnosing or escalating.
   identical command once.
 - **`gateCheck`: `source-hash-changed` right after editing `package.json`**
   → package.json IS hashed (orgId add/remove included); re-gate.
+- **PR opened with a stale `gate-stamp.json`** → it cannot merge: someone
+  runs `cd <pkg> && zbb --slot <slot> gate` on the branch and commits the
+  stamp. There is no CI fallback and no exception for base.
 - **`dataloaderOrgJob` fails with `npm … 401 Unauthorized`** (server-side,
   `/root/.npm` in the log) → the TARGET env's dataloader pod fetches with
   its OWN `ZB_TOKEN` — no client-side fix. Retry once; then escalate to

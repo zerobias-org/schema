@@ -64,6 +64,13 @@ Schema:
     <one-paragraph description>
 ```
 
+## README.md (scaffolded from `templates/README.md`)
+
+Tables for classes, package interfaces and links, plus a **Decisions**
+section (sources used, parent chosen and why, base gaps declared, enum
+sources). It is in `files`, so editing it after the gate invalidates the
+stamp — write it during authoring.
+
 ## build.gradle.kts (the discovery marker — scaffolder writes it)
 
 ```kotlin
