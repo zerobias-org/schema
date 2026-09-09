@@ -303,7 +303,11 @@ values:                                    # REQUIRED, non-empty array
 **Enum rules (enforced by the dataloader):**
 - `id` **and** `fieldId` are **required** (both UUIDv4); see [Identity](#identity-id--required-on-every-definition-file).
 - `values` is **required** and cannot be empty. Entries are strings or `{KEY: description}` objects.
-- Values **MUST be ALL_CAPS** matching `[A-Z][A-Z0-9_]*` — lowercase values fail at load time.
+- Values **MUST be ALL_CAPS** matching `[A-Z][A-Z0-9_]*` — reviewers reject anything else. ⚠ Do
+  not rely on the gate for this: the dataloader only checks that a value starts with a letter
+  (`Enumeration value must start with letter`), so a lowercase value loads and gets caught at
+  review instead. A few legacy mixed-case algorithm names exist in base (`DiffieHellman`); they are
+  not a precedent, and never rewrite a published value in place — collected data conforms to it.
 - Values cannot repeat within the same enum.
 - Enum names are **globally unique**.
 
@@ -482,7 +486,7 @@ on the class or something it extends. Invalid JSONata fails at load time.
 
 | Scenario | Approach |
 |----------|----------|
-| Generic concept any vendor could yield | Base interface (add one via PR if missing — see below) |
+| Generic concept any vendor could yield | Existing base interface; if base lacks it, a `<Vendor><Concept>Base` interface in your package (see below) — zb promotes at review |
 | Properties shared across classes in the same vendor package | Vendor-specific mixin interface |
 | Property unique to one class | Inline field definition |
 | Property used in 2+ classes in the same package | Define in `fields/` |
@@ -552,6 +556,14 @@ with the next base publish. When declaring a `<Vendor><Base>Base` interface that
 include a `models` block if the matching segment/feature codes exist in the catalog — it travels
 with the interface into base.
 
+Placement rule (validated against the dataloader): resource links **do not propagate through
+`extends`** — the link lands on the declaring interface's resource only. Declare `models` on the most
+abstract interface whose *name* still entails the capability (`Repository` ⇒ `c_vcs`,
+`IdentityProvider` ⇒ IAM, `SourceCodeMgmtFinding` ⇒ SCA); never on structural roots (`Object`,
+`Component`, `Asset`, `Application`, `Principal`, `Party`) — the fan-out over-claims for every
+subtype. `f_*` codes go on the narrowest interface exhibiting the feature; `t_*`/`c_*`/`d_*` on the
+interface that defines the market category.
+
 ### How the dataloader processes a schema package
 
 Multi-pass, so cross-references resolve regardless of file order:
@@ -592,7 +604,7 @@ Three behaviors to internalize:
 | `No matching link` | Bidirectional link missing its other side | Add the reciprocal link, or `uniLink: true`, or `defered: true` |
 | `t3 fields do not match` | t3 differs between link sides | Same t3 field on both sides |
 | `LinkTo array item missing period` | Array linkTo without `.` | Use `ClassName.propertyName` |
-| `Enumeration value must start with letter` | Lowercase/numeric enum value | ALL_CAPS (`[A-Z][A-Z0-9_]*`) |
+| `Enumeration value must start with letter` | Enum value starts with a digit or symbol | ALL_CAPS (`[A-Z][A-Z0-9_]*`), letter first |
 | `Field type not specified` | Missing `type` on a field | Add `type: string` (or other type) |
 | `field "x.y" not found` | Class references a field with no YAML | Create `fields/x.y.yml` or drop the reference |
 | `Unable to handle <kind> '<name>', id is missing` | Definition file has no `id:` (or enum/document lacks `fieldId:`) | Add it — v5(NIL, Name) for classes/interfaces, v4 otherwise; see [Identity](#identity-id--required-on-every-definition-file) |
@@ -677,11 +689,19 @@ Every schema package (and every collector) depends on base, so:
 - **Promotion edits the contributor's PR**: move the interface/property/link into base, drop it from
   the package interface, point the classes at base, flip unilinks to two-way. Base is gated once
   (1–3 h); the package still gates in minutes.
+- **Editing base directly is slow by design.** A change in `package/zerobias/zerobias/base/` cannot
+  be used, loaded or checked by anyone until zb merges it and the publish reaches an environment —
+  base has no org-first path. Prefer the package extension (it works in your org today and can still
+  be promoted); commit straight to base only when you accept that wait, and the full gate still runs.
+  The skill's "Authoring into base (zb owners only)" section is the checklist.
 
 ## Validation
 
-> **Always gate your package before pushing** — `cd` into it and run `zbb gate` (see
-> [Per-package validation](#per-package-validation)). Do not invoke `./gradlew` directly.
+> **The gate is mandatory — nothing publishes or works downstream without a passed gate and its
+> committed stamp**, for packages and for base alike, exactly as in the module, collectorbot and
+> product repos. `cd` into the package and run `zbb gate` (see
+> [Per-package validation](#per-package-validation)) before pushing; a PR carrying a stale stamp
+> cannot merge and no PR workflow runs the gate for you. Do not invoke `./gradlew` directly.
 > Local file-checks alone are not enough — schema correctness (class extends chains, field references, link bidirectionality, enum format, etc.) is only enforced by the dataloader. `gate` runs the local validator, and runs the dataloader against an ephemeral Neon branch **provided `ZB_TOKEN` is set** — without it that step is silently skipped. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full validation workflow — required reading for third-party contributors working from a fork.
 
 ### Validator (in repo)
@@ -883,7 +903,9 @@ zb.package:    {vendor}.{code}.schema
 **Rules:**
 - `{vendor}` and `{code}` must match `^[a-z0-9]+$` — **lowercase alphanumeric only. No hyphens, no underscores, no dots.** This matches the ZB platform UI's `vspCodeValidator` constraint on product/vendor/suite codes. The API does not enforce this server-side, but the ecosystem (catalog package names, dataloader artifact resolution) requires it.
 - **NEVER rename** a published schema package without coordinating with the platform team (Chris/Kevin). Renaming after classes are registered requires manual ownership transfer on the platform side. The dataloader cannot automatically reassign class ownership between packages.
-- Enum values **MUST be ALL_CAPS** matching `[A-Z][A-Z0-9_]*`. The dataloader enforces this — lowercase values fail at load time.
+- Enum values **MUST be ALL_CAPS** matching `[A-Z][A-Z0-9_]*`. The gate does not catch case (the
+  dataloader only requires a leading letter) — review does. Legacy mixed-case values in base are not
+  a precedent.
 
 ## Important Notes
 - `npm install` at the repo root only refreshes the lockfile for the commitlint dev deps. Commitlint

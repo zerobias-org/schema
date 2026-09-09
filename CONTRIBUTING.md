@@ -293,9 +293,9 @@ Top five issues seen on third-party PRs, with concrete symptoms and fixes.
 
 ### 4. Enum values written in lowercase or mixed case
 
-**Symptom:** Dataloader rejects the enum at load with a regex error like `value "active" does not match [A-Z][A-Z0-9_]*`.
+**Symptom:** The PR is sent back at review. The gate does **not** catch this — the dataloader only rejects values that don't start with a letter (`Enumeration value must start with letter`), so a green gate is no proof.
 
-**Fix:** Rename the value to ALL_CAPS (`ACTIVE`, `IN_PROGRESS`, `NOT_APPLICABLE`). `validateContent` does not catch this — only the dataloader does.
+**Fix:** Every value MUST be ALL_CAPS (`ACTIVE`, `IN_PROGRESS`, `NOT_APPLICABLE`). Never rewrite a value that is already published — collected data conforms to it.
 
 ### 5. Missing entry in `zerobias.imports`
 

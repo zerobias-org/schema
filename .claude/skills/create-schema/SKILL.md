@@ -43,8 +43,23 @@ that already has catalog versions (`resolveOrgVersion: … Org publish is for
 artifacts that exist only inside your org`), and the dataloader refuses
 org-private content that shadows public names. A new package has neither
 problem. What base lacks is expressed inside the package (Phase 3) and
-promoted into base by zb owners at review, in a second step — for zb's own
-work too, so the schema is seen and collected to before it becomes shared.
+promoted into base by zb owners at review, in a second step.
+
+⚠ **Editing base directly is the promotion path, and it is slow by design.**
+A change made in `package/zerobias/zerobias/base/` cannot be used, loaded
+or checked by anyone until zb reviews it, merges it and the publish reaches
+an environment — there is no org-first shortcut for base. Prefer the
+package extension: it works in your org today and can still be promoted.
+Commit straight to base only if you accept that wait (zb owners doing a
+reviewed promotion; see "Authoring into base" at the end) — and then the
+full gate still runs, like everywhere else.
+
+**The gate is not optional.** Every schema change — package or base,
+contributor or owner — passes `zbb gate`, which runs the real dataloader
+against an ephemeral branch exactly as modules, collectors and products do.
+Without a passed gate and its committed stamp nothing publishes and nothing
+works downstream. The local scratch DB (Phase 4a) only makes the gate pass
+on the first try; it never replaces it.
 
 **Concrete classes, not interface-targeting.** Anyone can generate the
 concrete classes their collector emits, so collectors target the package's
@@ -188,6 +203,17 @@ reuse order). Non-negotiables:
 - Every concrete class `extends` a base interface where one fits (that is
   what makes a `WizUser` count as a `User` for every base-level consumer);
   extending `Element` enables framework linking.
+- **Retiring a definition: never rename, never delete in place.** Ids are
+  derived from names, so a rename is a delete + create and the dataloader
+  soft-deletes whatever your package stops mentioning. The pattern (real
+  example: `package/w3geekery/smemart/deprecated.yml`): keep the old file
+  untouched until the retirement commit, add the new name as a NEW file
+  with its own id, then list the old name under the right key in
+  `deprecated.yml` with a comment saying **why** (absorbed by a platform
+  primitive, renamed to X, duplicate of Y) — "no longer needed" is not a
+  reason. Keys: `classes:`, `interfaces:`, `fields:`, `enums:`,
+  `documents:`; strings only. A name cannot be both `skip: true` and
+  deprecated.
 
 ### When base lacks something — extend it inside the package
 
@@ -242,6 +268,43 @@ updates the PR**: the promoted parts move to base, the package interfaces
 lose them, the classes extend base directly, and unilinks can become
 two-way. Nothing for the contributor to redo.
 
+### Pitfalls the gate finds last — read for them first
+
+Learned authoring the physical-space model (schema #87); each one costs a
+gate run if found late. There is no script for these — read the chain.
+
+- **Redeclaring an inherited property is an overload, not an override.** If
+  any interface in the `extends` chain already has `capacity`, your
+  interface must not declare `capacity` again — the dataloader refuses
+  (`… already exists on extended class`). Read the whole chain, not just
+  the parent.
+- **Diamonds bring duplicate properties.** `Asset` and `Location` both
+  define `inventoryItems`; an interface extending both (directly or through
+  parents) collides. `Environment` on `main` gets away with it, so the
+  loader tolerates this pair today — don't rely on it; pick one parent.
+- **`skip: true` interfaces are not loaded** (e.g. `Datacenter`). Don't
+  extend them, don't edit them expecting an effect.
+- **T3 must be identical on both link halves** when both declare it
+  (`t3 fields do not match` otherwise); declaring it on one side is fine.
+- **Geometry and quantities use the platform `number` type**; counts use
+  `integer`. Both resolve without a local field file.
+- **`viewProperties` cannot read a link attribute (T3) yet** — a column
+  that needs one has to wait; show the linked object's `name` instead.
+- **Top-level `links: models:` blocks load** (deferred resolution to
+  catalog codes) — a clean gate proves the block is well-formed, not that
+  the codes exist; verify codes in the segment / compliance_feature repos.
+- **Resource links do not inherit.** A `models` block lands on the
+  declaring interface only, never on what extends it. Put it on the most
+  abstract interface whose *name* still entails the capability
+  (`Repository` ⇒ VCS, `IdentityProvider` ⇒ IAM), never on structural roots
+  (`Object`, `Component`, `Asset`, `Application`, `Principal`, `Party`).
+- **A new interface needs at least two properties.** Single-property
+  interfaces break the platform's GraphQL builder (the `FederatedIdentity`
+  lesson); give it a second real property or fold it into its parent.
+- **A package `README.md` is stamp-hashed** (it is in `files`). A docs-only
+  README edit invalidates `gate-stamp.json` like any content change — re-gate
+  or ship it with the next content commit.
+
 ### Set the org target BEFORE the first gate
 
 **Replace the scaffolded `zerobias.orgId: "{target-org-uuid}"` in the
@@ -273,7 +336,7 @@ What it catches: missing/invalid ids, unresolved `extends`, one-sided
 links, unresolved `t3`, enum case, `viewProperties` JSONata, field
 references. Full recipe and its differences from CI: `CONTRIBUTING.md`.
 
-### 4b — gate
+### 4b — gate (mandatory — nothing publishes without it)
 
 All builds go through `zbb` — **never invoke `./gradlew` directly**. Only
 zbb injects the slot env AND pins the JDK (a bare `./gradlew` on JDK 25
@@ -429,9 +492,35 @@ interfaces and decides, per interface or per property, whether to
 made on the same PR: base gains the interface/property/link, the package
 interface drops the promoted part (or is removed if now empty), the
 classes `extends` the base interface directly, and unilinks toward base
-become two-way. The contributor is told what moved; nothing to redo. The
-same two-step applies to zb's own additions — new base concepts are
-authored as a package first, seen and collected to, then promoted.
+become two-way. The contributor is told what moved; nothing to redo.
+
+### Authoring into base (zb owners only)
+
+Sometimes zb owners promote a reviewed design straight into
+`package/zerobias/zerobias/base/` (schema #87, the physical-space model, is
+the exemplar). Accept the trade-off first: **the change is unusable and
+unverifiable by anyone until it is merged and published** — no org load, no
+early collection. If that wait is a problem, author it as a package and
+promote later; that is the default even for zb.
+
+When you do edit base:
+1. Branch off `origin/dev`; the PR targets **`dev`** like every package PR
+   (base is a package: it publishes the `dev` prerelease line first and is
+   promoted dev → qa → uat → main). Only an owner who explicitly accepts
+   publishing `latest` on merge targets `main`.
+2. Additive only: new interfaces/fields/enums/documents, new properties,
+   new parents on existing interfaces. Never rename, remove or retype
+   anything published; retire via `deprecated.yml`.
+3. Every new file carries its id (interfaces `UUIDv5(NIL, Name)`).
+4. Walk the pitfalls list above by hand — read every `extends` chain you
+   touch, all the way up.
+5. **Run the gate.** Base is ~550 files and takes 1–3 hours through a
+   remote Neon branch; that is the cost of touching base, not a reason to
+   skip it. The stamp must be refreshed and committed **before** the PR is
+   mergeable — CI's publish guard rejects a stale stamp, and no PR workflow
+   runs the gate for you.
+6. PR body: what each new interface/property/link adds, why base and not a
+   package, and the gate evidence (`"testDataloader": "passed"`).
 
 ## Common issues
 
@@ -447,8 +536,10 @@ calls): re-run the identical command ONCE before diagnosing or escalating.
 - **`package.json name expected '@zerobias-org/schema-<…>'` /
   `zerobias.package expected '<…>'`** → name/dir triangulation; fix the
   fields, never rename the dir.
-- **Enum values rejected** → must be ALL_CAPS `[A-Z][A-Z0-9_]*` — the
-  dataloader enforces it at load time.
+- **Enum value not ALL_CAPS** → rejected at review, even though the gate
+  passed: the dataloader only checks for a leading letter
+  (`Enumeration value must start with letter`). Every value is
+  `[A-Z][A-Z0-9_]*`; fix it before the PR, not after.
 - **`Unable to handle <kind> '<name>', id is missing` / `… is not a valid
   UUID`** → the file lacks `id:` (or an enum/document lacks `fieldId:`);
   mint it per [templates.md → Generating ids](templates.md#generating-ids).
@@ -489,6 +580,9 @@ calls): re-run the identical command ONCE before diagnosing or escalating.
   identical command once.
 - **`gateCheck`: `source-hash-changed` right after editing `package.json`**
   → package.json IS hashed (orgId add/remove included); re-gate.
+- **PR opened with a stale `gate-stamp.json`** → it cannot merge: someone
+  runs `cd <pkg> && zbb --slot <slot> gate` on the branch and commits the
+  stamp. There is no CI fallback and no exception for base.
 - **`dataloaderOrgJob` fails with `npm … 401 Unauthorized`** (server-side,
   `/root/.npm` in the log) → the TARGET env's dataloader pod fetches with
   its OWN `ZB_TOKEN` — no client-side fix. Retry once; then escalate to
