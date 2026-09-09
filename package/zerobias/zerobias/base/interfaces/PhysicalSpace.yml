@@ -33,7 +33,7 @@ properties:
   - openings:
     multi: true
     linkTo: PhysicalEntry.id.connects
-    t3: opening
+    t3: spaceAccess
   - monitoredBy:
     multi: true
     linkTo: SecurityDevice.id.monitors

@@ -1,0 +1,13 @@
+id: 0b4e0c8f-29f2-49f4-acd9-0adb698d82fc
+fieldId: d31cd413-3c2a-4f63-b3f1-8ab381347718
+description: "How a space relates to an opening it connects to, everything as experienced FROM THAT SPACE: which side of the opening it is, how the leaf hangs and swings, and what it takes to pass through. A door's inside is the next room's outside, so this rides on the connects / openings link (t3), never on the opening itself."
+displayName: "Space Access"
+properties:
+  - side:
+    field: openingSide
+  - hinge:
+    field: physicalEntry.hinge
+  - swing:
+    field: physicalEntry.swing
+  - locking:
+    field: accessLocking
