@@ -35,6 +35,30 @@ Phase 7 PR --base dev              ← drop orgId + RE-GATE first
         └─ zb review: promote package interfaces into base, or keep them vendor-local
 ```
 
+## Autonomy contract — one sentence in, an org-loaded package out
+
+The expected invocation is a single sentence: *"make a Snyk model with
+org, project, target, user and issue"*. From that, run Phases 0–5 **without
+asking anything** and stop at Phase 6 with the loaded model in front of the
+user. Everything else is derived, decided and recorded — not asked:
+
+| You need | Derive it |
+|---|---|
+| vendor / product code | lowercase-alnum of the name (`Snyk` → `snyk`); confirm with `store.Vendor.get`; product: the vendor's only product, else the one whose name matches the request, else the vendor's flagship (same code as the vendor) |
+| target org | the slot's `ZB_ORG_ID` (Phase 3) |
+| what the entities look like | the source order in Phase 1 → *Learn the vendor model* |
+| class names, parents, properties, links, enums | the decision procedure in Phase 1 — decide, then record the decision in the package `README.md` |
+| ids, branch name, package path, dependencies | mechanical, per Phase 2–3 and `templates.md` |
+
+**Exactly four stop points.** (1) a prerequisite is missing (Phase 0);
+(2) the vendor or product is not in the catalog — say which and which leaf
+skill creates it; (3) the schema package already exists, locally, in the
+registry or in an open PR; (4) the Phase 6 sign-off before the PR. A design
+question is never a stop point: pick the option the decision procedure
+gives, note it under *Decisions* in the README, and let the user overrule
+at Phase 6. The package + stamp commits in Phases 4–7 are part of the
+flow, not separate approvals.
+
 **One path for everyone.** Internal and external contributors, zb staff
 included, author a package and org-load it. **Nobody edits
 `package/zerobias/zerobias/base/` in a contribution PR.** Two facts make
@@ -72,8 +96,8 @@ the schema need; no platform task required. If the user references a
 ZeroBias task (UUID or task name), additionally follow the **task-driven
 appendix** at the end.
 
-**Headless runs (`claude -p "add a schema for Wiz findings"`).** Same flow,
-three hard rules:
+**Headless runs (`claude -p "add a schema for Wiz findings"`).** Same flow
+and the same autonomy contract; three hard rules:
 - **Pre-flight first**: run the `prerequisites` skill (Phase 0) before
   touching anything. If anything is missing, print the exact setup
   instructions and exit — never fail mid-flow.
@@ -139,6 +163,60 @@ Then check the schema itself doesn't already exist:
   already-released package cannot be org-published; extending it is a
   PR-only change reviewed by zb — say so.
 
+### Learn the vendor model
+
+The request names concepts (*org, project, target, user, issue*); the
+package needs their real shape. Sources, in this order — stop at the first
+that covers every named concept, and never ask the user for what a source
+can tell you:
+
+1. **The Hub module**, if one exists: `module/package/<vendor>/<product>/api.yml`
+   in the sibling checkout, or `npm view @zerobias-org/module-<vendor>-<product>`
+   → its bundled spec. Its schemas are exactly what a collector will emit,
+   so property names, types and enum values come from here verbatim.
+2. **The collectorbot** for the vendor (`collectorbot/package/…/src/Mappers.ts`):
+   shows which module fields already map to which base properties.
+3. **The vendor's public API reference** (fetch the REST/GraphQL docs for
+   each named entity): the entity's fields, its identifiers, its
+   relationships to the other named entities, every documented status /
+   type / severity value.
+4. Only if 1–3 leave a named concept undefined: ask, once, listing exactly
+   what could not be established.
+
+### Decision procedure (decide, record, don't ask)
+
+- **Class per named concept**, `<Vendor><Concept>` in PascalCase
+  (`SnykOrganization`, `SnykIssue`); one class per file.
+- **Parent**: for each concept, grep base interfaces by the concept and its
+  synonyms (issue → `Finding`, `Vulnerability`, `SecurityFinding`;
+  org → `Tenant`, `Organization`, `Party`; project → `Project`,
+  `Repository`, `Application`; user → `User`, `Account`, `Principal`) and
+  read the 3–5 nearest. Extend the one whose description matches the
+  vendor's meaning; when two fit, the more specific one. Nothing fits →
+  `<Vendor><Concept>Base extends` the nearest structural interface
+  (`Component`, `Asset`, `Principal`), never bare `Object` when a base
+  interface is close.
+- **Properties**: the vendor's identifier (`keyed`), name/title, status or
+  state, severity/type, timestamps (created/updated/resolved), owner /
+  organization, URL — then whatever the source marks as core. Reuse a base
+  field when one exists (`name`, `url`, `timeCreated`, `severity`, …);
+  inline fields for one-off vendor attributes; `fields/` for anything two
+  classes share. Skip volatile counters and pagination noise.
+- **Links**: model every relationship *between the named entities*
+  (org ⟷ projects, project ⟷ issues, project → target, org ⟷ users) as
+  two-way links between the package's own classes/interfaces; links to
+  base types are `uniLink: true`.
+- **Enums**: every value the source documents, ALL_CAPS, no `UNKNOWN` or
+  `OTHER` catch-all unless the vendor itself has one — completeness is the
+  point (a collector must never invent a value).
+- **Package-local `<Vendor><Base>Base` interfaces** only where you add a
+  property or link base lacks; otherwise classes extend base directly.
+- **`links: models:`** on a package interface only when the product's
+  `segments` (its catalog `index.yml`) name a code that interface models.
+- Write every non-obvious choice under **Decisions** in the package
+  `README.md` (parent chosen and why, base gaps declared, sources used).
+  That section is what the user reviews at Phase 6.
+
 **Read base before designing.** `ls package/zerobias/zerobias/base/interfaces/`
 and READ the 3–5 interfaces nearest to each concept the package needs
 (their `extends`, properties and links) — base has 125+ interfaces and the
@@ -172,8 +250,10 @@ The script copies the templates + `.npmrc`, substitutes the path-derived
 names, and writes the `build.gradle.kts` marker (`plugins { id("zb.schema") }`)
 required for gradle discovery. You fill `{name}` / `{description}` in
 `catalog.yml` and `package.json`. **Verify the scaffold immediately**:
-`ls -A package/<path>` must show `package.json`, `catalog.yml`, `.npmrc`
-(dotfile!), `build.gradle.kts`. The scaffolded `package.json` already
+`ls -A package/<path>` must show `package.json`, `catalog.yml`, `README.md`,
+`.npmrc` (dotfile!), `build.gradle.kts`. The README is in `files` (so it is
+stamp-hashed) and carries the **Decisions** section the user reviews at
+Phase 6 — fill its tables as you author, not afterwards. The scaffolded `package.json` already
 carries `"registry": "https://pkg.zerobias.org/"` and an `orgId`
 placeholder (filled below). Exact file shapes: [templates.md](templates.md).
 

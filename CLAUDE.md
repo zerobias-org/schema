@@ -108,7 +108,7 @@ not an npm script.
 ### Monorepo Structure
 - **`package/`**: schema packages organized by vendor/code (e.g. `hl7/fhir`, `zerobias/zerobias/base`).
 - **`scripts/`**: dev helpers (`createNewSchema.sh` scaffolder, `setup-org-credentials.sh` one-time credential/slot setup).
-- **`templates/`**: starter files for new schemas (`catalog.yml`, `package.json`) with `{dashed}`/`{dotted}`/`{path}`/`{name}`/`{description}` placeholders.
+- **`templates/`**: starter files for new schemas (`catalog.yml`, `package.json`, `README.md`) with `{dashed}`/`{dotted}`/`{path}`/`{name}`/`{description}` placeholders.
 - **`bundle/`**: `@zerobias-org/schema-bundle` aggregate; auto-refreshed by the publish workflow's `update-bundle` step.
 - **`build.gradle.kts`** + **`settings.gradle.kts`**: root validator + auto-discovery of schemas by `build.gradle.kts` marker.
 - **`zbb.yaml`**: lifecycle map between zbb commands and gradle tasks; imports the shared dev-stack credentials.
@@ -774,7 +774,7 @@ use the slot's identity).
    ```bash
    scripts/createNewSchema.sh package/{vendor}/{code}
    ```
-   It copies `templates/catalog.yml` + `templates/package.json` + the repo-root `.npmrc`,
+   It copies `templates/catalog.yml` + `templates/package.json` + `templates/README.md` + the repo-root `.npmrc`,
    substitutes the `{dashed}`/`{dotted}`/`{path}` placeholders from the path, and **writes the
    `build.gradle.kts` marker itself** — no manual marker step. New packages start at version
    **`1.0.0`**; CI owns every bump after that.
