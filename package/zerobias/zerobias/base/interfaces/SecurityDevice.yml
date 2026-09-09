@@ -1,0 +1,36 @@
+id: 862a18d4-88b3-5ed1-9a18-588232859d1f
+description: "A device that gates or watches: readers, locks, contacts, cameras, sensors, panels. An inventoried asset with a place; what it reaches is its coverage."
+extends:
+  - PhysicalObject
+  - Asset
+links:
+  models:
+    - c_physical
+    - s_facilityaccess
+    - s_envmon
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Device":
+    jsonata: deviceType
+    sort: deviceType
+  "Secures":
+    jsonata: $join(secures.name, ", ")
+  "Monitors":
+    jsonata: $join(monitors.name, ", ")
+properties:
+  - deviceType:
+    field: securityDevice.type
+# Links
+  - secures:
+    multi: true
+    linkTo: PhysicalEntry.id.devices
+    t3: openingSide
+  - monitors:
+    multi: true
+    linkTo: PhysicalSpace.id.monitoredBy
+    t3: monitoring
+  - app:
+    linkTo: Application
+    uniLink: true

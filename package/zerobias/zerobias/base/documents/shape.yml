@@ -1,0 +1,34 @@
+id: 63f2fdce-58de-44da-8123-9b25cf0bb372
+fieldId: 2427027f-f6ad-4ddf-ae9d-4fa67673b87e
+description: "A volume in the owner's frame: an outline (footprint) or a reach (coverage). The plan view is its projection."
+displayName: "Shape"
+properties:
+  - kind:
+    field: shape.kind
+  - label:
+    field: shape.label
+  - radius:
+    field: shape.radius
+  - range:
+    field: shape.range
+  - heading:
+    field: shape.heading
+  - sweep:
+    field: shape.sweep
+  - hFov:
+    field: shape.hFov
+  - vFov:
+    field: shape.vFov
+  - zMin:
+    field: shape.zMin
+  - zMax:
+    field: shape.zMax
+  - width:
+    field: extent.width
+  - depth:
+    field: extent.depth
+  - height:
+    field: extent.height
+  - vertices:
+    multi: true
+    field: point

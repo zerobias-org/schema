@@ -1,0 +1,5 @@
+id: 916ad58f-956e-4a51-8d14-3bf673c6d3c0
+example: -25
+description: "Rotation about the object's x axis, degrees, positive nose-up"
+displayName: "Pitch"
+type: number

@@ -1,0 +1,8 @@
+id: 4fc90828-c580-420c-ba78-bd612d50d008
+fieldId: b7a70e47-65a2-486c-a2fa-54be1f6cff4b
+description: "Which side of an opening a space lies on, or a device acts on"
+displayName: "Opening Side"
+values:
+  - INSIDE: "The secured side; for a device, it acts on exit"
+  - OUTSIDE: "The unsecured side; for a device, it controls entry"
+  - EITHER: "Not side-specific: a lock, a door contact, a window sensor"

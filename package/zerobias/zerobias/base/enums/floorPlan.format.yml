@@ -1,0 +1,11 @@
+id: 8e5c6c40-c940-44fa-be55-9e57a45eac79
+fieldId: e19583f8-9c90-4416-a6c5-115224be97f3
+description: "File format of a floor plan drawing"
+displayName: "Floor Plan Format"
+values:
+  - IMAGE: "Raster image (PNG, JPEG)"
+  - SVG: "Scalable vector drawing"
+  - PDF: "PDF drawing"
+  - DXF: "CAD exchange drawing"
+  - IFC: "BIM model"
+  - OTHER: "Other"

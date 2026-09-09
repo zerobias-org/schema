@@ -1,0 +1,5 @@
+id: 5ee5ead1-e6a9-4a73-b966-2ffbfd6becfd
+example: 0.6
+description: "Size along the object's x axis, metres"
+displayName: "Width"
+type: number

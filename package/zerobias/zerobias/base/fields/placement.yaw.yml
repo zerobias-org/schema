@@ -1,0 +1,5 @@
+id: 53136c30-1f4a-4297-8d79-4c4fb45e7b35
+example: 90
+description: "Rotation about z, degrees, counter-clockwise from +x seen from above"
+displayName: "Yaw"
+type: number

@@ -1,0 +1,12 @@
+id: a2fc6685-a48c-4c73-b50c-d58cc30901fc
+fieldId: 1f64321b-dc0c-4213-a051-e47930ee2772
+description: "What it takes to pass through an opening from a given space: the locking mechanism as experienced from that side"
+displayName: "Access Locking"
+values:
+  - FREE: "No lock or the lock does not act on this side: push and go (typical egress side)"
+  - KEY: "A mechanical key is needed from this side"
+  - CREDENTIAL: "A credential is needed from this side: card, fob, mobile, biometric"
+  - CODE: "A code is needed from this side: keypad or combination"
+  - CREDENTIAL_OR_KEY: "Credential normally, mechanical key override"
+  - NO_EGRESS: "Cannot be opened from this side at all (one-way door, fixed panel)"
+  - OTHER: "Other"

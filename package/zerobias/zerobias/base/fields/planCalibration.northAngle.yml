@@ -1,0 +1,5 @@
+id: 5b8bf52f-a192-4307-8ac9-ad3e7078c78b
+example: 0
+description: "Degrees from the image's up direction to true north, clockwise"
+displayName: "North Angle"
+type: number

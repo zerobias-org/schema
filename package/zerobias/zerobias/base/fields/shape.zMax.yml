@@ -1,0 +1,5 @@
+id: 9c11d695-3450-4d26-8e59-f66967f75089
+example: 0.1
+description: "Top of a prism shape, metres, relative to the owner's origin"
+displayName: "Z Max"
+type: number

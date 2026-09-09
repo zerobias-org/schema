@@ -1,0 +1,5 @@
+id: 02c4c291-46f2-44b4-949f-fc5817cb7a0e
+example: 1.2
+description: "Size along the object's y axis, metres"
+displayName: "Depth"
+type: number

@@ -1,0 +1,5 @@
+id: 42c10679-8d95-4827-b0fa-ce04e4aa7f18
+example: 460
+description: "Drawing height in pixels"
+displayName: "Image Height"
+type: integer

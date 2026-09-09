@@ -1,0 +1,5 @@
+id: ebe0e48a-9448-4dcf-b9ab-7c1a2920fb6e
+example: 60
+description: "Vertical field of view of a CONE, degrees"
+displayName: "Vertical FOV"
+type: number

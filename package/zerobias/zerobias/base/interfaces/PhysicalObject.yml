@@ -1,0 +1,49 @@
+id: 030a3931-a09c-5def-bb33-dc102ce66043
+description: "Anything with a body and a place: equipment, fixtures, spaces, openings, devices. Its position is the placement on its placedIn link, in the parent's frame."
+extends:
+  - Component
+links:
+  models:
+    - c_physical         # Physical and Environmental Security
+    - s_facilityaccess   # Facility Access Control
+    - s_envmon           # Environmental Monitoring
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Kind":
+    jsonata: kind
+    sort: kind
+  "Placed in":
+    jsonata: placedIn.name
+  "Mount":
+    jsonata: mount
+    sort: mount
+  "Source":
+    jsonata: sourceSystem & ":" & externalId
+properties:
+  - kind:
+    field: physicalObject.kind
+  - mount:
+    field: physicalObject.mount
+  - extent:
+    field: extent
+  - footprint:
+    field: shape
+  - coverage:
+    field: shape
+    multi: true
+  - externalId:
+    field: physicalObject.externalId
+  - sourceSystem:
+    field: physicalObject.sourceSystem
+  - installed:
+    field: timeInstalled
+# Links — the containment tree; both halves on this interface
+  - placedIn:
+    linkTo: PhysicalObject.id.contains
+    t3: placement
+  - contains:
+    multi: true
+    linkTo: PhysicalObject.id.placedIn
+    t3: placement

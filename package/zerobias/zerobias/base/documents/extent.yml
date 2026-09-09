@@ -1,0 +1,11 @@
+id: 5a02420a-a014-48b3-b0f3-0ae81f32b94a
+fieldId: 98bf7fdc-332b-4d65-bd48-1f574b49c0bc
+description: "Bounding box of the object's body in its own frame: centred on x and y, standing on z = 0"
+displayName: "Extent"
+properties:
+  - width:
+    field: extent.width
+  - depth:
+    field: extent.depth
+  - height:
+    field: extent.height

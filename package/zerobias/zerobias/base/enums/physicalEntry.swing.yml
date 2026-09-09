@@ -1,0 +1,9 @@
+id: ec5752d7-f404-48c2-856b-7201ecd04d5f
+fieldId: bf35b800-3e23-460a-b0d0-2982bc287052
+description: "For swinging leaves, whether they open into or out of the space this opening link belongs to"
+displayName: "Swing"
+values:
+  - INWARD: "Leaf swings into this space"
+  - OUTWARD: "Leaf swings out of this space"
+  - BOTH: "Double-action leaf"
+  - NOT_APPLICABLE: "Operation is not a swing"

@@ -1,0 +1,5 @@
+id: cefecfd1-a933-4a46-8c19-3705e15f4531
+example: "-65 dBm"
+description: "Level or meaning this shape represents, e.g. a signal level or a detection class"
+displayName: "Label"
+type: string

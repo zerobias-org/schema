@@ -1,0 +1,5 @@
+id: 5b4ab618-b7e3-4a4b-9ff9-3f612a356450
+example: 30
+description: "Drawing scale: image pixels per metre"
+displayName: "Pixels per Metre"
+type: number

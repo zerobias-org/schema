@@ -1,0 +1,5 @@
+id: b7c1462e-39f5-4bce-a830-ea787a8f2068
+example: 0
+description: "Rotation about the object's y axis, degrees, positive clockwise looking along +y"
+displayName: "Roll"
+type: number

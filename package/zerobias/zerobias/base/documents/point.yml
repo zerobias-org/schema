@@ -1,0 +1,11 @@
+id: 7f34e0af-d57e-48a5-887c-8cf6351e91cb
+fieldId: 9a2e9096-9212-4ad9-bf21-a5e31f1c6017
+description: "A vertex in the owner's frame, metres"
+displayName: "Point"
+properties:
+  - x:
+    field: placement.x
+  - y:
+    field: placement.y
+  - z:
+    field: placement.z

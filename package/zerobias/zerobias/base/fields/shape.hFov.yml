@@ -1,0 +1,5 @@
+id: 8c3827ec-12a3-45c3-b3af-81f664baf254
+example: 90
+description: "Horizontal field of view of a CONE, degrees"
+displayName: "Horizontal FOV"
+type: number

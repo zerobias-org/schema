@@ -1,0 +1,15 @@
+id: a89ab7a8-da0a-420f-9bb6-9c574c61b1c5
+fieldId: d5692ff7-4019-46cb-b4a2-5f7069cfa7f9
+description: "How the leaf of an opening moves"
+displayName: "Operation"
+values:
+  - SWING: "Single-action hinged leaf"
+  - DOUBLE_ACTION: "Hinged leaf that swings both ways"
+  - SLIDING: "Slides along the wall (pocket, barn, patio)"
+  - SECTIONAL_OVERHEAD: "Panels ride tracks up and along the ceiling (garage, loading dock)"
+  - ROLL_UP: "Coils onto a drum above the opening (shutter, grille)"
+  - BI_FOLD: "Folds in panels"
+  - REVOLVING: "Revolving door or turnstile"
+  - PIVOT: "Rotates about a vertical axis away from the edge"
+  - FIXED: "Does not open (fixed window, glazed panel)"
+  - NONE: "No leaf (open bay, gap, barrier arm)"

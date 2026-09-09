@@ -1,0 +1,5 @@
+id: 145eea78-270b-492a-af5b-a174baa008d4
+example: 1.2
+description: "Offset along the parent's x axis, metres"
+displayName: "X"
+type: number

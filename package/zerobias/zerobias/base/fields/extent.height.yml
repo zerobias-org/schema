@@ -1,0 +1,5 @@
+id: 76c949f5-b398-4a36-a1a0-483f5496207a
+example: 2.0
+description: "Size along the object's z axis, metres"
+displayName: "Height"
+type: number

@@ -1,0 +1,19 @@
+id: 195454ea-8503-4029-be82-39605071419d
+fieldId: a27ed924-e9c1-4bf6-838e-8fdc35cde9b6
+description: "Maps a drawing's pixels onto the space's frame"
+displayName: "Plan Calibration"
+properties:
+  - pixelsPerMetre:
+    field: planCalibration.pixelsPerMetre
+  - originX:
+    field: planCalibration.originX
+  - originY:
+    field: planCalibration.originY
+  - northAngle:
+    field: planCalibration.northAngle
+  - imageWidth:
+    field: planCalibration.imageWidth
+  - imageHeight:
+    field: planCalibration.imageHeight
+  - floorElevation:
+    field: planCalibration.floorElevation

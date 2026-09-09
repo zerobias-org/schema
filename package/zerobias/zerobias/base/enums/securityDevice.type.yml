@@ -1,0 +1,22 @@
+id: fcc3e7e1-39df-499d-9a09-a6a793eb82f9
+fieldId: 5fcea615-e7ed-40c5-b641-1078270e00cb
+description: "What a security device is"
+displayName: "Security Device Type"
+values:
+  - CARD_READER: "Card or badge reader"
+  - KEYPAD: "PIN keypad"
+  - BIOMETRIC_READER: "Fingerprint, face or iris reader"
+  - INTERCOM: "Intercom or video doorbell"
+  - ELECTRONIC_LOCK: "Electric strike, maglock or motorised lock"
+  - DOOR_CONTACT: "Door or window position contact"
+  - REX_BUTTON: "Request-to-exit button or sensor"
+  - CAMERA: "Video camera"
+  - MOTION_SENSOR: "Motion or presence sensor"
+  - GLASS_BREAK_SENSOR: "Glass-break sensor"
+  - SMOKE_DETECTOR: "Smoke detector"
+  - TEMPERATURE_SENSOR: "Temperature sensor"
+  - HUMIDITY_SENSOR: "Humidity sensor"
+  - WATER_LEAK_SENSOR: "Water leak sensor"
+  - ALARM_PANEL: "Intrusion or fire alarm panel"
+  - SIREN: "Siren or strobe"
+  - OTHER: "Other"

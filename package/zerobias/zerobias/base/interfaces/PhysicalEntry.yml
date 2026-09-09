@@ -1,8 +1,9 @@
 id: 029b657f-4bc4-577b-85ca-a891dd085c1b
-description: A physical entry point or access control device such as doors, gates, or barriers
+description: "An opening between spaces: door, gate, turnstile, window or barrier. The opening object itself; what is true from each side of it (hinge, swing, locking) rides on its connects links."
 extends:
   - Asset
   - Resource
+  - PhysicalObject
 properties:
   - entryType:
     field: physicalEntry.type
@@ -10,6 +11,8 @@ properties:
     field: physicalEntry.status
   - capacity:
     field: accessZone.capacity
+  - operation:
+    field: physicalEntry.operation
   # Links
   - site:
     linkTo: PhysicalSite.id.entries
@@ -20,5 +23,13 @@ properties:
     multi: true
   - app:
     linkTo: PhysicalAccessManagementApp.id.entries
+  - connects:
+    multi: true
+    linkTo: PhysicalSpace.id.openings
+    t3: spaceAccess
+  - devices:
+    multi: true
+    linkTo: SecurityDevice.id.secures
+    t3: openingSide
   # accessRules inherited from Resource
 

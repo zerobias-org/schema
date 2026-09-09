@@ -1,0 +1,19 @@
+id: c069a394-73c1-4e02-b1cb-c017728da97d
+fieldId: ca599231-27b9-480d-8246-b2b5be52a631
+description: "What kind of container a space is"
+displayName: "Space Type"
+values:
+  - SITE: "A campus or single-address property"
+  - CAMPUS: "Several buildings under one site"
+  - BUILDING: "A building"
+  - FLOOR: "A storey of a building"
+  - ROOM: "An enclosed room"
+  - CORRIDOR: "A circulation space"
+  - ZONE: "A security or functional area, may span rooms"
+  - RACK_ROW: "A row of racks"
+  - RACK: "An equipment rack; children are placed by rack unit"
+  - CABINET: "A lockable cabinet or safe"
+  - SHELF: "A shelf or bay"
+  - CAGE: "A caged area inside a room"
+  - OUTDOOR_AREA: "Grounds, parking, perimeter"
+  - OTHER: "Other"
