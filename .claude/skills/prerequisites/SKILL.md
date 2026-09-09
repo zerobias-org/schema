@@ -71,15 +71,18 @@ Two paths through this table:
 | — | **GitHub token for gradle plugin reads** (applies to EVERYONE on a clean machine; dev machines with locally-published `zb/*` in `~/.m2` are silently exempt) | `READ_TOKEN` / `NPM_TOKEN` / `GITHUB_TOKEN` env var present, `read:packages` scope — GitHub Packages Maven requires auth even for public reads (verified 2026-08-17) | EITHER export a PAT that has `read:packages` as `GITHUB_TOKEN`, OR use the gh keyring: `gh auth refresh -s read:packages && export GITHUB_TOKEN=$(gh auth token)`. ⚠ an INVALID `GITHUB_TOKEN` env var silently shadows a valid keyring login — `gh auth status` exposes it |
 | — | **build-tools plugin ≥ 1.0.137** (hard floor for org loads) | `./gradlew buildEnvironment \| grep build-tools` → ≥ 1.0.137 | usually a stale locally-published build-tools in `~/.m2` shadowing the release — remove `~/.m2/repository/com/zerobias/build-tools`; otherwise fix the GitHub-token row above |
 | — | Gate's remote dataloader step (`testDataloader`) | runs **iff `ZB_TOKEN` is present** (row 9 covers it; older `NEON_API_KEY` mentions are stale). ⚠ Absent `ZB_TOKEN` = the step is SKIPPED, not failed, and the stamp records `"testDataloader": "skipped"` — **skipped is not passed**; org loads and PRs need a stamp that says `passed` | — |
-| — | `@zerobias-com/platform-dataloader` global *(optional — local scratch-DB validation per CONTRIBUTING.md)* | `command -v dataloader` (zbb.yaml requires ≥ 1.0.87 when used) | `npm i -g @zerobias-com/platform-dataloader@latest` |
+| — | **`@zerobias-com/platform-dataloader` global** (hard — this repo's `zbb.yaml` `require:` runs on EVERY zbb lifecycle command: `gate` / `publishOrg` / `dataloader` exit 1 at preflight without it, printing an install hint that zbb does NOT run) | `command -v dataloader` + version ≥ 1.0.87 — read `$(npm root -g)/@zerobias-com/platform-dataloader/package.json` (`dataloader --version` boots the app and dials a DB first, ~5 s) | `./scripts/setup-org-credentials.sh` installs it when missing and reports when it is behind (re-run is safe, check-first); by hand: `zbb --slot <slot> --stack dev exec npm i -g @zerobias-com/platform-dataloader@latest` — needs the slot's `ZB_TOKEN`, a bare `npm i -g` 401s |
 
 **Tooling freshness (hard).** The ZeroBias CLIs move fast and version skew
 fails in confusing ways. For every UNPINNED @zerobias tool —
 `@zerobias-org/zbb`, `@zerobias-com/zerobias-mcp` (`zb`), and
 `@zerobias-com/platform-dataloader` when installed — the installed version
-MUST equal the registry's latest: compare `npm view <pkg> version` against
-the installed one. Behind → update with consent (`npm i -g <pkg>@latest`)
-or stop and wait — never continue on stale tooling. Documented pins beat
+MUST equal the registry's latest: compare `npm view <pkg>@latest version` against
+the installed one. Behind → update with consent (`zbb --slot <slot> --stack dev exec npm i -g <pkg>@latest`)
+or stop and wait — never continue on stale tooling. Spell `@latest` in the
+`npm view`: inside a slot the dev stack exports `NPM_CONFIG_TAG` (content-package
+dist-tag routing), and a bare `npm view <pkg> version` resolves THAT tag — the
+CLIs carry none, so the lookup comes back empty and must not read as "latest". Documented pins beat
 freshness: never bump a pinned version to satisfy this rule.
 ⚠ Run the `@zerobias-com/*` `npm view` freshness checks from `$HOME`, not
 the repo cwd — this repo's project `.npmrc` reroutes that scope to GitHub
