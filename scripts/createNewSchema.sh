@@ -38,6 +38,7 @@ DOTTED=$(printf '%s' "$NAME_REL" | tr '/' '.')
 
 cp "$REPO_ROOT/templates/catalog.yml" "$TARGET/"
 cp "$REPO_ROOT/templates/package.json" "$TARGET/"
+cp "$REPO_ROOT/templates/README.md" "$TARGET/"
 cp "$REPO_ROOT/.npmrc" "$TARGET/"
 
 # In-place sed portable across BSD (macOS) and GNU sed
@@ -47,6 +48,7 @@ subst() {
 }
 subst "$TARGET/package.json"
 subst "$TARGET/catalog.yml"
+subst "$TARGET/README.md"
 
 # Gradle discovery marker — settings.gradle.kts finds packages by this file
 if [ ! -f "$TARGET/build.gradle.kts" ]; then
@@ -57,7 +59,7 @@ echo "Scaffolded $FOLDER_PATH"
 echo "  npm name:         @zerobias-org/schema-$DASHED"
 echo "  zerobias.package: $DOTTED.schema"
 echo "Next:"
-echo "  1. Fill {name} / {description} in catalog.yml and package.json,"
+echo "  1. Fill {name} / {description} in catalog.yml, package.json and README.md,"
 echo "     and zerobias.orgId ({target-org-uuid}) with your org UUID for the org-first flow"
 echo "     (delete the orgId line only when opening the PR)"
 echo "  2. Author definitions under classes/ interfaces/ fields/ enums/ documents/"
