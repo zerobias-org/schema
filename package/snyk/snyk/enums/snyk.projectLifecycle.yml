@@ -1,0 +1,8 @@
+id: 29a791fe-c1bf-4674-87e7-fe1e4eedda08
+fieldId: eccd8689-5c9a-4d5d-9c5c-aef2f7ec8c2e
+description: "Lifecycle attribute assigned to a Snyk project."
+displayName: "Lifecycle"
+values:
+  - PRODUCTION: "Production"
+  - DEVELOPMENT: "Development"
+  - SANDBOX: "Sandbox"

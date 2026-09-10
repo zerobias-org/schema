@@ -1,0 +1,60 @@
+id: c710d404-0c33-5e81-92ba-03488dab0f3a
+description: "A Snyk organization: the scope inside Snyk that owns targets, projects, issues and members. Optionally belongs to a Snyk group."
+extends:
+  - Application
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Slug":
+    jsonata: slug
+    sort: slug
+  "Personal":
+    jsonata: isPersonal
+    sort: isPersonal
+  "Group Id":
+    jsonata: groupId
+    sort: groupId
+  "Projects":
+    jsonata: $count(projects)
+  "Targets":
+    jsonata: $count(targets)
+  "Members":
+    jsonata: $count(members)
+  "Issues":
+    jsonata: $count(issues)
+properties:
+  - slug:
+    field:
+      type: string
+      description: "Canonical, unique, URL-friendly name of the organization"
+      displayName: "Slug"
+      keyed: true
+  - isPersonal:
+    field:
+      type: boolean
+      description: "True when the organization is independent and not part of a Snyk group"
+      displayName: "Personal"
+  - groupId:
+    field:
+      type: string
+      description: "Snyk ID of the parent group, when the organization belongs to one"
+      displayName: "Group Id"
+  - accessRequestsEnabled:
+    field:
+      type: boolean
+      description: "Whether users can request access to the organization"
+      displayName: "Access Requests Enabled"
+  # Links
+  - members:
+    multi: true
+    linkTo: SnykUser.id.organization
+  - targets:
+    multi: true
+    linkTo: SnykTarget.id.organization
+  - projects:
+    multi: true
+    linkTo: SnykProject.id.organization
+  - issues:
+    multi: true
+    linkTo: SnykIssue.id.organization

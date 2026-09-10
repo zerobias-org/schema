@@ -1,0 +1,9 @@
+id: 1a501090-4be9-4e92-a2a4-f8475793f808
+fieldId: ff89dea7-8320-412f-a5e4-f068fd28a892
+description: "Business criticality attribute assigned to a Snyk project."
+displayName: "Business Criticality"
+values:
+  - CRITICAL: "Critical"
+  - HIGH: "High"
+  - MEDIUM: "Medium"
+  - LOW: "Low"

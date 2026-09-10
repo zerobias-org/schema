@@ -1,0 +1,14 @@
+id: 88bbce70-7a79-47a5-af7a-4cdbfac6524b
+fieldId: 0e50eea0-a54e-4184-adbd-e1eed452ad33
+description: "Environment attribute assigned to a Snyk project."
+displayName: "Environment"
+values:
+  - FRONTEND: "Frontend"
+  - BACKEND: "Backend"
+  - INTERNAL: "Internal"
+  - EXTERNAL: "External"
+  - MOBILE: "Mobile"
+  - SAAS: "SaaS"
+  - ONPREM: "On-premises"
+  - HOSTED: "Hosted"
+  - DISTRIBUTED: "Distributed"

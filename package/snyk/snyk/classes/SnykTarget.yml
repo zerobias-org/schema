@@ -1,0 +1,41 @@
+id: 89a85c56-5482-5717-b65f-e9e8ac239f4f
+description: "A Snyk target: the external thing Snyk imported and scans (a source repository, container image, cloud account, CLI directory, ...) from which projects are created"
+extends:
+  - Component
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "URL":
+    jsonata: url
+    sort: url
+  "Private":
+    jsonata: isPrivate
+    sort: isPrivate
+  "Integration":
+    jsonata: integrationType
+    sort: integrationType
+  "Projects":
+    jsonata: $count(projects)
+properties:
+  - isPrivate:
+    field:
+      type: boolean
+      description: "True when the target is private rather than publicly accessible"
+      displayName: "Private"
+  - integrationType:
+    field:
+      type: string
+      description: "Type of the integration the target was imported through (e.g. github, gitlab, ecr, cli)"
+      displayName: "Integration Type"
+  - integrationId:
+    field:
+      type: string
+      description: "Snyk ID of the integration the target was imported through"
+      displayName: "Integration Id"
+  # Links
+  - organization:
+    linkTo: SnykOrganization.id.targets
+  - projects:
+    multi: true
+    linkTo: SnykProject.id.target

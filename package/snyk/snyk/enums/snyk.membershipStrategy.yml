@@ -1,0 +1,7 @@
+id: 58e26095-18f2-45c6-8b0d-ef22891fe003
+fieldId: 77bf25d8-4a37-4fd5-8511-b0987174468f
+description: "How a user's membership in a Snyk organization was established."
+displayName: "Membership Strategy"
+values:
+  - DIRECT: "The user was added to the organization directly"
+  - INDIRECT: "The user's membership is inherited, e.g. through the parent group"

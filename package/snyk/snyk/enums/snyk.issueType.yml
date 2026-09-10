@@ -1,0 +1,12 @@
+id: 5dcefef9-d5ce-4f65-a879-25da2eeeb336
+fieldId: 13a99b03-6544-4bdc-88a8-f71242a70929
+description: "The kind of issue Snyk reported."
+displayName: "Issue Type"
+values:
+  - PACKAGE_VULNERABILITY: "A known vulnerability in an open source dependency"
+  - LICENSE: "A license policy violation in an open source dependency"
+  - CLOUD: "A misconfiguration found in a scanned cloud environment"
+  - CODE: "A Snyk Code (SAST) finding in first-party source"
+  - CUSTOM: "An issue raised by a custom rule"
+  - CONFIG: "An infrastructure-as-code misconfiguration"
+  - SECRETS: "A secret detected in source"

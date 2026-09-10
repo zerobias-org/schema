@@ -1,0 +1,7 @@
+id: 5565e729-ff0d-4197-b8dc-81f5bf6d5993
+fieldId: 47532070-ce19-4950-956a-42f6a803acae
+description: "Whether a Snyk project is actively monitored."
+displayName: "Project Status"
+values:
+  - ACTIVE: "The project is monitored and tested on its recurring schedule"
+  - INACTIVE: "The project has been deactivated and is no longer tested"

@@ -1,0 +1,6 @@
+Schema:
+  name: "Snyk"
+  package: "snyk.snyk.schema"
+  description: |-
+    AuditgraphDB schema for the Snyk developer security platform: organizations, projects,
+    targets, org members and the issues Snyk reports (open source, code, container and IaC).

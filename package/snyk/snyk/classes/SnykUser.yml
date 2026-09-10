@@ -1,0 +1,56 @@
+id: 19a04653-4d12-58ef-bf76-4b6279077bd4
+description: "A Snyk user as a member of one Snyk organization: identity plus the organization role and membership details"
+extends:
+  - Account
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Username":
+    jsonata: login
+    sort: login
+  "E-Mail":
+    jsonata: email
+    sort: email
+  "Org Role":
+    jsonata: orgRole
+    sort: orgRole
+  "Status":
+    jsonata: status
+    sort: status
+  "Login Method":
+    jsonata: loginMethod
+    sort: loginMethod
+  "Organization":
+    jsonata: organization
+properties:
+  - orgRole:
+    field:
+      type: string
+      description: "Name of the role the user holds in the organization (e.g. Organization Admin, Organization Collaborator, or a custom role)"
+      displayName: "Org Role"
+  - orgRoleId:
+    field:
+      type: string
+      description: "Snyk ID of the organization role"
+      displayName: "Org Role Id"
+  - loginMethod:
+    field:
+      type: string
+      description: "Authentication method the user signs in with (e.g. saml)"
+      displayName: "Login Method"
+  - membershipStrategy:
+    field: snyk.membershipStrategy
+  - membershipCreated:
+    field: timeCreated
+  # Links
+  - organization:
+    linkTo: SnykOrganization.id.members
+  - importedProjects:
+    multi: true
+    hidden: true
+    linkTo: SnykProject.id.importer
+  - ownedProjects:
+    multi: true
+    hidden: true
+    linkTo: SnykProject.id.owner

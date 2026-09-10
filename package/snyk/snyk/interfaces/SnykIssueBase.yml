@@ -1,0 +1,39 @@
+id: 005a0d00-0bf6-53f8-9bda-5b19ca8a3c36
+description: "A scanner-reported security issue: Finding plus the severity, suppression, resolution time and CVE/CWE references every vulnerability scanner yields"
+extends:
+  - Finding
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Severity":
+    jsonata: severity
+    sort: severity
+  "State":
+    jsonata: state
+    sort: state
+  "Ignored":
+    jsonata: ignored
+    sort: ignored
+properties:
+  - severity:
+    field: severity
+  - ignored:
+    field:
+      type: boolean
+      description: "True while the issue is suppressed by an ignore rule / policy"
+      displayName: "Ignored"
+  - resolvedAt:
+    field:
+      type: date-time
+      description: "When the issue was resolved"
+      displayName: "Resolved At"
+  # Links to base catalog classes — uniLink: base never links back to a package
+  - cves:
+    multi: true
+    linkTo: CVE
+    uniLink: true
+  - cwes:
+    multi: true
+    linkTo: CWE
+    uniLink: true

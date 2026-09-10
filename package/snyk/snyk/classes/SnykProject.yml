@@ -1,0 +1,94 @@
+id: 47bd0918-3570-5509-bfcd-d5a6860dcca6
+description: "A Snyk project: one scannable unit inside a target (a manifest, image, IaC file set or code base) with its scan settings and attributes"
+extends:
+  - Component
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Type":
+    jsonata: projectType
+    sort: projectType
+  "Origin":
+    jsonata: origin
+    sort: origin
+  "Status":
+    jsonata: status
+    sort: status
+  "Target File":
+    jsonata: targetFile
+    sort: targetFile
+  "Target Reference":
+    jsonata: targetReference
+    sort: targetReference
+  "Test Frequency":
+    jsonata: testFrequency
+    sort: testFrequency
+  "Issues":
+    jsonata: $count(issues)
+properties:
+  - projectType:
+    field:
+      type: string
+      description: "The package manager / scan type of the project (e.g. npm, maven, dockerfile, sast, terraformconfig)"
+      displayName: "Project Type"
+  - origin:
+    field:
+      type: string
+      description: "The integration origin the project was added from (e.g. github, cli, ecr)"
+      displayName: "Origin"
+  - status:
+    field: snyk.projectStatus
+  - readOnly:
+    field:
+      type: boolean
+      description: "Whether the project is read-only"
+      displayName: "Read Only"
+  - targetFile:
+    field:
+      type: string
+      description: "Path of the scanned file within the target (e.g. package.json)"
+      displayName: "Target File"
+  - targetReference:
+    field:
+      type: string
+      description: "Revision of the target that is scanned (e.g. a branch name)"
+      displayName: "Target Reference"
+  - targetRuntime:
+    field:
+      type: string
+      description: "Runtime target for .NET projects"
+      displayName: "Target Runtime"
+  - businessCriticality:
+    multi: true
+    field: snyk.projectBusinessCriticality
+  - environment:
+    multi: true
+    field: snyk.projectEnvironment
+  - lifecycle:
+    multi: true
+    field: snyk.projectLifecycle
+  - testFrequency:
+    field: snyk.testFrequency
+  - pullRequestChecksEnabled:
+    field:
+      type: boolean
+      description: "Whether Snyk pull request checks are enabled for the project"
+      displayName: "PR Checks Enabled"
+  - cliMonitoredAt:
+    field:
+      type: date-time
+      description: "When the project was last uploaded by the Snyk CLI (snyk monitor)"
+      displayName: "CLI Monitored At"
+  # Links
+  - organization:
+    linkTo: SnykOrganization.id.projects
+  - target:
+    linkTo: SnykTarget.id.projects
+  - importer:
+    linkTo: SnykUser.id.importedProjects
+  - owner:
+    linkTo: SnykUser.id.ownedProjects
+  - issues:
+    multi: true
+    linkTo: SnykIssue.id.project

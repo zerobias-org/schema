@@ -1,0 +1,9 @@
+id: d501f269-90ba-40ee-b39e-480a0ad978a8
+fieldId: acc83aef-0275-49d1-b493-c896877d0e7e
+description: "Snyk reachability analysis result for a vulnerable dependency."
+displayName: "Reachability"
+values:
+  - FUNCTION: "The vulnerable function is reachable from the project's code"
+  - PACKAGE: "The vulnerable package is reachable, but not the specific function"
+  - NO_INFO: "No reachability information is available"
+  - NOT_APPLICABLE: "Reachability analysis does not apply to this issue"

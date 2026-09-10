@@ -1,0 +1,7 @@
+id: 90d45593-913b-4240-82aa-43cf57a51df5
+fieldId: e014a001-ad1f-4887-b230-ae17b044a8f9
+description: "How a resolved Snyk issue was resolved."
+displayName: "Resolution Type"
+values:
+  - DISAPPEARED: "The issue no longer appears in the latest test"
+  - FIXED: "The issue was fixed"

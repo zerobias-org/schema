@@ -1,0 +1,147 @@
+id: 0b840783-eb03-5eab-a180-441b684abb8b
+description: "An issue Snyk reported against a project: a dependency vulnerability, license violation, code, IaC, cloud, secret or custom-rule finding"
+extends:
+  - SnykIssueBase
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Type":
+    jsonata: issueType
+    sort: issueType
+  "Severity":
+    jsonata: severity
+    sort: severity
+  "State":
+    jsonata: state
+    sort: state
+  "Ignored":
+    jsonata: ignored
+    sort: ignored
+  "Risk Score":
+    jsonata: riskScore
+    sort: riskScore
+  "Package":
+    jsonata: packageName
+    sort: packageName
+  "Project":
+    jsonata: project
+properties:
+  - key:
+    field:
+      type: string
+      description: "Opaque key that identifies the issue across test runs within its project"
+      displayName: "Key"
+      keyed: true
+  - keyAsset:
+    field:
+      type: string
+      description: "Snyk Code only: key that identifies the issue per repository"
+      displayName: "Asset Key"
+  - issueType:
+    field: snyk.issueType
+  - resolutionType:
+    field: snyk.issueResolutionType
+  - resolutionDetails:
+    field:
+      type: string
+      description: "Details of how the issue was resolved"
+      displayName: "Resolution Details"
+  - tool:
+    field:
+      type: string
+      description: "Opaque identifier of the Snyk tool that reported the issue (e.g. snyk://npm-deps)"
+      displayName: "Tool"
+  - riskScore:
+    field:
+      type: integer
+      description: "Snyk risk score for the issue"
+      displayName: "Risk Score"
+  - riskScoreModel:
+    field:
+      type: string
+      description: "Version of the risk scoring model that produced the score"
+      displayName: "Risk Model"
+  - cvssScore:
+    field:
+      type: number
+      description: "CVSS base score assigned by Snyk"
+      displayName: "CVSS Score"
+  - cvssVectorString:
+    field:
+      type: string
+      description: "CVSS vector string assigned by Snyk"
+      displayName: "CVSS Vector"
+  - cvssVersion:
+    field:
+      type: string
+      description: "CVSS version of the score and vector"
+      displayName: "CVSS Version"
+  - exploitMaturity:
+    field:
+      type: string
+      description: "Highest exploit maturity level known for the issue"
+      displayName: "Exploit Maturity"
+  - exploitSources:
+    multi: true
+    field:
+      type: string
+      description: "Sources of exploit intelligence for the issue (e.g. CISA, ExploitDB, Snyk)"
+      displayName: "Exploit Sources"
+  - reachability:
+    field: snyk.issueReachability
+  - packageName:
+    field:
+      type: string
+      description: "Name of the vulnerable dependency, for dependency issues"
+      displayName: "Package"
+  - filePath:
+    field:
+      type: string
+      description: "Path of the file the issue was found in, for code, IaC and resource-path issues"
+      displayName: "File Path"
+  - isUpgradeable:
+    field:
+      type: boolean
+      description: "True when a dependency upgrade fixes the issue"
+      displayName: "Upgradeable"
+  - isPatchable:
+    field:
+      type: boolean
+      description: "True when a Snyk patch fixes the issue"
+      displayName: "Patchable"
+  - isPinnable:
+    field:
+      type: boolean
+      description: "True when pinning the dependency fixes the issue"
+      displayName: "Pinnable"
+  - isFixableSnyk:
+    field:
+      type: boolean
+      description: "True when Snyk can fix the issue automatically"
+      displayName: "Fixable by Snyk"
+  - isFixableManually:
+    field:
+      type: boolean
+      description: "True when the issue can be fixed manually"
+      displayName: "Fixable Manually"
+  - isFixableUpstream:
+    field:
+      type: boolean
+      description: "True when a fix is available upstream"
+      displayName: "Fixable Upstream"
+  - lastIntroducedAt:
+    field:
+      type: date-time
+      description: "When the issue was last introduced"
+      displayName: "Last Introduced At"
+  - ignoreId:
+    field:
+      type: string
+      description: "ID of the ignore rule / policy suppressing the issue"
+      displayName: "Ignore Id"
+  # Links
+  - organization:
+    linkTo: SnykOrganization.id.issues
+  - project:
+    linkTo: SnykProject.id.issues

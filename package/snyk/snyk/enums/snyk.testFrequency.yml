@@ -1,0 +1,8 @@
+id: 37871671-990e-4345-aecc-6d345a3e0d94
+fieldId: cdb33fbe-ffbe-4cbf-8100-9457a4bbbae7
+description: "How often Snyk re-tests a project (settings.recurring_tests.frequency)."
+displayName: "Test Frequency"
+values:
+  - DAILY: "Tested every day"
+  - WEEKLY: "Tested every week"
+  - NEVER: "Recurring tests are disabled"
