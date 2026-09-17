@@ -1,0 +1,10 @@
+Schema:
+  name: "Hospital Financials Schema"
+  package: "zerobias.schemas.hospitalfinancials.schema"
+  description: |-
+    AuditgraphDB schema for hospital financial data, starting with lab send-out economics:
+    what a test costs (reference lab fee schedule and invoices), what the hospital billed
+    (chargemaster, charges, 837 claims), what each payer actually paid (835 remittances,
+    adjustments, provider-level takebacks), and the benchmarks to compare against (CLFS,
+    payer contract rates). Clinical context (encounter, coverage, diagnosis, order, result)
+    comes from HL7; the financial half from X12 — the schema is the join spine between them.

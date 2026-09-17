@@ -1,0 +1,25 @@
+id: 4e9290c1-12c3-5cd6-8ea3-9010054c0d93
+description: "A performing / reference laboratory the hospital sends specimens to (e.g. Quest). Reference entity. Source: LIS send-out configuration, vendor contract."
+extends:
+  - Object
+properties:
+  - labCode:
+    field:
+      type: string
+      description: "Hospital's identifier for the reference lab"
+
+  - tests:
+    linkTo: HospitalReferenceLabTest.id.performingLab
+    multi: true
+
+  - invoiceLines:
+    linkTo: HospitalReferenceLabInvoiceLine.id.performingLab
+    multi: true
+
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Lab Code":
+    jsonata: labCode
+    sort: labCode

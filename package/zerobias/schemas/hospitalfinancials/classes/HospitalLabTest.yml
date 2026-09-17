@@ -1,0 +1,42 @@
+id: 703ef2e0-98af-5a0f-9f60-d7dee8dc0397
+description: "A test in the hospital's own laboratory catalog (LIS / chargemaster spine). Reference entity. Source: LIS send-out configuration; HL7 OBR-4 identifies it on orders."
+extends:
+  - Object
+properties:
+  - testCode:
+    field:
+      type: string
+      description: "Hospital (LIS) test code — the OBR-4 identifier on orders"
+
+  - isSendOut:
+    field:
+      type: boolean
+      description: "True when the LIS routes this test to a reference lab rather than in-house"
+
+  - isActive:
+    field:
+      type: boolean
+      description: "True while the test is orderable"
+
+  - chargemasterItems:
+    linkTo: HospitalChargemasterItem.id.labTest
+    multi: true
+
+  - referenceLabTests:
+    linkTo: HospitalReferenceLabTest.id.hospitalTests
+    multi: true
+
+  - labOrders:
+    linkTo: HospitalLabOrder.id.test
+    multi: true
+
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Test Code":
+    jsonata: testCode
+    sort: testCode
+  "Send-Out":
+    jsonata: isSendOut
+    sort: isSendOut

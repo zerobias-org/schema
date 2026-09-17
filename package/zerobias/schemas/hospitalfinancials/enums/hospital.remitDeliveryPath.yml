@@ -1,0 +1,8 @@
+id: 5d4d1efe-2581-4ed2-b99d-fd8abcbc337b
+fieldId: ca90e200-20fd-4ebe-8737-79afeb03c95c
+description: "How a payer's 835s reach the hospital. A split topology means one feed will not see every payer."
+displayName: "Remit Delivery Path"
+values:
+  - CLEARINGHOUSE: 'Via a clearinghouse (Change/Optum, Availity, Waystar, ...).'
+  - DIRECT: 'Delivered directly by the payer.'
+  - PAPER: 'Paper EOB keyed manually; no 835.'

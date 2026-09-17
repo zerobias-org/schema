@@ -1,0 +1,54 @@
+id: b52e01d2-0af9-58db-9bfe-b04fa291b7eb
+description: "One 835 transaction — a payment with the claims it settles and the provider-level takebacks that sit outside any claim. Event entity. Source: X12 835 BPR / TRN / PLB."
+extends:
+  - Object
+properties:
+  - traceNumber:
+    field:
+      type: string
+      description: "Check or EFT trace number (TRN02)"
+
+  - paymentAmount:
+    field:
+      type: number
+      description: "Total actual provider payment (BPR02)"
+
+  - paymentMethod:
+    field:
+      type: string
+      description: "Payment method code (BPR04: ACH, CHK, NON)"
+
+  - paymentDate:
+    field:
+      type: date
+      description: "Payment effective date (BPR16)"
+
+  - productionDate:
+    field:
+      type: date
+      description: "Production date of the remittance (DTM*405)"
+
+  - payer:
+    linkTo: HospitalPayer.id.remittanceAdvices
+    multi: false
+
+  - claims:
+    linkTo: HospitalRemittanceClaim.id.remittanceAdvice
+    multi: true
+
+  - providerLevelAdjustments:
+    linkTo: HospitalProviderLevelAdjustment.id.remittanceAdvice
+    multi: true
+
+viewProperties:
+  "Trace #":
+    jsonata: traceNumber
+    sort: traceNumber
+  "Payer":
+    jsonata: payer.name
+  "Paid":
+    jsonata: paymentAmount
+    sort: paymentAmount
+  "Payment Date":
+    jsonata: paymentDate
+    sort: paymentDate

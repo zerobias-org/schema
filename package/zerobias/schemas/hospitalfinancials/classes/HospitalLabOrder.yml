@@ -1,0 +1,58 @@
+id: e88a1961-28cd-51b4-a6e7-7c24b899b0df
+description: "One lab test ordered for one patient on one date — the join to the shared test catalog. Event entity. Contains PHI. Source: HL7 ORM/OML ORC + OBR."
+extends:
+  - Object
+properties:
+  - placerOrderNumber:
+    field:
+      type: string
+      description: "Placer order number (ORC-2 / OBR-2)"
+
+  - fillerOrderNumber:
+    field:
+      type: string
+      description: "Filler order number (ORC-3 / OBR-3)"
+
+  - orderTime:
+    field:
+      type: date-time
+      description: "Date-time of the order (ORC-9 / OBR-6)"
+
+  - orderStatus:
+    field:
+      type: string
+      description: "Order status (ORC-5) or control code (ORC-1)"
+
+  - isCancelled:
+    field:
+      type: boolean
+      description: "True when the order was cancelled (ORC-1 CA/OC) — excluded from volume"
+
+  - encounter:
+    linkTo: HospitalEncounter.id.labOrders
+    multi: false
+
+  - test:
+    linkTo: HospitalLabTest.id.labOrders
+    multi: false
+
+  - orderingLocation:
+    linkTo: HospitalLocation.id.labOrders
+    multi: false
+
+  - results:
+    linkTo: HospitalLabResult.id.labOrder
+    multi: true
+
+viewProperties:
+  "Order":
+    jsonata: placerOrderNumber
+    sort: placerOrderNumber
+  "Test":
+    jsonata: test.name
+  "Ordered":
+    jsonata: orderTime
+    sort: orderTime
+  "Cancelled":
+    jsonata: isCancelled
+    sort: isCancelled

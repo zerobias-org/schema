@@ -1,0 +1,10 @@
+id: 4d4f6870-4dc5-4d74-9bda-5e60a7fbb7c7
+fieldId: de5d6b26-b6cc-4f48-80b7-a54ecbc080a8
+description: "X12 835 CAS01 claim adjustment group code."
+displayName: "Adjustment Group Code"
+values:
+  - CO: 'Contractual obligation.'
+  - PR: 'Patient responsibility.'
+  - OA: 'Other adjustment.'
+  - PI: 'Payer initiated reduction.'
+  - CR: 'Correction and reversal.'

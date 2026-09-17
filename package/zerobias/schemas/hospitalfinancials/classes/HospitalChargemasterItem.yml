@@ -1,0 +1,62 @@
+id: 3b58f355-e616-553c-8d2e-d3dad0c61443
+description: "A chargemaster (CDM) line: charge code, amount, revenue code and the procedure code it bills as. Effective-dated. Reference entity. Source: hospital chargemaster."
+extends:
+  - Object
+properties:
+  - chargeCode:
+    field:
+      type: string
+      description: "Chargemaster charge code"
+
+  - chargeAmount:
+    field:
+      type: number
+      description: "Gross charge amount for one unit"
+
+  - revenueCode:
+    field:
+      type: string
+      description: "UB-04 revenue code (e.g. 0300 laboratory)"
+
+  - effectiveFrom:
+    field:
+      type: date
+      description: "First date this charge amount is in force"
+
+  - effectiveTo:
+    field:
+      type: date
+      description: "Last date this charge amount is in force; empty while current"
+
+  - labTest:
+    linkTo: HospitalLabTest.id.chargemasterItems
+    multi: false
+
+  - procedureCode:
+    field:
+      type: string
+      description: "Procedure code (CPT/HCPCS) this charge bills as"
+
+  - procedureElement:
+    linkTo: Element
+    multi: false
+    uniLink: true
+    description: "The published procedure-code Element (HCPCS/CPT standard)"
+
+  - chargeTransactions:
+    linkTo: HospitalChargeTransaction.id.chargemasterItem
+    multi: true
+
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Charge Code":
+    jsonata: chargeCode
+    sort: chargeCode
+  "Charge":
+    jsonata: chargeAmount
+    sort: chargeAmount
+  "Effective From":
+    jsonata: effectiveFrom
+    sort: effectiveFrom

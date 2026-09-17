@@ -1,0 +1,47 @@
+id: 0f8e5294-bb9a-51a5-8f5e-3ba2b83ab221
+description: "One CAS adjustment — the gap between charge and payment, classified by group code and reason. Attached to a service line, or to the remittance claim for claim-level CAS. Event entity. Source: X12 835 CAS."
+extends:
+  - Object
+properties:
+  - groupCode:
+    field: hospital.adjustmentGroupCode
+
+  - amount:
+    field:
+      type: number
+      description: "Adjustment amount (CAS03)"
+
+  - quantity:
+    field:
+      type: number
+      description: "Adjustment quantity (CAS04)"
+
+  - serviceLine:
+    linkTo: HospitalRemittanceServiceLine.id.adjustments
+    multi: false
+
+  - remittanceClaim:
+    linkTo: HospitalRemittanceClaim.id.adjustments
+    multi: false
+
+  - reasonCode:
+    field:
+      type: string
+      description: "Claim adjustment reason code as received (CAS02)"
+
+  - reasonCodeElement:
+    linkTo: Element
+    multi: false
+    uniLink: true
+    description: "The published CARC Element (X12 external code list)"
+
+viewProperties:
+  "Group":
+    jsonata: groupCode
+    sort: groupCode
+  "Reason":
+    jsonata: reasonCode
+    sort: reasonCode
+  "Amount":
+    jsonata: amount
+    sort: amount

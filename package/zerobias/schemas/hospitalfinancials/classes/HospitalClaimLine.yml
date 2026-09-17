@@ -1,0 +1,70 @@
+id: c53b5db3-67a7-5ea5-a550-436e72742132
+description: "One service line on a claim — the billed side of a procedure code on a date of service. Event entity. Source: X12 837 Loop 2400 (SV1 professional / SV2 institutional)."
+extends:
+  - Object
+properties:
+  - lineNumber:
+    field:
+      type: integer
+      description: "Service line number (LX01)"
+
+  - modifiers:
+    field:
+      type: string
+      description: "Procedure modifiers, space-separated (SV101-3.. / SV202-3..)"
+
+  - units:
+    field:
+      type: number
+      description: "Service units (SV104 / SV205)"
+
+  - lineCharge:
+    field:
+      type: number
+      description: "Line item charge amount (SV102 / SV203)"
+
+  - serviceDate:
+    field:
+      type: date
+      description: "Date of service (DTP*472)"
+
+  - revenueCode:
+    field:
+      type: string
+      description: "Revenue code (SV201) — institutional only"
+
+  - claim:
+    linkTo: HospitalClaim.id.lines
+    multi: false
+
+  - procedureCode:
+    field:
+      type: string
+      description: "Procedure code as submitted (SV101-2 / SV202-2)"
+
+  - procedureElement:
+    linkTo: Element
+    multi: false
+    uniLink: true
+    description: "The published procedure-code Element (HCPCS/CPT standard)"
+
+  - remittanceServiceLines:
+    linkTo: HospitalRemittanceServiceLine.id.claimLine
+    multi: true
+
+viewProperties:
+  "Line":
+    jsonata: lineNumber
+    sort: lineNumber
+  "Code":
+    jsonata: procedureCode
+    sort: procedureCode
+  "Units":
+    jsonata: units
+    sort: units
+  "Charge":
+    jsonata: lineCharge
+    sort: lineCharge
+  "Service Date":
+    jsonata: serviceDate
+    sort: serviceDate

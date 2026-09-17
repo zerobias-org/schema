@@ -1,0 +1,45 @@
+id: 226a29cf-d428-548a-bd95-341f4ea20470
+description: "A rejection that never became an 835 — would otherwise read as unpaid. Event entity. Source: X12 TA1, 999 (IK5/AK9), 277CA (STC)."
+extends:
+  - Object
+properties:
+  - acknowledgmentType:
+    field: hospital.acknowledgmentType
+
+  - statusCategoryCode:
+    field:
+      type: string
+      description: "Claim status category code (STC01-1, e.g. A7)"
+
+  - statusCode:
+    field:
+      type: string
+      description: "Claim status code (STC01-2) or 999 error code"
+
+  - reason:
+    field:
+      type: string
+      description: "Free-text or decoded reason for the rejection"
+
+  - rejectionTime:
+    field:
+      type: date-time
+      description: "Date-time of the acknowledgment"
+
+  - claim:
+    linkTo: HospitalClaim.id.rejections
+    multi: false
+
+viewProperties:
+  "Type":
+    jsonata: acknowledgmentType
+    sort: acknowledgmentType
+  "Category":
+    jsonata: statusCategoryCode
+    sort: statusCategoryCode
+  "Status":
+    jsonata: statusCode
+    sort: statusCode
+  "When":
+    jsonata: rejectionTime
+    sort: rejectionTime

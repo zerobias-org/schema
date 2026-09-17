@@ -1,0 +1,33 @@
+id: fe95b734-7f49-5d3e-829c-baa1e675d430
+description: "The contracted price the hospital pays a reference lab for one test — the cost side. Effective-dated. Reference entity. Source: reference lab client fee schedule (contract document, not a feed)."
+extends:
+  - Object
+properties:
+  - contractedPrice:
+    field:
+      type: number
+      description: "Contracted client price for one unit of the test"
+
+  - effectiveFrom:
+    field:
+      type: date
+      description: "First date this price is in force"
+
+  - effectiveTo:
+    field:
+      type: date
+      description: "Last date this price is in force; empty while current"
+
+  - referenceLabTest:
+    linkTo: HospitalReferenceLabTest.id.feeScheduleRates
+    multi: false
+
+viewProperties:
+  "Test":
+    jsonata: referenceLabTest.name
+  "Price":
+    jsonata: contractedPrice
+    sort: contractedPrice
+  "Effective From":
+    jsonata: effectiveFrom
+    sort: effectiveFrom

@@ -1,0 +1,53 @@
+id: e9389e60-0c27-596b-b8c1-fa78e0e50272
+description: "A provider-level adjustment (takeback, interest, forwarding balance) that sits outside any claim and would otherwise skew net paid. Event entity. Source: X12 835 PLB."
+extends:
+  - Object
+properties:
+  - providerIdentifier:
+    field:
+      type: string
+      description: "Provider identifier the adjustment applies to (PLB01)"
+
+  - fiscalPeriodDate:
+    field:
+      type: date
+      description: "Fiscal period date (PLB02)"
+
+  - referenceId:
+    field:
+      type: string
+      description: "Reference identification (PLB03-2), often the original claim or check"
+
+  - amount:
+    field:
+      type: number
+      description: "Provider adjustment amount (PLB04) — positive reduces payment"
+
+  - remittanceAdvice:
+    linkTo: HospitalRemittanceAdvice.id.providerLevelAdjustments
+    multi: false
+
+  - reasonCode:
+    field:
+      type: string
+      description: "Provider adjustment reason code as received (PLB03-1)"
+
+  - reasonCodeElement:
+    linkTo: Element
+    multi: false
+    uniLink: true
+    description: "The published adjustment reason Element (X12 external code list)"
+
+viewProperties:
+  "Provider":
+    jsonata: providerIdentifier
+    sort: providerIdentifier
+  "Reason":
+    jsonata: reasonCode
+    sort: reasonCode
+  "Amount":
+    jsonata: amount
+    sort: amount
+  "Period":
+    jsonata: fiscalPeriodDate
+    sort: fiscalPeriodDate

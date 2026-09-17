@@ -1,0 +1,7 @@
+id: ccefac93-5ad9-4fc2-ba15-adab9fe4f4b2
+fieldId: 68a40a22-3c43-46ad-a7bb-4affa33a96aa
+description: "Which 837 transaction produced the claim."
+displayName: "Claim Type"
+values:
+  - INSTITUTIONAL: '837I (facility, UB-04).'
+  - PROFESSIONAL: '837P (professional, CMS-1500).'

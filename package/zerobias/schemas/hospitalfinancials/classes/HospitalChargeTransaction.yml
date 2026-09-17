@@ -1,0 +1,54 @@
+id: ad48b97a-dd6d-52df-837e-faef04ff2002
+description: "A charge posted to an encounter. Event entity. Contains PHI. Source: HL7 DFT^P03 FT1 when charges post through an interface; otherwise the billing system."
+extends:
+  - Object
+properties:
+  - transactionId:
+    field:
+      type: string
+      description: "Transaction ID (FT1-2)"
+
+  - serviceDate:
+    field:
+      type: date
+      description: "Date of service (FT1-4)"
+
+  - quantity:
+    field:
+      type: integer
+      description: "Units (FT1-10)"
+
+  - chargeAmount:
+    field:
+      type: number
+      description: "Extended charge amount (FT1-11)"
+
+  - encounter:
+    linkTo: HospitalEncounter.id.chargeTransactions
+    multi: false
+
+  - procedureCode:
+    field:
+      type: string
+      description: "Procedure code (FT1-25)"
+
+  - procedureElement:
+    linkTo: Element
+    multi: false
+    uniLink: true
+    description: "The published procedure-code Element (HCPCS/CPT standard)"
+
+  - chargemasterItem:
+    linkTo: HospitalChargemasterItem.id.chargeTransactions
+    multi: false
+
+viewProperties:
+  "Transaction":
+    jsonata: transactionId
+    sort: transactionId
+  "Service Date":
+    jsonata: serviceDate
+    sort: serviceDate
+  "Charge":
+    jsonata: chargeAmount
+    sort: chargeAmount

@@ -1,0 +1,43 @@
+id: feb685f1-bee7-51e5-b7e8-06337162eed2
+description: "The reference lab's result for an order — carries the accession number that joins to the lab's invoice. Event entity. Contains PHI. Source: HL7 ORU OBR/OBX from the reference lab."
+extends:
+  - Object
+properties:
+  - accessionNumber:
+    field:
+      type: string
+      description: "Reference lab accession number (OBR-3 / OBR-20) — matches HospitalReferenceLabInvoiceLine.accessionNumber"
+
+  - resultTime:
+    field:
+      type: date-time
+      description: "Results report date-time (OBR-22)"
+
+  - resultStatus:
+    field:
+      type: string
+      description: "Result status (OBR-25)"
+
+  - notPerformedReason:
+    field:
+      type: string
+      description: "Reason the test was not performed (insufficient specimen, QNS, cancelled) — a second cost with no second charge when recollected"
+
+  - labOrder:
+    linkTo: HospitalLabOrder.id.results
+    multi: false
+
+  - invoiceLines:
+    linkTo: HospitalReferenceLabInvoiceLine.id.labResult
+    multi: true
+
+viewProperties:
+  "Accession":
+    jsonata: accessionNumber
+    sort: accessionNumber
+  "Resulted":
+    jsonata: resultTime
+    sort: resultTime
+  "Status":
+    jsonata: resultStatus
+    sort: resultStatus

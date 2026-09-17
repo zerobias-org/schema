@@ -1,0 +1,50 @@
+id: bc991d40-8c0b-563b-9170-40f8811aac89
+description: "One line of a reference lab invoice — the actual cost of one accession. Event entity. Source: reference lab invoice (data file or parsed PDF)."
+extends:
+  - Object
+properties:
+  - invoiceNumber:
+    field:
+      type: string
+      description: "Reference lab invoice number"
+
+  - invoiceDate:
+    field:
+      type: date
+      description: "Invoice date"
+
+  - accessionNumber:
+    field:
+      type: string
+      description: "Accession number on the invoice line — matches HospitalLabResult.accessionNumber"
+
+  - cost:
+    field:
+      type: number
+      description: "Amount invoiced for this line"
+
+  - labResult:
+    linkTo: HospitalLabResult.id.invoiceLines
+    multi: false
+
+  - referenceLabTest:
+    linkTo: HospitalReferenceLabTest.id.invoiceLines
+    multi: false
+
+  - performingLab:
+    linkTo: HospitalReferenceLab.id.invoiceLines
+    multi: false
+
+viewProperties:
+  "Invoice":
+    jsonata: invoiceNumber
+    sort: invoiceNumber
+  "Accession":
+    jsonata: accessionNumber
+    sort: accessionNumber
+  "Cost":
+    jsonata: cost
+    sort: cost
+  "Date":
+    jsonata: invoiceDate
+    sort: invoiceDate
