@@ -10,7 +10,7 @@
     "directory": "bundle/"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://pkg.zerobias.org"
   },
   "zerobias": {
     "package": "bundle.all-schemas",
@@ -23,7 +23,6 @@
     "@zerobias-org/schema-w3geekery-sme-mart": "2.0.1",
     "@zerobias-org/schema-w3geekery-smemart": "2.0.12",
     "@zerobias-org/schema-zerobias-schemas-agentskills": "2.0.3",
-    "@zerobias-org/schema-zerobias-schemas-mcpservers": "2.0.1",
-    "@zerobias-org/schema-zerobias-zerobias-base": "3.0.3"
+    "@zerobias-org/schema-zerobias-schemas-mcpservers": "2.0.1"
   }
 }

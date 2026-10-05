@@ -42,7 +42,7 @@ plugins { id("zb.schema") }
 `zb.schema` extends `zb.content` and adds the TS-twin pipeline (generation at gate time inside the Neon branch, publish + promote in lockstep with the schema package).
 
 ### 2. Ensure `.npmrc`
-If `<package>/.npmrc` doesn't exist, copy from a sibling already-migrated package (or from the repo root). Validators require it.
+`<package>/.npmrc` must be byte-identical to the repo-root `.npmrc`: `cp .npmrc <package>/.npmrc` (never from a sibling — siblings may be stale). Dependency specs are `"*"`, never `"latest"`. Validators require it.
 
 ### 3. Run **full** `gate` (NOT just `validateContent`)
 ```bash
