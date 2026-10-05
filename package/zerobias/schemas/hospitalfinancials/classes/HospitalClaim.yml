@@ -1,0 +1,78 @@
+id: a6082a7e-fb11-524e-aa17-5d20fb534555
+description: "A claim submitted to a payer (837I or 837P). Event entity. Contains PHI. Source: X12 837 Loop 2300 CLM."
+extends:
+  - Object
+properties:
+  - patientControlNumber:
+    field:
+      type: string
+      description: "Patient control number (CLM01) — matches HospitalEncounter.visitNumber and HospitalRemittanceClaim.patientControlNumber"
+
+  - claimType:
+    field: hospital.claimType
+
+  - billType:
+    field:
+      type: string
+      description: "Facility type / bill type (CLM05-1 + CLM05-3, e.g. 131, 141)"
+
+  - totalCharge:
+    field:
+      type: number
+      description: "Total claim charge amount (CLM02)"
+
+  - statementFromDate:
+    field:
+      type: date
+      description: "Statement period start (DTP*434)"
+
+  - statementToDate:
+    field:
+      type: date
+      description: "Statement period end (DTP*434)"
+
+  - submittedTime:
+    field:
+      type: date-time
+      description: "Interchange date-time the claim was sent (ISA09/ISA10)"
+
+  - interchangeControlNumber:
+    field:
+      type: string
+      description: "Interchange control number (ISA13) of the 837 that carried the claim"
+
+  - payer:
+    linkTo: HospitalPayer.id.claims
+    multi: false
+
+  - encounter:
+    linkTo: HospitalEncounter.id.claims
+    multi: false
+
+  - lines:
+    linkTo: HospitalClaimLine.id.claim
+    multi: true
+
+  - rejections:
+    linkTo: HospitalClaimRejection.id.claim
+    multi: true
+
+  - remittanceClaims:
+    linkTo: HospitalRemittanceClaim.id.claim
+    multi: true
+
+viewProperties:
+  "Patient Control #":
+    jsonata: patientControlNumber
+    sort: patientControlNumber
+  "Type":
+    jsonata: claimType
+    sort: claimType
+  "Payer":
+    jsonata: payer.name
+  "Total Charge":
+    jsonata: totalCharge
+    sort: totalCharge
+  "Submitted":
+    jsonata: submittedTime
+    sort: submittedTime

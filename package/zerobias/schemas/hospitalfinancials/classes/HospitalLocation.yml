@@ -1,0 +1,33 @@
+id: dc60b69c-52e0-5d38-8a12-797f97a56367
+description: "An ordering location / patient location inside the hospital (point of care, department). Reference entity. Source: HL7 PV1-3."
+extends:
+  - Object
+properties:
+  - locationCode:
+    field:
+      type: string
+      description: "Point-of-care / unit code (PV1-3.1)"
+
+  - department:
+    field:
+      type: string
+      description: "Department the location belongs to"
+
+  - encounters:
+    linkTo: HospitalEncounter.id.location
+    multi: true
+
+  - labOrders:
+    linkTo: HospitalLabOrder.id.orderingLocation
+    multi: true
+
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Code":
+    jsonata: locationCode
+    sort: locationCode
+  "Department":
+    jsonata: department
+    sort: department

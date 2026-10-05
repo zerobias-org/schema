@@ -1,0 +1,45 @@
+id: 4d6ebb6c-80cd-53f1-96e1-e034bab41a4d
+description: "A diagnosis code on an encounter — feeds coverage / medical-necessity rules. Event entity. Contains PHI. Source: HL7 DG1."
+extends:
+  - Object
+properties:
+  - code:
+    field:
+      type: string
+      description: "Diagnosis code (DG1-3.1)"
+
+  - codeSystem:
+    field:
+      type: string
+      description: "Coding system (DG1-3.3, e.g. I10)"
+
+  - sequence:
+    field:
+      type: integer
+      description: "Set ID / order of the diagnosis (DG1-1)"
+
+  - diagnosisType:
+    field:
+      type: string
+      description: "Diagnosis type (DG1-6: A admitting, W working, F final)"
+
+  - element:
+    linkTo: Element
+    multi: false
+    uniLink: true
+    description: "The published diagnosis-code Element (ICD-10-CM standard)"
+
+  - encounter:
+    linkTo: HospitalEncounter.id.diagnoses
+    multi: false
+
+viewProperties:
+  "Code":
+    jsonata: code
+    sort: code
+  "Type":
+    jsonata: diagnosisType
+    sort: diagnosisType
+  "Sequence":
+    jsonata: sequence
+    sort: sequence

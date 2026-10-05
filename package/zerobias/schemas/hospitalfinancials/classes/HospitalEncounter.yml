@@ -1,0 +1,70 @@
+id: b9022d7a-7f6f-5035-b9e6-d7bb6b115b5a
+description: "A patient visit. The visit number becomes the claim's patient control number — the join between the clinical (HL7) and financial (X12) halves. Event entity. Contains PHI. Source: HL7 ADT PV1."
+extends:
+  - Object
+properties:
+  - visitNumber:
+    field:
+      type: string
+      description: "Visit / account number (PV1-19) — matches HospitalClaim.patientControlNumber"
+
+  - patientClass:
+    field: hospital.patientClass
+
+  - patientType:
+    field:
+      type: string
+      description: "Patient type (PV1-18)"
+
+  - financialClass:
+    field:
+      type: string
+      description: "Financial class (PV1-20)"
+
+  - admitTime:
+    field:
+      type: date-time
+      description: "Admit / arrival date-time (PV1-44)"
+
+  - dischargeTime:
+    field:
+      type: date-time
+      description: "Discharge date-time (PV1-45)"
+
+  - location:
+    linkTo: HospitalLocation.id.encounters
+    multi: false
+
+  - coverages:
+    linkTo: HospitalCoverage.id.encounter
+    multi: true
+
+  - diagnoses:
+    linkTo: HospitalDiagnosis.id.encounter
+    multi: true
+
+  - labOrders:
+    linkTo: HospitalLabOrder.id.encounter
+    multi: true
+
+  - chargeTransactions:
+    linkTo: HospitalChargeTransaction.id.encounter
+    multi: true
+
+  - claims:
+    linkTo: HospitalClaim.id.encounter
+    multi: true
+
+viewProperties:
+  "Visit":
+    jsonata: visitNumber
+    sort: visitNumber
+  "Class":
+    jsonata: patientClass
+    sort: patientClass
+  "Financial Class":
+    jsonata: financialClass
+    sort: financialClass
+  "Admitted":
+    jsonata: admitTime
+    sort: admitTime

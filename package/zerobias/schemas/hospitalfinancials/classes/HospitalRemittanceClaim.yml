@@ -1,0 +1,64 @@
+id: 805b9580-f563-51f7-897d-6781b2a880dc
+description: "A payer's settlement of one claim inside an 835. Event entity. Contains PHI. Source: X12 835 Loop 2100 CLP."
+extends:
+  - Object
+properties:
+  - patientControlNumber:
+    field:
+      type: string
+      description: "Patient control number (CLP01) — echoes HospitalClaim.patientControlNumber"
+
+  - claimStatusCode:
+    field:
+      type: string
+      description: "Claim status code (CLP02: 1 primary, 2 secondary, 3 tertiary, 4 denied, 22 reversal)"
+
+  - chargeAmount:
+    field:
+      type: number
+      description: "Total claim charge amount as the payer received it (CLP03)"
+
+  - paidAmount:
+    field:
+      type: number
+      description: "Claim payment amount (CLP04)"
+
+  - patientResponsibilityAmount:
+    field:
+      type: number
+      description: "Patient responsibility amount (CLP05)"
+
+  - payerClaimControlNumber:
+    field:
+      type: string
+      description: "Payer's internal claim number (CLP07)"
+
+  - remittanceAdvice:
+    linkTo: HospitalRemittanceAdvice.id.claims
+    multi: false
+
+  - claim:
+    linkTo: HospitalClaim.id.remittanceClaims
+    multi: false
+
+  - serviceLines:
+    linkTo: HospitalRemittanceServiceLine.id.remittanceClaim
+    multi: true
+
+  - adjustments:
+    linkTo: HospitalRemittanceAdjustment.id.remittanceClaim
+    multi: true
+
+viewProperties:
+  "Patient Control #":
+    jsonata: patientControlNumber
+    sort: patientControlNumber
+  "Status":
+    jsonata: claimStatusCode
+    sort: claimStatusCode
+  "Charged":
+    jsonata: chargeAmount
+    sort: chargeAmount
+  "Paid":
+    jsonata: paidAmount
+    sort: paidAmount

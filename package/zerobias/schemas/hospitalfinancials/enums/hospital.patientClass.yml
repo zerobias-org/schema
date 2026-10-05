@@ -1,0 +1,13 @@
+id: 94f0baef-647e-4016-a623-f13353aa2e80
+fieldId: 1af0a907-52b7-4aa4-8ccb-88815aa7a603
+description: "Patient class from HL7 PV1-2 (table 0004). Drives whether lab is separately payable or packaged."
+displayName: "Patient Class"
+values:
+  - INPATIENT: 'PV1-2 = I. Lab is generally inside the DRG; no separate lab payment.'
+  - OUTPATIENT: 'PV1-2 = O. Hospital outpatient; lab may be packaged (status indicator Q4) or paid at CLFS.'
+  - EMERGENCY: 'PV1-2 = E.'
+  - NON_PATIENT: 'PV1-2 = N. Specimen-only, billable on a 14X claim.'
+  - OBSERVATION: 'Observation status.'
+  - RECURRING: 'PV1-2 = R. Recurring / series patient.'
+  - PREADMIT: 'PV1-2 = P.'
+  - UNKNOWN: 'PV1-2 = U or not supplied.'

@@ -1,0 +1,39 @@
+{
+  "name": "@zerobias-org/schema-zerobias-schemas-hospitalfinancials",
+  "version": "1.0.0",
+  "description": "Hospital Financials Schema — lab send-out economics: orders, results, charges, claims, remittances and the reference data that prices them",
+  "author": "team@zerobias.com",
+  "license": "ISC",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zerobias-org/schema.git",
+    "directory": "package/zerobias/schemas/hospitalfinancials/"
+  },
+  "publishConfig": {
+    "registry": "https://pkg.zerobias.org/"
+  },
+  "files": [
+    "classes/**",
+    "interfaces/**",
+    "fields/**",
+    "documents/**",
+    "enums/**",
+    "catalog.yml",
+    "README.md"
+  ],
+  "dependencies": {
+    "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
+    "@zerobias-org/schema-zerobias-zerobias-base": "latest"
+  },
+  "zerobias": {
+    "package": "zerobias.schemas.hospitalfinancials.schema",
+    "id": "a3002346-3283-49d9-b89a-2722ca731ff4",
+    "dataloader-version": "1.0.0",
+    "import-artifact": "schema",
+    "imports": [
+      "zerobias.zerobias.platform.schema",
+      "zerobias.zerobias.base.schema"
+    ]
+  }
+}

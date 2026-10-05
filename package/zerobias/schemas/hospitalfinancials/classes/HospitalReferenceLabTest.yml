@@ -1,0 +1,52 @@
+id: 00b49dba-b421-5c69-904a-954fdd07792e
+description: "A test as the reference lab defines it — its own code, possibly a panel that fans out to several procedure codes. Reference entity. Source: reference lab test directory / fee schedule."
+extends:
+  - Object
+properties:
+  - labTestCode:
+    field:
+      type: string
+      description: "Reference lab's test code (e.g. Quest test code)"
+
+  - isPanel:
+    field:
+      type: boolean
+      description: "True when one reference-lab test bills as several procedure codes (cost sits on the panel, payment on the codes)"
+
+  - performingLab:
+    linkTo: HospitalReferenceLab.id.tests
+    multi: false
+
+  - hospitalTests:
+    linkTo: HospitalLabTest.id.referenceLabTests
+    multi: true
+
+  - procedureCodes:
+    field:
+      type: string
+      description: "Procedure codes this reference-lab test bills as, space-separated (panel fan-out)"
+
+  - procedureElements:
+    linkTo: Element
+    multi: true
+    uniLink: true
+    description: "The published procedure-code Elements (HCPCS/CPT standard) this test bills as"
+
+  - feeScheduleRates:
+    linkTo: HospitalReferenceLabFeeScheduleRate.id.referenceLabTest
+    multi: true
+
+  - invoiceLines:
+    linkTo: HospitalReferenceLabInvoiceLine.id.referenceLabTest
+    multi: true
+
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Lab Test Code":
+    jsonata: labTestCode
+    sort: labTestCode
+  "Panel":
+    jsonata: isPanel
+    sort: isPanel

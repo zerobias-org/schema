@@ -1,0 +1,47 @@
+id: c42c32f0-f572-5041-a845-af45c9a1eea7
+description: "An insurance payer / plan sponsor the hospital bills. Reference entity. Source: 837 Loop 2010BB NM1*PR, 835 Loop 1000A N1*PR, HL7 IN1."
+extends:
+  - Object
+properties:
+  - payerId:
+    field:
+      type: string
+      description: "Payer identifier as it appears on 837/835 (NM109 / N104)"
+
+  - financialClass:
+    field:
+      type: string
+      description: "Hospital financial class this payer maps to (PV1-20)"
+
+  - remitDeliveryPath:
+    field: hospital.remitDeliveryPath
+
+  - coverages:
+    linkTo: HospitalCoverage.id.payer
+    multi: true
+
+  - claims:
+    linkTo: HospitalClaim.id.payer
+    multi: true
+
+  - remittanceAdvices:
+    linkTo: HospitalRemittanceAdvice.id.payer
+    multi: true
+
+  - contractRates:
+    linkTo: HospitalPayerContractRate.id.payer
+    multi: true
+
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "Payer ID":
+    jsonata: payerId
+    sort: payerId
+  "Financial Class":
+    jsonata: financialClass
+    sort: financialClass
+  "Remit Path":
+    jsonata: remitDeliveryPath
+    sort: remitDeliveryPath

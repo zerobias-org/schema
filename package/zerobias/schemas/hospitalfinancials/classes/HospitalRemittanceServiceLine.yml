@@ -1,0 +1,66 @@
+id: 1eb75523-7cc8-5bf4-acad-0463f398ef47
+description: "The paid side of one procedure code on one claim. Event entity. Source: X12 835 Loop 2110 SVC (+ AMT*B6 allowed amount when present)."
+extends:
+  - Object
+properties:
+  - submittedCharge:
+    field:
+      type: number
+      description: "Line item charge amount (SVC02)"
+
+  - paidAmount:
+    field:
+      type: number
+      description: "Line item provider payment amount (SVC03)"
+
+  - units:
+    field:
+      type: number
+      description: "Units of service paid (SVC05)"
+
+  - allowedAmount:
+    field:
+      type: number
+      description: "Allowed amount (AMT*B6) — situational; when absent, derive as charge minus CO adjustments"
+
+  - serviceDate:
+    field:
+      type: date
+      description: "Service date (DTP*472)"
+
+  - remittanceClaim:
+    linkTo: HospitalRemittanceClaim.id.serviceLines
+    multi: false
+
+  - claimLine:
+    linkTo: HospitalClaimLine.id.remittanceServiceLines
+    multi: false
+
+  - procedureCode:
+    field:
+      type: string
+      description: "Procedure code as adjudicated (SVC01-2)"
+
+  - procedureElement:
+    linkTo: Element
+    multi: false
+    uniLink: true
+    description: "The published procedure-code Element (HCPCS/CPT standard)"
+
+  - adjustments:
+    linkTo: HospitalRemittanceAdjustment.id.serviceLine
+    multi: true
+
+viewProperties:
+  "Code":
+    jsonata: procedureCode
+    sort: procedureCode
+  "Charged":
+    jsonata: submittedCharge
+    sort: submittedCharge
+  "Paid":
+    jsonata: paidAmount
+    sort: paidAmount
+  "Allowed":
+    jsonata: allowedAmount
+    sort: allowedAmount

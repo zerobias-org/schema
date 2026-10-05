@@ -1,0 +1,47 @@
+id: 26048379-b10b-52fa-b6ed-6740d7120b64
+description: "The expected allowable a payer contract sets for one procedure code. Effective-dated. Reference entity. Source: payer contract or contract-management module."
+extends:
+  - Object
+properties:
+  - expectedAllowable:
+    field:
+      type: number
+      description: "Contracted allowed amount for one unit"
+
+  - effectiveFrom:
+    field:
+      type: date
+      description: "First date this rate is in force"
+
+  - effectiveTo:
+    field:
+      type: date
+      description: "Last date this rate is in force; empty while current"
+
+  - payer:
+    linkTo: HospitalPayer.id.contractRates
+    multi: false
+
+  - procedureCode:
+    field:
+      type: string
+      description: "Procedure code (CPT/HCPCS) the rate applies to"
+
+  - procedureElement:
+    linkTo: Element
+    multi: false
+    uniLink: true
+    description: "The published procedure-code Element (HCPCS/CPT standard)"
+
+viewProperties:
+  "Payer":
+    jsonata: payer.name
+  "Code":
+    jsonata: procedureCode
+    sort: procedureCode
+  "Allowable":
+    jsonata: expectedAllowable
+    sort: expectedAllowable
+  "Effective From":
+    jsonata: effectiveFrom
+    sort: effectiveFrom

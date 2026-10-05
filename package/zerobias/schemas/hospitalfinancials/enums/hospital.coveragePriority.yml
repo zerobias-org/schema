@@ -1,0 +1,8 @@
+id: 990f4d71-53af-44a6-ab41-40f1e7b6e92a
+fieldId: 84ead712-2345-487a-811c-c4d69cf39fe7
+description: "Order in which a coverage is billed (HL7 IN1-22 / X12 SBR01)."
+displayName: "Coverage Priority"
+values:
+  - PRIMARY: 'Billed first.'
+  - SECONDARY: 'Billed after the primary remit.'
+  - TERTIARY: 'Billed after the secondary remit.'

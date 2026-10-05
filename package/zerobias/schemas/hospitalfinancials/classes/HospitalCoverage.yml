@@ -1,0 +1,35 @@
+id: 38375b9f-bb1b-5ffc-86a7-c65e028093a0
+description: "An insurance coverage attached to an encounter — which payer/plan is billed and in what order. Event entity. Contains PHI. Source: HL7 IN1 (on the order or the ADT feed)."
+extends:
+  - Object
+properties:
+  - planId:
+    field:
+      type: string
+      description: "Insurance plan identifier (IN1-2)"
+
+  - planName:
+    field:
+      type: string
+      description: "Insurance plan name (IN1-4 / IN1-8)"
+
+  - coveragePriority:
+    field: hospital.coveragePriority
+
+  - encounter:
+    linkTo: HospitalEncounter.id.coverages
+    multi: false
+
+  - payer:
+    linkTo: HospitalPayer.id.coverages
+    multi: false
+
+viewProperties:
+  "Plan":
+    jsonata: planName
+    sort: planName
+  "Payer":
+    jsonata: payer.name
+  "Priority":
+    jsonata: coveragePriority
+    sort: coveragePriority
