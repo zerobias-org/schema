@@ -1,9 +1,0 @@
-id: f6dc40b7-9596-489f-ba59-eb503e1b69a3
-fieldId: 33439978-5971-4e39-81b9-5c568a9cdc2b
-description: "Competency Term"
-displayName: "Competency Term"
-values:
-  - "ANNUAL": "The annual anniversary, calendar day to calendar day (365 days)"
-  - "THREE_YEARS": "The third year anniversary"
-  - "CURRENT_CALENDAR_YEAR": "End of the current calendar year"
-  - "NEXT_CALENDAR_YEAR": "End of the next calendar year"

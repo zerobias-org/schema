@@ -1,9 +1,0 @@
-id: fc6105d4-1c71-43f9-9099-b6e3dfefcadd
-fieldId: 3320aa62-9f29-4dc0-a603-a04da703e7fa
-description: "Asset Status"
-displayName: "Asset Status"
-values:
-  - ACTIVE:	Asset is active and in use. In use by someone or something.
-  - AVAILABLE:	Asset is available for assign.
-  - UNAVAILABLE:	Asset is unavailable for assign (needs repair, configure, etc).
-  - RETIRED: Asset is retired and no longer in service.

@@ -1,8 +1,0 @@
-id: 6ed046c8-65c3-5727-80f1-cf74cd79b05e
-description: "Web Gateway"
-properties:
-  - resources:
-    linkTo: WebGatewayResource
-    multi: true
-  - type:
-    field: webGatewayType
