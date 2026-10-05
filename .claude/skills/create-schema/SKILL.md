@@ -376,8 +376,9 @@ gate run if found late. There is no script for these — read the chain.
   (`t3 fields do not match` otherwise); declaring it on one side is fine.
 - **Geometry and quantities use the platform `number` type**; counts use
   `integer`. Both resolve without a local field file.
-- **`viewProperties` cannot read a link attribute (T3) yet** — a column
-  that needs one has to wait; show the linked object's `name` instead.
+- **`viewProperties` cannot read a link attribute (T3) yet** — they run on
+  the stored payload with links not expanded, so a T3 (or a linked object's
+  `name`) is there only if the collector sent it inline on the owning side.
 - **Top-level `links: models:` blocks load** (deferred resolution to
   catalog codes) — a clean gate proves the block is well-formed, not that
   the codes exist; verify codes in the segment / compliance_feature repos.
@@ -386,9 +387,6 @@ gate run if found late. There is no script for these — read the chain.
   abstract interface whose *name* still entails the capability
   (`Repository` ⇒ VCS, `IdentityProvider` ⇒ IAM), never on structural roots
   (`Object`, `Component`, `Asset`, `Application`, `Principal`, `Party`).
-- **A new interface needs at least two properties.** Single-property
-  interfaces break the platform's GraphQL builder (the `FederatedIdentity`
-  lesson); give it a second real property or fold it into its parent.
 - **A package `README.md` is stamp-hashed** (it is in `files`). A docs-only
   README edit invalidates `gate-stamp.json` like any content change — re-gate
   or ship it with the next content commit.
