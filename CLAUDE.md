@@ -566,9 +566,9 @@ Placement rule (validated against the dataloader): resource links **do not propa
 `extends`** — the link lands on the declaring interface's resource only. Declare `models` on the most
 abstract interface whose *name* still entails the capability (`Repository` ⇒ `c_vcs`,
 `IdentityProvider` ⇒ IAM, `SourceCodeMgmtFinding` ⇒ SCA); never on structural roots (`Object`,
-`Component`, `Asset`, `Application`, `Principal`, `Party`) — the fan-out over-claims for every
-subtype. `f_*` codes go on the narrowest interface exhibiting the feature; `t_*`/`c_*`/`d_*` on the
-interface that defines the market category.
+`Component`, `Asset`, `Application`, `Principal`, `Party`) — the link would claim the whole root,
+and every subtype's objects, model the capability. `f_*` codes go on the narrowest interface
+exhibiting the feature; `t_*`/`c_*`/`d_*` on the interface that defines the market category.
 
 ### How the dataloader processes a schema package
 
