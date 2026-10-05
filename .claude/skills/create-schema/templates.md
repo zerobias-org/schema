@@ -30,9 +30,9 @@ constraints, viewProperties, validation errors) live in the repo
     "catalog.yml", "README.md"
   ],
   "dependencies": {
-    "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
-    "@zerobias-org/schema-zerobias-zerobias-base": "latest",
-    "@zerobias-org/product-<v>-<c>": "latest"    // the catalog entry this
+    "@zerobias-com/schema-zerobias-zerobias-platform": "*",
+    "@auditlogic/schema-zerobias-zerobias-base": "*",
+    "@zerobias-org/product-<v>-<c>": "*"         // the catalog entry this
                                                  // schema describes (suite
                                                  // pkg for umbrella schemas)
   },
@@ -141,7 +141,7 @@ type: string          # string|boolean|number|integer|date|datetime
 ```
 
 Reuse order: an existing base field → a new package field → only then a
-new package field with a `<vendor>.` prefix. Check `package/zerobias/zerobias/base/fields/`
+new package field with a `<vendor>.` prefix. Check `node_modules/@auditlogic/schema-zerobias-zerobias-base/fields/`
 before minting anything.
 
 ### enums/<prefix>.<name>.yml — values MUST be ALL_CAPS
@@ -179,7 +179,7 @@ properties:
 
 Sanity check for a class/interface id you were handed:
 `python3 -c 'import uuid;print(uuid.uuid5(uuid.UUID(int=0),"Account"))'`
-must print the id in `package/zerobias/zerobias/base/interfaces/Account.yml`.
+must print the id in `node_modules/@auditlogic/schema-zerobias-zerobias-base/interfaces/Account.yml`.
 
 Rules: ids are permanent — never change one after publish, never mint a
 second one for a name that already exists (the load refuses the mismatch),

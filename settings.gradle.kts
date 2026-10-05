@@ -38,7 +38,7 @@ rootProject.name = "zerobias-org-schemas"
 //   plugins { id("zb.schema") }
 // Project paths mirror filesystem:
 //   package/hl7/fhir              → :hl7:fhir
-//   package/zerobias/zerobias/base → :zerobias:zerobias:base
+//   package/hl7/fhir → :hl7:fhir
 val packageDir = file("package")
 if (packageDir.exists()) {
     packageDir.walkTopDown()

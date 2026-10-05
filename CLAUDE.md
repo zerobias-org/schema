@@ -106,7 +106,7 @@ not an npm script.
 ## Repository Architecture
 
 ### Monorepo Structure
-- **`package/`**: schema packages organized by vendor/code (e.g. `hl7/fhir`, `zerobias/zerobias/base`).
+- **`package/`**: schema packages organized by vendor/code (e.g. `hl7/fhir`, `microsoft/azure`). The base schema is not in this repo: it ships as `@auditlogic/schema-zerobias-zerobias-base` and is read from `node_modules/` after `npm install` in a package.
 - **`scripts/`**: dev helpers (`createNewSchema.sh` scaffolder, `setup-org-credentials.sh` one-time credential/slot setup).
 - **`templates/`**: starter files for new schemas (`catalog.yml`, `package.json`) with `{dashed}`/`{dotted}`/`{path}`/`{name}`/`{description}` placeholders.
 - **`bundle/`**: `@zerobias-org/schema-bundle` aggregate; auto-refreshed by the publish workflow's `update-bundle` step.
@@ -166,6 +166,14 @@ Rules (enforced by the dataloader):
 - An id that resolves to a row owned by **another package** is refused (ids are globally unique).
 - `uuidgen` on macOS cannot do v5 (Linux `uuidgen --sha1 --namespace … --name …` can); the python
   one-liners above work on both.
+- **The package carries an id too**: `zerobias.id` in `package.json` (UUIDv4, minted once for a new
+  package). A schema package without it is refused as a whole
+  (`Unable to handle schema '<vendor>.<code>.schema', id is missing`).
+- **Packages that were loaded before ids became mandatory** already have ids in the catalog for
+  every field, enum, document and for the package itself. Those existing ids must be declared —
+  a freshly minted one is refused as a mismatch (rule 1). Classes and interfaces are unaffected
+  (UUIDv5 is reproducible from the name); for the rest, ask a zb owner for the id export of the
+  package before adding `id:` lines.
 
 ### Classes (`classes/`)
 
@@ -199,7 +207,7 @@ viewProperties:                                       # Optional UI display conf
 ```
 
 Real examples: `package/w3geekery/smemart/classes/Bid.yml`,
-`package/zerobias/zerobias/base/classes/CAPEC.yml`,
+`node_modules/@auditlogic/schema-zerobias-zerobias-base/classes/CAPEC.yml`,
 `package/microsoft/azure/classes/AzureResourceGroup.yml`.
 
 **Class rules (enforced by the dataloader):**
@@ -222,7 +230,7 @@ polymorphism — and on this platform they are the primary integration surface (
 **Filename:** PascalCase matching the interface name (e.g. `Account.yml`).
 
 ```yaml
-# package/zerobias/zerobias/base/interfaces/Account.yml (abridged)
+# node_modules/@auditlogic/schema-zerobias-zerobias-base/interfaces/Account.yml (abridged)
 id: 1a32e499-4e51-5bae-9e39-70f6c2e4184a                        # REQUIRED — UUIDv5(NIL, "Account")
 description: "A user or system account inside an application"   # REQUIRED
 icon: images/classes/auditmation/base/Account.svg               # Optional
@@ -264,7 +272,7 @@ Fields define atomic, reusable property types, referenced by class/interface pro
 bare name for cross-cutting fields (e.g. `locationCode.yml`).
 
 ```yaml
-# package/zerobias/zerobias/base/fields/account.login.yml
+# node_modules/@auditlogic/schema-zerobias-zerobias-base/fields/account.login.yml
 id: 88eeaa46-8365-433d-8bb1-e994eb907343   # REQUIRED — UUIDv4, minted once
 description: "The login for the entity"    # Optional (defaults to field name)
 displayName: "Login"                       # Optional (defaults to field name)
@@ -369,7 +377,7 @@ properties:
     linkTo: Account
 
   # Explicit bidirectional pairing: ClassName.matchField.pairedProperty
-  # (see package/zerobias/zerobias/base/classes/CAPEC.yml)
+  # (see node_modules/@auditlogic/schema-zerobias-zerobias-base/classes/CAPEC.yml)
   - parent:
     linkTo: CAPEC.id.children       # pairs with the `children` property below
   - children:
@@ -457,7 +465,7 @@ properties:
 
 **Preference order when adding a property:**
 1. **Base schema field** if one fits (`email`, `url`, `name`, `timeCreated`, …) — search
-   `package/zerobias/zerobias/base/fields/` first.
+   `node_modules/@auditlogic/schema-zerobias-zerobias-base/fields/` first.
 2. **Inline field** if the field is unique to this class and used only once.
 3. **Package field** (`fields/` directory) if used by 2+ classes within the same schema.
 4. **Enums and documents** are always declared in their directories, then referenced — never inline.
@@ -537,18 +545,16 @@ Semantics (dataloader + platform ResourceLinker):
   **reconciled** on every load: remove a `links:` entry and reload, and the link disappears once no
   declarer remains. Two packages declaring the same link co-exist.
 
-#### `links.models` — interface → segment / compliance feature *(pre-release, on `dev`)*
+#### `links.models` — interface → segment / compliance feature *(not in the published base yet)*
 
-Base interfaces carry `links: models:` blocks mapping each interface to the catalog **segment
+An interface can carry a `links: models:` block mapping it to the catalog **segment
 codes** and **compliance-feature codes** whose data model it is. `models` is the predicate (inverse:
 `modeled_by`; the interface is the from side), so the graph reads `Repository models c_vcs` and
 `c_vcs modeled_by Repository`.
 
 This is the schema half of "segment declarations create schema obligations": a product categorized
-under a segment must yield objects of the interfaces that segment is `modeled_by`. The annotation
-pass currently lives on the `dev` branch (19 base interfaces, e.g.
-`git show origin/dev:package/zerobias/zerobias/base/interfaces/Repository.yml`) and lands on `main`
-with the next base publish. When declaring a `<Vendor><Base>Base` interface that may be promoted,
+under a segment must yield objects of the interfaces that segment is `modeled_by`. The published base
+(`@auditlogic/schema-zerobias-zerobias-base` 4.x) does not carry these annotations yet. When declaring a `<Vendor><Base>Base` interface that may be promoted,
 include a `models` block if the matching segment/feature codes exist in the catalog — it travels
 with the interface into base.
 
@@ -602,8 +608,8 @@ Three behaviors to internalize:
 
 ## Extending the base schema — extend it in your package, never edit it
 
-The base schema — `package/zerobias/zerobias/base` — is **interface-heavy by design**: 125+
-interfaces (`Account`, `Asset`, `Repository`, `Application`, `Backup`, `Pipeline`, …) and only a
+The base schema — published as `@auditlogic/schema-zerobias-zerobias-base`, not part of this repo — is **interface-heavy by design**: 125+
+interfaces (`Account`, `Asset`, `Repository`, `Application`, `Backup`, …) and only a
 handful of concrete classes. Vendor packages give those interfaces concrete classes; the interfaces
 give the vendor data its generic meaning (a `WizUser` *is a* `User` for every base-level consumer).
 Collectors emit the package's **concrete classes**, not interfaces — anyone can generate the classes
@@ -666,7 +672,7 @@ Write it as if it were already in base, so promotion is a move, not a rewrite:
 Every schema package (and every collector) depends on base, so:
 
 - **Additive changes are cheap.** A new interface, property, or field is a normal patch-bumped
-  publish; dependents track base via `latest` and pick it up on their next load.
+  publish; dependents track base via the `*` spec and pick it up on their next load.
 - **Never rename or remove a published artifact.** Class ownership is registered platform-side;
   renaming requires manual ownership transfer coordinated with the platform team, and the
   source-of-truth soft-delete (above) means a rename silently deletes the old name. Deprecate via
@@ -708,8 +714,8 @@ To confirm the dataloader actually ran, check the stamp: `"testDataloader": "pas
 needed).
 
 ### Package Naming
-- npm name: `@zerobias-org/schema-{parts joined with -}` (e.g. `@zerobias-org/schema-hl7-fhir`, `@zerobias-org/schema-zerobias-zerobias-base`).
-- `zerobias.package` block: `{parts joined with .}.schema` (e.g. `hl7.fhir.schema`, `zerobias.zerobias.base.schema`).
+- npm name: `@zerobias-org/schema-{parts joined with -}` (e.g. `@zerobias-org/schema-hl7-fhir`, `@zerobias-org/schema-microsoft-azure`).
+- `zerobias.package` block: `{parts joined with .}.schema` (e.g. `hl7.fhir.schema`, `microsoft.azure.schema`).
 - For umbrella schemas (`package/{vendor}/{product}/schema/`), the trailing `schema/` is dropped from the npm name; the block uses `{parent}.schema`.
 
 ## Creating a new schema package
@@ -766,10 +772,10 @@ use the slot's identity).
 
 ### Dependencies
 
-The scaffolded `package.json` already depends on (both tracked as `latest`):
+The scaffolded `package.json` already depends on (both with the `*` spec):
 
 - `@zerobias-com/schema-zerobias-zerobias-platform` — platform schema (`Object`, `File`, `Element`, …).
-- `@zerobias-org/schema-zerobias-zerobias-base` — the base interfaces/classes.
+- `@auditlogic/schema-zerobias-zerobias-base` — the base interfaces/classes.
 
 Add yourself, once the catalog product exists (it should — schemas hang off a product):
 
