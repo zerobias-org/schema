@@ -1,5 +1,0 @@
-skip: true
-description: "The name of an object"
-displayName: "Name"
-type: "string"
-indexed: true

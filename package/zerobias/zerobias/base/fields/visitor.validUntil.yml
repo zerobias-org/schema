@@ -1,5 +1,0 @@
-id: 955e70b4-eb98-4ec1-801b-388e9a1276ad
-description: Date until which the visitor access is valid
-displayName: Valid Until
-type: date
-example: "2021-12-31"

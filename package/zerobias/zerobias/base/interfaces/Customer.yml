@@ -1,7 +1,0 @@
-id: 6d1bd38b-5334-5c6f-b167-dc7afe49dc39
-description: "Customer of the organization"
-extends: Organization
-properties:
-  # Links
-  - app:
-    linkTo: CRMApplication

@@ -1,6 +1,0 @@
-id: 80ed66d0-f90a-5670-bf63-feca090057ea
-description: "SSO User"
-extends:
-  - SsoPrincipal
-  - Account
-properties:

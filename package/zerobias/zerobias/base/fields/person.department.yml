@@ -1,5 +1,0 @@
-id: bd33940a-e285-49a0-89d8-23994bc7fe4c
-example: "Human Resources"
-description: "Name of a department for a business, or other entity"
-displayName: "Department"
-type: "string"

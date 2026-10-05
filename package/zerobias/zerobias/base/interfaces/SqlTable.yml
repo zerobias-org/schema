@@ -1,9 +1,0 @@
-id: 24df8973-ae3f-56d8-90d8-07fc96045032
-icon: images/classes/auditmation/base/Database.svg
-description: "SQL Table"
-properties:
-  - schema:
-    linkTo: SqlSchema
-  - columns:
-    linkTo: SqlColumn
-    multi: true

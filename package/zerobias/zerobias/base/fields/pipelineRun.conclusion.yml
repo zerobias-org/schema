@@ -1,4 +1,0 @@
-example: "success"
-description: "Final conclusion of a completed pipeline run"
-displayName: "Conclusion"
-type: "string"

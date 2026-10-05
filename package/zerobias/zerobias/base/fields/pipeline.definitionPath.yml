@@ -1,3 +1,0 @@
-description: "Path of the pipeline definition file within its source repository"
-displayName: "Definition Path"
-type: "string"
