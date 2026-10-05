@@ -11,7 +11,7 @@
     "directory": "package/{vendor}/{code}/"
   },
   "publishConfig": {
-    "registry": "https://pkg.zerobias.org/"
+    "registry": "https://pkg.zerobias.org"
   },
   "files": [
     "classes/**",
@@ -23,7 +23,7 @@
     "README.md"
   ],
   "dependencies": {
-    "@zerobias-org/schema-zerobias-zerobias-base": "^3.0.0"
+    "@auditlogic/schema-zerobias-zerobias-base": "*"
   },
   "zerobias": {
     "dataloader-version": "1.0.0",

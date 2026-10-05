@@ -202,7 +202,7 @@ val changedModules by tasks.registering {
 
         // Build a set of valid package roots from the on-disk project
         // layout (relative to repo root, e.g. "package/hl7/fhir" or
-        // "package/zerobias/zerobias/base"). Any changed file whose
+        // "package/hl7/fhir"). Any changed file whose
         // prefix matches one of these belongs to that package.
         val packageRoots: List<String> = subprojects
             .filter { it.buildFile.exists() }

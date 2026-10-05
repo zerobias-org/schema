@@ -18,7 +18,8 @@ models, encouraged for anything generic. The `/create-schema` skill drives the w
 [`CONTRIBUTING.md`](CONTRIBUTING.md) (Lane 2) and [`CLAUDE.md`](CLAUDE.md).
 
 **Don't edit the base schema — extend it in your package.** The base schema
-([`package/zerobias/zerobias/base`](package/zerobias/zerobias/base)) is deliberately
+(published as `@auditlogic/schema-zerobias-zerobias-base`; after `npm install` in your package, read
+it under `node_modules/@auditlogic/schema-zerobias-zerobias-base/`) is deliberately
 interface-heavy; your concrete classes `extends` its interfaces, and your collector emits your
 classes. If base lacks an interface, a property or a link, declare a `<Vendor><Base>Base` interface
 in your package that extends the base one and carries the addition (links toward base types are
@@ -89,8 +90,8 @@ mkdir -p package/{vendor}/{code}
 cd package/{vendor}/{code} && zbb gate   # writes gate-stamp.json — commit it
 ```
 
-A new schema's `package.json` ships with `@zerobias-org/schema-zerobias-zerobias-base` +
-`@zerobias-com/schema-zerobias-zerobias-platform` (`latest`) and
+A new schema's `package.json` ships with `@auditlogic/schema-zerobias-zerobias-base` +
+`@zerobias-com/schema-zerobias-zerobias-platform` (both `*`) and
 `zerobias.imports: ["zerobias.zerobias.platform.schema", "zerobias.zerobias.base.schema"]`; add your
 `@zerobias-org/product-{vendor}-{code}` dependency. See [`CLAUDE.md`](CLAUDE.md) for the full
 definition reference.

@@ -36,8 +36,8 @@ Phase 7 PR --base dev              ← drop orgId + RE-GATE first
 ```
 
 **One path for everyone.** Internal and external contributors, zb staff
-included, author a package and org-load it. **Nobody edits
-`package/zerobias/zerobias/base/` in a contribution PR.** Two facts make
+included, author a package and org-load it. **The base schema is not in this repo (it ships
+as `@auditlogic/schema-zerobias-zerobias-base`), and nobody edits it in a contribution PR.** Two facts make
 this the only workable path: build-tools refuses to org-publish any package
 that already has catalog versions (`resolveOrgVersion: … Org publish is for
 artifacts that exist only inside your org`), and the dataloader refuses
@@ -124,11 +124,12 @@ Then check the schema itself doesn't already exist:
   already-released package cannot be org-published; extending it is a
   PR-only change reviewed by zb — say so.
 
-**Read base before designing.** `ls package/zerobias/zerobias/base/interfaces/`
+**Read base before designing.** Run `npm install` in the package first, then
+`ls node_modules/@auditlogic/schema-zerobias-zerobias-base/interfaces/`
 and READ the 3–5 interfaces nearest to each concept the package needs
 (their `extends`, properties and links) — base has 125+ interfaces and the
 concept is usually there or nearly there. Also skim
-`package/zerobias/zerobias/base/fields/` for reusable fields. What you
+`node_modules/@auditlogic/schema-zerobias-zerobias-base/fields/` for reusable fields. What you
 find decides Phase 3: extend directly, or extend-and-add.
 
 ## Phase 2 — branch first (never commit on dev or main)
@@ -172,7 +173,7 @@ reuse order). Non-negotiables:
 - Never hand-edit `version` after creation — CI owns bumps (new packages
   start at `1.0.0`).
 - `dependencies`: `@zerobias-com/schema-zerobias-zerobias-platform` +
-  `@zerobias-org/schema-zerobias-zerobias-base` (both `latest`), plus the
+  `@auditlogic/schema-zerobias-zerobias-base` (both `*`), plus the
   catalog package the schema describes (`@zerobias-org/product-<v>-<p>`,
   or the suite package for a suite-level umbrella schema).
 - `zerobias.package` MUST equal the dot-joined directory path + `.schema`;
@@ -185,6 +186,13 @@ reuse order). Non-negotiables:
   documents: a fresh UUIDv4. Recipes in
   [templates.md → Generating ids](templates.md#generating-ids). Never
   change a published id and never mint a second id for an existing name.
+- **`package.json` needs `zerobias.id`** (UUIDv4, minted once) — the
+  dataloader refuses the whole package without it (`Unable to handle
+  schema '<pkg>.schema', id is missing`). When touching a package that
+  was published before ids were mandatory, do NOT mint ids for its
+  existing fields/enums/documents or for the package: they already have
+  ids in the catalog and a new one is refused. Ask a zb owner for the
+  package's id export (classes/interfaces stay UUIDv5 of the name).
 - Every concrete class `extends` a base interface where one fits (that is
   what makes a `WizUser` count as a `User` for every base-level consumer);
   extending `Element` enables framework linking.
