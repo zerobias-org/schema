@@ -1,7 +1,0 @@
-id: 51839750-24c2-50e6-a632-82678a1ac30b
-description: "Any device that may support encryption"
-icon: images/classes/auditmation/base/CryptoDevice.svg
-properties:
-  - cryptoEnabled: "Whether encryption is enabled or disabled"
-    field: cryptoDevice.enabled
-  - cryptoModule: "The cryptographic module for the device"
