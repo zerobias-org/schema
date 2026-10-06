@@ -695,7 +695,7 @@ Every schema package (and every collector) depends on base, so:
 - **Promotion edits the contributor's PR**: move the interface/property/link into base, drop it from
   the package interface, point the classes at base, flip unilinks to two-way. Base is gated once
   (1–3 h); the package still gates in minutes.
-- **Editing base directly is slow by design.** A change in `package/zerobias/zerobias/base/` cannot
+- **Editing base directly is slow by design.** A change to base (authored in auditlogic/schema) cannot
   be used, loaded or checked by anyone until zb merges it and the publish reaches an environment —
   base has no org-first path. Prefer the package extension (it works in your org today and can still
   be promoted); commit straight to base only when you accept that wait, and the full gate still runs.
