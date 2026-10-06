@@ -11,7 +11,7 @@
     "directory": "package/microsoft/azure/"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://pkg.zerobias.org"
   },
   "files": [
     "classes/**",
@@ -22,12 +22,13 @@
     "README.md"
   ],
   "dependencies": {
-    "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
-    "@zerobias-org/schema-zerobias-zerobias-base": "latest",
-    "@zerobias-org/suite-microsoft-azure": "latest"
+    "@auditlogic/schema-zerobias-zerobias-base": "*",
+    "@zerobias-com/schema-zerobias-zerobias-platform": "*",
+    "@zerobias-org/suite-microsoft-azure": "*"
   },
   "zerobias": {
     "package": "microsoft.azure.schema",
+    "id": "cd1ffad3-5b7f-41b0-bc79-9e257d8f7baa",
     "dataloader-version": "1.0.0",
     "import-artifact": "schema",
     "imports": [

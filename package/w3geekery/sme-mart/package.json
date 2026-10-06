@@ -12,10 +12,11 @@
     "directory": "package/w3geekery/sme-mart/"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://pkg.zerobias.org"
   },
   "files": [
-    "catalog.yml"
+    "catalog.yml",
+    "npm-shrinkwrap.json"
   ],
   "zerobias": {
     "deprecated": true,

@@ -1,3 +1,4 @@
+id: 23dd60e6-100d-5d65-bc09-af594215e27e
 description: "Typed key-personnel record for an Org. One row per person. Person-held certifications are NOT stored here — they hang off UserCertification via userId. Background-check state captured as a typed enum. Verification metadata supports asserted-vs-verified (D-53)."
 extends:
   - Object

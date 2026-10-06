@@ -1,3 +1,4 @@
+id: ecfc9619-9a22-5d0c-bad9-dbaddf063590
 description: "Org-scoped expertise junction: a service a vendor Org offers, keyed to a Catalog Service-type Segment. One row per (org, serviceSegment) claim with its own verification provenance (D-53). Service-segment name resolved from the Catalog on read (not denormalized)."
 extends:
   - Object

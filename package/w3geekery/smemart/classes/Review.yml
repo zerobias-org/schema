@@ -1,3 +1,4 @@
+id: ef5d821a-46f5-5f44-8e59-0854777d803c
 description: "Review/rating of a vendor, scoped to engagement and/or project"
 extends:
   - Object

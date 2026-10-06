@@ -1,3 +1,5 @@
+id: 67ee8d7b-f39d-4003-b8d7-8adac5811957
+fieldId: 4e76f41a-7843-4a5f-acf5-426726b6dec1
 # PAIRED TO family, not freely set: SERVICE -> ENGAGEMENT; LICENSED_GOOD and PRODUCTIZED ->
 # ENTITLEMENT_GRANT. The schema cannot enforce that pairing -- it is a write-path validation the
 # app owns. Do not read this enum as independent of family.

@@ -1,3 +1,4 @@
+id: 53ada1e4-81eb-5def-9dc1-63c4ba40a560
 # Renamed from ProviderProductProficiency (2026-08-13), which was itself renamed from
 # ProviderProduct (Cluster B, D-61 + #343). NOT a rename in place — see VendorSkillProficiency.yml
 # for why each of these is a new file rather than an edit.

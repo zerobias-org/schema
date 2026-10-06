@@ -1,3 +1,4 @@
+id: fe102875-9789-44b5-bd8d-693c7d217ae5
 description: 'Type of insurance coverage (see coverageType enum)'
 displayName: 'Coverage Type'
 type: string

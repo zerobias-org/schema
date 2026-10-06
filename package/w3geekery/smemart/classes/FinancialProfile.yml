@@ -1,3 +1,4 @@
+id: 5b4cba20-be1c-5747-b355-5ff18b7b76b5
 description: "Typed financial disclosure for an Org. 1:1 per org. Sensitive — disclosure is gated at the read/UI layer (033 owns the gate), not via a field on this class. Verification metadata supports asserted-vs-verified (D-53)."
 extends:
   - Object

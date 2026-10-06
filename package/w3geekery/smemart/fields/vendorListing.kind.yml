@@ -1,3 +1,4 @@
+id: b5bfd8d1-8e77-4594-a700-86a8b98a03e4
 description: 'Sub-type within the family (see vendorListing.kind enum)'
 displayName: 'Kind'
 type: string

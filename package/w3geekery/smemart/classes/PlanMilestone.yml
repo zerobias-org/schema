@@ -1,3 +1,4 @@
+id: ac1a1cc8-db44-5c1d-b359-5fb02e3d381d
 description: "Individual milestone within a project plan"
 extends:
   - Object

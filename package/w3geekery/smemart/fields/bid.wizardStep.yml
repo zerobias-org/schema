@@ -1,3 +1,4 @@
+id: 75756036-ec3b-4d29-9f39-03eb12a56c52
 description: 'Last completed wizard step (0-based)'
 displayName: 'Wizard Step'
 type: integer

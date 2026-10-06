@@ -1,3 +1,4 @@
+id: fcbc021e-f84e-54fa-ba7d-2defc086c5ff
 description: "Org-scoped expertise junction: a vendor Org's claimed Catalog Role. One row per (org, role) claim with its own verification provenance (D-53). Role name resolved from the Catalog on read (not denormalized)."
 extends:
   - Object

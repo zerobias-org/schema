@@ -1,3 +1,4 @@
+id: a6d5e283-207d-53cf-b2d1-d5885685a8aa
 description: "FHIR AuditEvent — a record of an event made for purposes of maintaining a security log"
 extends:
   - Element

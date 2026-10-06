@@ -1,3 +1,4 @@
+id: bbf6041d-7fb7-4a5b-a395-0882f560239a
 description: 'Employee headcount band (see employeeCount enum)'
 displayName: 'Employee Count'
 type: string

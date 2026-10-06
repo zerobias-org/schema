@@ -11,21 +11,22 @@
     "directory": "package/zerobias/schemas/mcpservers/"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://pkg.zerobias.org"
   },
   "files": [
     "classes/**",
     "catalog.yml"
   ],
   "dependencies": {
-    "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
-    "@zerobias-org/product-zerobias-schemas-mcpservers": "latest",
-    "@zerobias-org/schema-zerobias-zerobias-base": "latest"
+    "@auditlogic/schema-zerobias-zerobias-base": "*",
+    "@zerobias-com/schema-zerobias-zerobias-platform": "*",
+    "@zerobias-org/product-zerobias-schemas-mcpservers": "*"
   },
   "zerobias": {
+    "package": "zerobias.schemas.mcpservers.schema",
+    "id": "570c5f3a-7d63-4ea7-91f4-e5b2033bbd4d",
     "dataloader-version": "1.0.0",
     "import-artifact": "schema",
-    "package": "zerobias.schemas.mcpservers.schema",
     "imports": [
       "zerobias.zerobias.platform.schema",
       "zerobias.zerobias.base.schema"

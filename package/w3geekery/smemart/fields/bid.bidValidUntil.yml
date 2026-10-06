@@ -1,3 +1,4 @@
+id: fa1e836d-fcda-492f-ba1b-e967dc0b0773
 description: 'ISO 8601 date until which the bid is valid. After this date, the bid expires.'
 displayName: 'Bid Valid Until'
 type: string

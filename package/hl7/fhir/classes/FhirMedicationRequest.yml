@@ -1,3 +1,4 @@
+id: 37d1757b-dd76-5b4f-aa15-42c9c3c1201d
 description: "FHIR MedicationRequest — an order or request for supply of medication and instructions for administration"
 extends:
   - Element

@@ -1,3 +1,5 @@
+id: a6bda44b-af6e-4fa3-89b8-40004f986be2
+fieldId: 1b291d52-a1d3-4b5d-8488-1996edb6c8f3
 # FOUR values, taken from the spec — gsd-plan/u1-seller-listing-spec.md:50 declares
 #   type ListingLifecycle = 'draft' | 'listed' | 'suspended' | 'retired';
 # This set is TRANSCRIBED from that line, not invented. (A three-value set omitting SUSPENDED was

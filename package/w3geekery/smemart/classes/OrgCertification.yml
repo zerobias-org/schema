@@ -1,3 +1,4 @@
+id: 69e2ceff-3727-5aa2-8108-2240ad16eedf
 description: "Organization holds an org-scope compliance certification (C3PAO authorization, FedRAMP authorization, SOC 2 report, etc.). Links a platform Org to a ComplianceCertification in the zerobias.schemas.certifications catalog with issue/expiry dates and verification state."
 extends:
   - Object

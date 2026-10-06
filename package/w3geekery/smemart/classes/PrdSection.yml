@@ -1,3 +1,4 @@
+id: d30445f3-e26d-5153-83be-fe810f63220c
 description: "Section within a PRD (overview, objectives, requirements, etc.)"
 extends:
   - Object

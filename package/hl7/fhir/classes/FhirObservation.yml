@@ -1,3 +1,4 @@
+id: 9e1efac3-06e2-5bbb-8c3f-2708b491b3c6
 description: "FHIR Observation — measurements and simple assertions made about a patient or other subject"
 extends:
   - Element

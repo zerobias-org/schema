@@ -1,3 +1,4 @@
+id: f702aac9-83e4-4696-a66a-3913aef2f15b
 description: 'Whether the listing is currently visible to buyers; distinct from lifecycle, which is the editorial state'
 displayName: 'Active'
 type: boolean

@@ -11,21 +11,22 @@
     "directory": "package/zerobias/schemas/agentskills/"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://pkg.zerobias.org"
   },
   "files": [
     "classes/**",
     "catalog.yml"
   ],
   "dependencies": {
-    "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
-    "@zerobias-org/product-zerobias-schemas-agentskills": "latest",
-    "@zerobias-org/schema-zerobias-zerobias-base": "latest"
+    "@auditlogic/schema-zerobias-zerobias-base": "*",
+    "@zerobias-com/schema-zerobias-zerobias-platform": "*",
+    "@zerobias-org/product-zerobias-schemas-agentskills": "*"
   },
   "zerobias": {
+    "package": "zerobias.schemas.agentskills.schema",
+    "id": "258c719a-2614-4246-90bc-e045026746ee",
     "dataloader-version": "1.0.0",
     "import-artifact": "schema",
-    "package": "zerobias.schemas.agentskills.schema",
     "imports": [
       "zerobias.zerobias.platform.schema",
       "zerobias.zerobias.base.schema"

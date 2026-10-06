@@ -1,3 +1,4 @@
+id: 4acfa245-ee49-40e5-8116-a85e28cfac84
 description: 'UUID of the Catalog Segment (Domain or Category); type/name resolved from Catalog on read'
 displayName: 'Segment ID'
 type: string

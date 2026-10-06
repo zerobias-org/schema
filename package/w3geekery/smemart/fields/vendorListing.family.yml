@@ -1,3 +1,4 @@
+id: 8f5f3302-b28e-4965-819d-908039fc357d
 description: 'What kind of thing this listing is, which determines how it is delivered (see vendorListing.family enum)'
 displayName: 'Family'
 type: string

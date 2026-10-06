@@ -1,3 +1,4 @@
+id: 42aef44c-9811-5f72-beb6-c35888cfb7a2
 description: "FHIR Encounter — an interaction between a patient and healthcare provider for the purpose of providing services"
 extends:
   - Element

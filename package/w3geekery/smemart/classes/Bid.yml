@@ -1,3 +1,4 @@
+id: ccddd2e5-e455-585e-9bb7-902903228b0d
 description: "A vendor's bid on an RFP (SmeMartProject in published status)"
 extends:
   - Object
