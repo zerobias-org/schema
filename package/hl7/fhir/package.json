@@ -11,7 +11,7 @@
     "directory": "package/hl7/fhir/"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://pkg.zerobias.org"
   },
   "files": [
     "classes/**",
@@ -19,14 +19,15 @@
     "catalog.yml"
   ],
   "dependencies": {
-    "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
-    "@zerobias-org/product-hl7-fhir": "latest",
-    "@zerobias-org/schema-zerobias-zerobias-base": "latest"
+    "@auditlogic/schema-zerobias-zerobias-base": "*",
+    "@zerobias-com/schema-zerobias-zerobias-platform": "*",
+    "@zerobias-org/product-hl7-fhir": "*"
   },
   "zerobias": {
+    "package": "hl7.fhir.schema",
+    "id": "0d2fc5a6-b8ce-45a1-8462-dd8e0be8f22b",
     "dataloader-version": "1.0.0",
     "import-artifact": "schema",
-    "package": "hl7.fhir.schema",
     "imports": [
       "zerobias.zerobias.platform.schema",
       "zerobias.zerobias.base.schema"

@@ -1,3 +1,4 @@
+id: 0c9fac48-8740-49fb-aa86-cf79eb4a0a08
 # FREE TEXT ON PURPOSE — do not "fix" this into a number.
 # This field already ships in the app as vendor-authored free text: the profile form renders a
 # plain `<input type="text">` with no validation (vendor-profile-form.component.html:90), the model

@@ -1,3 +1,4 @@
+id: 31cfb09d-3008-411a-97b9-b3cf161fdffd
 description: 'UUID of the Catalog Role this person holds; type/name resolved from Catalog on read'
 displayName: 'Role ID'
 type: string

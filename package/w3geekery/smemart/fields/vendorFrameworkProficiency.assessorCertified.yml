@@ -1,3 +1,4 @@
+id: 82f35bb2-5301-42de-ba87-986f5a8cb131
 description: 'Whether the org holds an assessor certification for this framework'
 displayName: 'Assessor Certified'
 type: boolean

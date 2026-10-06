@@ -1,0 +1,14 @@
+{
+  "name": "@zerobias-org/schema-w3geekery-sme-mart",
+  "version": "2.0.1",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "@zerobias-org/schema-w3geekery-sme-mart",
+      "version": "2.0.1",
+      "deprecated": "Renamed to @zerobias-org/schema-w3geekery-smemart. Use the new package.",
+      "license": "ISC"
+    }
+  }
+}

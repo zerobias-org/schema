@@ -1,3 +1,4 @@
+id: 54d61a9d-ee26-407b-bdfb-fda8f55e18bf
 description: 'Type of PRD section (overview, objectives, requirements, etc.)'
 displayName: 'Section Type'
 type: string

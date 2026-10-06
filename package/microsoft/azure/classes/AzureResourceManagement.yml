@@ -1,3 +1,4 @@
+id: aaf818ce-f8f7-5a14-b616-03c9227a3f50
 description: An Azure Resource Management Application
 extends:
   - InventoryApplication

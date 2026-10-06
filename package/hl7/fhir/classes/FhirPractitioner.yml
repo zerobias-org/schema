@@ -1,3 +1,4 @@
+id: b260685b-6bd3-5204-ba92-66f24384a874
 description: "FHIR Practitioner — a person who is involved in the provisioning of healthcare"
 extends:
   - Element

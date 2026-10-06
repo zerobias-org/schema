@@ -1,3 +1,4 @@
+id: 568c53ab-b61c-4d8f-a2c8-aca480c5c16a
 description: 'Agency that issued the credit score (D&B, Experian, etc.)'
 displayName: 'Credit Rating Agency'
 type: string

@@ -1,3 +1,4 @@
+id: 812e1157-7bdc-44a5-a98f-111dc3f8cf5b
 description: 'UUID of the Org claiming this capability'
 displayName: 'Org ID'
 type: string

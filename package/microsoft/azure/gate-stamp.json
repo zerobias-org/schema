@@ -1,7 +1,7 @@
 {
   "version": "3.0.0-uat.0",
-  "branch": "feat/microsoft-azure-schema",
-  "sourceHash": "5614f1b56dbb553f3106ed8089a1f3cbb9d073d8a07c63c4918eb1fcdf23196d",
+  "branch": "build/auditlogic-base-npmrc",
+  "sourceHash": "4f492236d4ef15c00a4a999ef328b13584740f925d91e9d439ac91ee1bac4ed0",
   "testHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "tasks": {
     "validate": "passed",

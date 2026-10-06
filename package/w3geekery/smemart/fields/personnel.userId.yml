@@ -1,3 +1,4 @@
+id: 1232ad72-e73b-4765-8cec-4e8c83cddb9f
 description: 'Optional UUID of the platform User (when the person has an account); person certifications hang off UserCertification via this id'
 displayName: 'User ID'
 type: string

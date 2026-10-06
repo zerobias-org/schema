@@ -11,7 +11,7 @@
     "directory": "package/w3geekery/smemart/"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://pkg.zerobias.org"
   },
   "files": [
     "classes/**",
@@ -23,14 +23,15 @@
     "deprecated.yml"
   ],
   "dependencies": {
-    "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
-    "@zerobias-org/product-w3geekery-smemart": "latest",
-    "@zerobias-org/schema-zerobias-zerobias-base": "latest"
+    "@auditlogic/schema-zerobias-zerobias-base": "*",
+    "@zerobias-com/schema-zerobias-zerobias-platform": "*",
+    "@zerobias-org/product-w3geekery-smemart": "*"
   },
   "zerobias": {
+    "package": "w3geekery.smemart.schema",
+    "id": "bc446039-9813-418c-a524-21337b4247b7",
     "dataloader-version": "1.0.0",
     "import-artifact": "schema",
-    "package": "w3geekery.smemart.schema",
     "imports": [
       "zerobias.zerobias.platform.schema",
       "zerobias.zerobias.base.schema"

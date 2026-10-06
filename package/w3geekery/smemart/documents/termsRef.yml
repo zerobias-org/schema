@@ -1,3 +1,5 @@
+id: f2fcf3f3-ebec-4e09-a560-189523639357
+fieldId: 6d8e0823-0551-4ccb-8951-1db89924e62a
 # Mirrors OfferRef exactly — same reasoning, same shape. See OfferRef.yml for why these are
 # documents rather than classes (identity belongs to the referent; temporary seam shape).
 #

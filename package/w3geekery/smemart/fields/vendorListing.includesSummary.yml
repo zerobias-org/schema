@@ -1,3 +1,4 @@
+id: 6eb44f5b-4cf6-472c-ae29-6fd74549cf59
 # FREE-TEXT LISTING COPY. Shop-window prose, not structured data.
 # Singular string, deliberately — the donor ships serviceOffering.serviceIncludes as type: string,
 # and the TS sketch's string[] was aspirational. Nothing reads this, nothing branches on it.

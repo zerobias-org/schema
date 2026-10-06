@@ -1,3 +1,4 @@
+id: 4703dabf-81ee-402a-bd1e-fcbc0b5e193d
 description: 'Optional reason if vendor requested an invitation'
 displayName: 'Request Reason'
 type: string

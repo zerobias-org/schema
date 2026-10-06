@@ -1,3 +1,4 @@
+id: 279e04cf-c847-5206-bc74-4ac57fa69e71
 description: An Azure Subscription
 extends:
  - CloudService

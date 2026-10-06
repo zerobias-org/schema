@@ -1,3 +1,4 @@
+id: 681f3fa0-ef80-4e97-b61f-8fec7dba6ed1
 description: 'UUID of the VendorListing this segment assignment belongs to'
 displayName: 'Listing ID'
 type: string

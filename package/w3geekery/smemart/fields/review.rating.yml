@@ -1,3 +1,4 @@
+id: 214d8093-d6ca-48f4-a3ae-3fede6c17c80
 description: 'Numeric rating (1-5)'
 displayName: 'Rating'
 type: integer
