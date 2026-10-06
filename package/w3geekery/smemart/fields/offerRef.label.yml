@@ -1,3 +1,4 @@
+id: db669035-8178-40f4-b6aa-b934ae00c941
 description: 'Display label for the offer, denormalized for listing render; the Ledger Offer remains the source of truth'
 displayName: 'Label'
 type: string

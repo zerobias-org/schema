@@ -1,3 +1,4 @@
+id: caa81700-593d-5664-8c96-5ec627e2c258
 description: "FHIR Organization — a formally or informally recognized grouping of people or organizations"
 extends:
   - Element

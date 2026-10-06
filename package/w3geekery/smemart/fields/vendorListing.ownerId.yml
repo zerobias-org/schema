@@ -1,3 +1,4 @@
+id: 93b300ff-b826-4f46-a6ac-3a4da9e19b76
 description: 'UUID of the vendor Org that owns this listing (the seller); one-sided — buyers do not own listings'
 displayName: 'Owner ID'
 type: string

@@ -1,3 +1,4 @@
+id: f7c6de10-5481-4048-94eb-6cfe8a37bc7c
 description: 'Whether the record has been verified against an authoritative source (nullable until vetted, D-53). Boolean by deliberate design — see the verificationStatus note in interfaces/Verifiable.yml before proposing an enum.'
 displayName: 'Verified'
 type: boolean

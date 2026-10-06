@@ -1,3 +1,4 @@
+id: fff1c8a8-41a9-5b95-b1c0-83edb3a11f6e
 # Renamed from ProviderSkillProficiency (2026-08-13), which was itself renamed from ProviderSkill
 # (Cluster B, D-61 + #343). NOT a rename in place — class IDs are derived from content, so each of
 # these is a NEW class file and the prior name is retired whole via deprecated.yml. The old file is

@@ -1,3 +1,4 @@
+id: 6a4ff448-8e03-5d68-a671-4f72dc746ee3
 description: "A Model Context Protocol (MCP) server that exposes tools, resources, and prompts to AI agents"
 extends:
   - Element

@@ -1,3 +1,4 @@
+id: e6e03a58-eded-4316-856a-777e934bf19f
 # type is the DOCUMENT NAME — this is how the schema's type vocabulary extends past scalars.
 # Precedent: base/fields/location.address.yml is `type: "address"`, consuming documents/address.yml.
 # Declared multi: true on the class (proven by base/documents/locationInfo.yml).

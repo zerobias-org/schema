@@ -1,7 +1,7 @@
 {
-  "version": "2.0.1",
-  "branch": "main",
-  "sourceHash": "ac661aa9791096a857334bdfd55b4a0e09947abf9775869786234560fdc97339",
+  "version": "2.0.1-uat.0",
+  "branch": "build/auditlogic-base-npmrc",
+  "sourceHash": "c305096c115856d610872940a5e553bea1aa3f40ad777836ab427fc6d4626af2",
   "testHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "tasks": {
     "validate": "passed",

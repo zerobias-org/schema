@@ -1,3 +1,4 @@
+id: bb943d09-5733-44b5-af50-f1144bf6e507
 description: 'Invitation status: pending, accepted, declined, revoked, expired, or requested'
 displayName: 'Status'
 type: string

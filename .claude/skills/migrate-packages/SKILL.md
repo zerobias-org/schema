@@ -44,6 +44,26 @@ plugins { id("zb.schema") }
 ### 2. Ensure `.npmrc`
 `<package>/.npmrc` must be byte-identical to the repo-root `.npmrc`: `cp .npmrc <package>/.npmrc` (never from a sibling — siblings may be stale). Dependency specs are `"*"`, never `"latest"`. Validators require it.
 
+### 2b. Fill in the schema ids — on EVERY package you touch
+
+**Schema ids** are the stable catalog identities of a schema package and of everything it
+defines. The dataloader refuses a package that does not declare them
+(`Unable to handle <kind> '<name>', id is missing`), so a package without ids cannot pass the
+gate — whatever else you changed in it. Touching a package that has none means filling them
+all in, in the same PR:
+
+| Where | Key | Value |
+|---|---|---|
+| `package.json` → `zerobias` | `id` | the package's schema id |
+| `classes/*.yml`, `interfaces/*.yml` | `id:` (first line) | `UUIDv5(NIL, Name)` — computed from the name |
+| `fields/*.yml` | `id:` (first line) | the field's id |
+| `enums/*.yml`, `documents/*.yml` | `id:` + `fieldId:` (first two lines) | the data type's id + its backing field's id |
+
+Ids never change once published. For anything that was already loaded (an existing package,
+field, enum or document) the value is its **existing** catalog id, not a new one — a different
+id is refused; a zb maintainer supplies those. Only brand-new artifacts get a freshly minted
+UUIDv4. Recipes: [CLAUDE.md → Identity](../../../CLAUDE.md#identity-id--required-on-every-definition-file).
+
 ### 3. Run **full** `gate` (NOT just `validateContent`)
 ```bash
 cd <package> && zbb gate

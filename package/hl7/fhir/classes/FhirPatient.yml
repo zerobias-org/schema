@@ -1,3 +1,4 @@
+id: c8f9bcdf-d65d-5d53-8f4e-80ac64d01467
 description: "FHIR Patient — demographics and administrative information about an individual receiving care"
 extends:
   - Element

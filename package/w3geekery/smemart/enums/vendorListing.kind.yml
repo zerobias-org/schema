@@ -1,3 +1,5 @@
+id: 5741006d-ae93-467d-b6b8-9803598a82fa
+fieldId: b5bfd8d1-8e77-4594-a700-86a8b98a03e4
 # An ENUM rather than a free string, deliberately (ruled 2026-08-03). The tradeoff was framed as
 # "an open-ended enum is a maintenance liability, a string is untyped" -- and the asymmetry decides
 # it: ADDING an enum value is purely additive and costs nothing, REMOVING one costs a deprecated

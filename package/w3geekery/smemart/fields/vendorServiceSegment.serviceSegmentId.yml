@@ -1,3 +1,4 @@
+id: 40beb349-6ef8-4a83-b944-aba6f3995223
 description: 'UUID of the Catalog Service-type Segment offered'
 displayName: 'Service Segment ID'
 type: string

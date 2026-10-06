@@ -1,3 +1,5 @@
+id: 5701a886-9a5e-4655-bf19-677dbd8e668f
+fieldId: 5c39a3db-b5dc-4a8b-b70c-b68a9dfed307
 description: Company ownership/structure classification for an org. Shared 7-value taxonomy with the contact-us CRM "Business Classification" field. Distinct from OrgSegment (industry/service classification).
 displayName: Business Classification
 values:

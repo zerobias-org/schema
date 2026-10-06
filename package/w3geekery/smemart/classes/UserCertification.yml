@@ -1,3 +1,4 @@
+id: c57876d8-be05-5074-9df9-c38eb747626e
 description: "Individual user holds an individual-scope compliance certification. Links a platform User to a ComplianceCertification in the zerobias.schemas.certifications catalog with issue/expiry dates, verification state, and certification number. Used by Seller profile to claim individual-scope certifications (CISSP, CCA, OSCP, etc.)."
 extends:
   - Object

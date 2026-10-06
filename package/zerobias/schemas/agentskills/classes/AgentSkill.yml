@@ -1,3 +1,4 @@
+id: 41f388d6-8fd9-526b-854d-2c7bb2cd939d
 description: "An Agent Skill — a portable, structured set of instructions for AI agents following the agentskills.io specification"
 extends:
   - Element

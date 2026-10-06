@@ -1,3 +1,4 @@
+id: c2031f69-4081-41d4-8fbe-796beca3e3ab
 description: 'UUID of platform User holding this certification'
 displayName: 'User ID'
 type: string

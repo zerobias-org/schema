@@ -1,3 +1,4 @@
+id: 078da13e-d1fa-4d3d-bcd4-e40c8b4380b6
 description: 'ISO 4217 currency code for annualRevenue (default USD)'
 displayName: 'Revenue Currency'
 type: string

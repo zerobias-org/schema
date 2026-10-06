@@ -1,3 +1,5 @@
+id: 599a1c50-48a3-4f6c-8395-6ef9a7702794
+fieldId: bbf6041d-7fb7-4a5b-a395-0882f560239a
 description: Employee headcount band. Boundary at 100 aligns with the ZeroBias Foundation/Guild eligibility cutoff (<100 emp) so guildEligible is derivable from the band. Matches the contact-us CRM Number_of_Employees picklist 1:1 — do not re-band without updating both.
 displayName: Employee Count
 values:

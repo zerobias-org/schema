@@ -1,3 +1,4 @@
+id: 571cbebf-7298-52b7-917c-a3708a7b73d2
 description: "FHIR Provenance — tracking of the origin and history of a resource"
 extends:
   - Element

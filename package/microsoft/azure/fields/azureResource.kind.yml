@@ -1,3 +1,4 @@
+id: 372da904-bfe0-4448-8864-21355c25fa1d
 description: 'Resource kind qualifier as returned by Azure Resource Manager (resource-type specific, open vocabulary)'
 displayName: 'Kind'
 type: string

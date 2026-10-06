@@ -1,3 +1,4 @@
+id: c06b3d91-d4cd-4c71-9f0a-ad5629cd7f1a
 description: 'ISO 4217 currency code (default USD)'
 displayName: 'Currency'
 type: string

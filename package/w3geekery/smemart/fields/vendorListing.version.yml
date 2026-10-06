@@ -1,3 +1,4 @@
+id: 674f73e4-6eaa-4f47-b33e-10203c292578
 description: 'Monotonic version, bumped on any buyer-visible edit. U2 pins this at transaction time so a buyer can prove WHAT THEY BOUGHT'
 displayName: 'Version'
 type: integer

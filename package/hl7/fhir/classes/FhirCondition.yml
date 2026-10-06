@@ -1,3 +1,4 @@
+id: 659aa5cb-2662-545d-b7ca-5300ce94a573
 description: "FHIR Condition — a clinical condition, problem, diagnosis, or other event, situation, issue, or clinical concept"
 extends:
   - Element

@@ -1,3 +1,4 @@
+id: 011e3e75-ac99-4f10-9eac-5167b4573288
 description: 'Whether the org holds a vendor certification for this product'
 displayName: 'Certified'
 type: boolean
