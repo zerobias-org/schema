@@ -70,7 +70,7 @@ problem. What base lacks is expressed inside the package (Phase 3) and
 promoted into base by zb owners at review, in a second step.
 
 ⚠ **Editing base directly is the promotion path, and it is slow by design.**
-A change made in `package/zerobias/zerobias/base/` cannot be used, loaded
+A change made to base (authored in auditlogic/schema) cannot be used, loaded
 or checked by anyone until zb reviews it, merges it and the publish reaches
 an environment — there is no org-first shortcut for base. Prefer the
 package extension: it works in your org today and can still be promoted.
@@ -582,9 +582,9 @@ become two-way. The contributor is told what moved; nothing to redo.
 
 ### Authoring into base (zb owners only)
 
-Sometimes zb owners promote a reviewed design straight into
-`package/zerobias/zerobias/base/` (schema #87, the physical-space model, is
-the exemplar). Accept the trade-off first: **the change is unusable and
+Sometimes zb owners promote a reviewed design straight into base, which
+lives in auditlogic/schema (auditlogic/schema#228, the physical-space model,
+is the exemplar). Accept the trade-off first: **the change is unusable and
 unverifiable by anyone until it is merged and published** — no org load, no
 early collection. If that wait is a problem, author it as a package and
 promote later; that is the default even for zb.
