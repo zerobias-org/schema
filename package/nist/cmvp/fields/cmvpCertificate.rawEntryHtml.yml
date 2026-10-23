@@ -1,0 +1,3 @@
+description: 'The full, original HTML fragment captured for this certificate''s detail page, verbatim and re-renderable — the source of truth for anything not captured by a promoted field above, and the audit trail if a promoted field''s parsing is ever wrong'
+displayName: 'Raw Entry HTML'
+type: string

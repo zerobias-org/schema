@@ -1,0 +1,5 @@
+Schema:
+  name: "CMVP"
+  package: "nist.cmvp.schema"
+  description: |-
+    NIST Cryptographic Module Validation Program (CMVP) certificate registry.

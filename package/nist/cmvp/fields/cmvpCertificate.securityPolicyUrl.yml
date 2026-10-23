@@ -1,0 +1,3 @@
+description: 'Link to the published Security Policy document (PDF) for this module'
+displayName: 'Security Policy URL'
+type: string

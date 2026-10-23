@@ -1,0 +1,3 @@
+description: 'Date this validation event was recorded by CMVP'
+displayName: 'Validation Date'
+type: date

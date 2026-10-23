@@ -1,0 +1,3 @@
+description: 'Vendor mailing address as printed by CMVP'
+displayName: 'Vendor Address'
+type: string

@@ -1,0 +1,3 @@
+description: 'The CMVP certificate number — unique key of this entry, from the source registry URL'
+displayName: 'Certificate Number'
+type: string

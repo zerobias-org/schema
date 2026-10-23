@@ -1,0 +1,3 @@
+description: 'Type of validation event, e.g. Initial, Revalidation'
+displayName: 'Validation Type'
+type: string

@@ -1,0 +1,3 @@
+description: 'Overall FIPS 140 security level achieved (1-4)'
+displayName: 'Overall Level'
+type: integer

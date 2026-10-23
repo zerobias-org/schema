@@ -1,0 +1,3 @@
+description: 'UUID of the matching ZeroBias catalog Vendor, if one has been matched. Vendor name resolved from the Catalog on read (not denormalized). Unset until catalog matching is implemented'
+displayName: 'Vendor ID'
+type: string
