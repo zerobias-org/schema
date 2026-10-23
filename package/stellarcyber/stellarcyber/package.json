@@ -1,0 +1,36 @@
+{
+  "name": "@zerobias-org/schema-stellarcyber-stellarcyber",
+  "version": "1.0.0-rc.1",
+  "description": "AuditgraphDB schema for Stellar Cyber Open XDR threat findings",
+  "author": "team@zerobias.com",
+  "license": "ISC",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zerobias-org/schema.git",
+    "directory": "package/stellarcyber/stellarcyber/"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "files": [
+    "classes/**",
+    "fields/**",
+    "catalog.yml",
+    "README.md"
+  ],
+  "dependencies": {
+    "@zerobias-com/schema-zerobias-zerobias-platform": "latest",
+    "@zerobias-org/product-stellarcyber-stellarcyber": "latest",
+    "@zerobias-org/schema-zerobias-zerobias-base": "latest"
+  },
+  "zerobias": {
+    "dataloader-version": "1.0.0",
+    "import-artifact": "schema",
+    "package": "stellarcyber.stellarcyber.schema",
+    "imports": [
+      "zerobias.zerobias.platform.schema",
+      "zerobias.zerobias.base.schema"
+    ]
+  }
+}
