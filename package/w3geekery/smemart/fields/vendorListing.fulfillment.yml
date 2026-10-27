@@ -1,3 +1,4 @@
+id: 4e76f41a-7843-4a5f-acf5-426726b6dec1
 description: 'How a purchase is delivered; paired to family and validated on write, not freely set (see vendorListing.fulfillment enum)'
 displayName: 'Fulfillment'
 type: string

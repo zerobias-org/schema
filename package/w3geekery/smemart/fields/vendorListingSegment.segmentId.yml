@@ -1,3 +1,4 @@
+id: 38d37328-6c39-4012-9f86-207c2a994de6
 description: 'UUID of the Catalog Segment this listing is filed under; type/name resolved from Catalog on read'
 displayName: 'Segment ID'
 type: string

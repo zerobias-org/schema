@@ -1,3 +1,4 @@
+id: 4703e88c-e7f0-41cd-ae46-45e8edb4493f
 description: 'Stated delivery timeframe, as free text (carried from ServiceOffering.deliveryTime)'
 displayName: 'Delivery Time'
 type: string

@@ -1,3 +1,4 @@
+id: 0e7c2b0c-d10d-40cc-829f-5e59b7886c04
 description: 'ISO 8601 timestamp when invitation was sent'
 displayName: 'Invited At'
 type: string

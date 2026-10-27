@@ -1,3 +1,4 @@
+id: 243e5a89-f879-42b5-ab62-faf8357b8822
 # INSTANCE-LEVEL, and a plain string UUID for consistency with five shipped precedents.
 #
 # WHAT THIS HOLDS: a specific Service-type Segment INSTANCE — not a segmentType.

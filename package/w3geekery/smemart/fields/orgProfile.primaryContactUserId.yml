@@ -1,3 +1,4 @@
+id: 50b5b965-ba5c-4808-8f2d-267fedfdf76b
 description: 'UUID of a member User; name/email resolved on read, not denormalized'
 displayName: 'Primary Contact User ID'
 type: string

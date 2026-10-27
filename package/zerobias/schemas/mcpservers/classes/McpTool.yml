@@ -1,3 +1,4 @@
+id: 63797399-68a0-5638-9275-965ddc5f9ffe
 description: "A tool exposed by an MCP server — a callable function that an AI agent can invoke"
 extends:
   - Element

@@ -1,3 +1,4 @@
+id: 82aef2b8-62ce-4845-a420-cef03980d03d
 description: 'UUID of the Catalog Segment (Domain/Category) the org has capability in'
 displayName: 'Segment ID'
 type: string

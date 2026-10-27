@@ -1,3 +1,4 @@
+id: f7a997bd-6b9d-55be-ac82-6a5c56e2b1f3
 # THE KEYSTONE. U2's entire schema exposure rides on this class — dropping it silently drops U2.
 #
 # ┌───────────────────────────────────────────────────────────────────────────────────────┐

@@ -1,3 +1,4 @@
+id: aa9a153d-0c9c-490c-888e-ef41a6876667
 description: 'UUID of the Ledger Offer this pointer resolves to'
 displayName: 'Offer ID'
 type: string

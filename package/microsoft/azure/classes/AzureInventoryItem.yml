@@ -1,3 +1,4 @@
+id: 6aa98af9-9605-5185-9af8-269ecf631842
 description: An Azure Inventory Item
 extends:
   - InventoryItem

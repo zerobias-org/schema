@@ -1,3 +1,4 @@
+id: ff9f2d73-1895-505e-a2d8-964485fdf3f0
 # ┌─────────────────────────────────────────────────────────────────────────────────────┐
 # │ THE EMPTINESS IS INTENTIONAL. DO NOT ADD PROPERTIES TO THIS INTERFACE.               │
 # └─────────────────────────────────────────────────────────────────────────────────────┘
@@ -19,7 +20,7 @@
 #   name; that is why `Verifiable` is named as it is.
 #
 # PRECEDENT for a propertyless marker that extends another interface — all live, none skipped,
-# in package/zerobias/zerobias/base/interfaces/:
+# in node_modules/@auditlogic/schema-zerobias-zerobias-base/interfaces/:
 #   SsoPrincipal.yml (extends Principal) · SsoGroup.yml · SsoUser.yml · AppEnvironmentBaseline.yml
 #   All declare `properties:` with nothing under it. This file follows that exact shape.
 #

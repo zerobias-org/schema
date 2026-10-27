@@ -1,3 +1,4 @@
+id: 39266b0f-3742-56c5-88b7-b6742b28e00e
 description: "FHIR Consent — a record of a healthcare consumer's choices regarding authorized or restricted actions"
 extends:
   - Element

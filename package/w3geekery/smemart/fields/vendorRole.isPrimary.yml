@@ -1,3 +1,4 @@
+id: fc702571-0cac-4326-83b4-26166f0d7f35
 description: 'Whether this is a primary role for the org'
 displayName: 'Is Primary'
 type: boolean

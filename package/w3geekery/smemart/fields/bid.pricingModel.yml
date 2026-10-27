@@ -1,3 +1,4 @@
+id: 38974ef6-e9f3-422c-b479-f26cea514cd8
 description: 'Pricing model: fixed, hourly, milestone, nrc_arc (non-recurring + annual recurring)'
 displayName: 'Pricing Model'
 type: string

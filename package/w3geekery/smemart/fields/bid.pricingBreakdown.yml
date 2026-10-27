@@ -1,3 +1,4 @@
+id: 939b681f-9e47-4fdc-a391-2b5bd471184a
 description: 'JSON-encoded pricing breakdown by task type (hours, cost, notes per line item)'
 displayName: 'Pricing Breakdown'
 type: string

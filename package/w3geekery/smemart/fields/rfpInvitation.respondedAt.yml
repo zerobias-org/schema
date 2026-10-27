@@ -1,3 +1,4 @@
+id: 704584dc-22b5-4f06-bcd2-3699e69154f0
 description: 'ISO 8601 timestamp when vendor responded'
 displayName: 'Responded At'
 type: string

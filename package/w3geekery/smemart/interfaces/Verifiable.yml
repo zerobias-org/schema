@@ -1,3 +1,4 @@
+id: 25e963dd-3a4f-5df0-a1d4-8388b736ada2
 # Provenance contract: "who checked this claim, when, against what, and until when."
 #
 # Owns the five provenance properties once, so implementing classes declare NONE of them.

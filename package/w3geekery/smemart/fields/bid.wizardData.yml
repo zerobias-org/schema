@@ -1,3 +1,4 @@
+id: 5d2f8a1d-62ec-488f-8f74-b8e463a837c2
 description: 'JSON blob storing full bid wizard state for draft persistence'
 displayName: 'Wizard Data'
 type: string

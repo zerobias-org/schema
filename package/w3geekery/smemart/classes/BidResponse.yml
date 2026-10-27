@@ -1,3 +1,4 @@
+id: a024a0b5-50df-59cc-ba8e-25fcd82f69c3
 description: "A vendor's compliance response to a single RFP requirement"
 extends:
   - Object

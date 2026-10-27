@@ -1,3 +1,4 @@
+id: 632ced7f-85d5-5f6e-9f99-8258001d14cc
 description: "Typed client/project reference for an Org. Distinct from Review (which is platform-mediated reputation) — a ClientReference is a vendor-supplied case study/testimonial with a contact. Verification metadata supports asserted-vs-verified (D-53)."
 extends:
   - Object

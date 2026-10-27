@@ -1,3 +1,4 @@
+id: f2ad9c7a-15bd-5b23-9320-495cd2b431f6
 # A JUNCTION CLASS — one row per (listing, segment). This is how this package expresses
 # "a thing has many Catalog refs", and it is neither an array nor a scalar.
 #
