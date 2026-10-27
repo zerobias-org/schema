@@ -1,7 +1,7 @@
 {
   "name": "@zerobias-org/schema-microsoft-azure",
   "description": "Suite level schema for Microsoft Azure",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "team@zerobias.com",
   "license": "ISC",
   "type": "module",
