@@ -590,10 +590,12 @@ early collection. If that wait is a problem, author it as a package and
 promote later; that is the default even for zb.
 
 When you do edit base:
-1. Branch off `origin/dev`; the PR targets **`dev`** like every package PR
-   (base is a package: it publishes the `dev` prerelease line first and is
-   promoted dev → qa → uat → main). Only an owner who explicitly accepts
-   publishing `latest` on merge targets `main`.
+1. auditlogic/schema is not this repo: it has only `dev` and `main`, no
+   qa/uat chain, and every base PR to date targets **`main`** (#224–#230,
+   including the #228 exemplar, and the Qualification port #232). Branch
+   off `origin/main`, target `main`, and expect the merge to publish
+   `latest` — the new base is live for every consumer at once, which is
+   why step 2 is non-negotiable.
 2. Additive only: new interfaces/fields/enums/documents, new properties,
    new parents on existing interfaces. Never rename, remove or retype
    anything published; retire via `deprecated.yml`.
