@@ -708,7 +708,7 @@ Every schema package (and every collector) depends on base, so:
 > product repos. `cd` into the package and run `zbb gate` (see
 > [Per-package validation](#per-package-validation)) before pushing; a PR carrying a stale stamp
 > cannot merge and no PR workflow runs the gate for you. Do not invoke `./gradlew` directly.
-> Local file-checks alone are not enough — schema correctness (class extends chains, field references, link bidirectionality, enum format, etc.) is only enforced by the dataloader. `gate` runs the local validator, and runs the dataloader against an ephemeral Neon branch **provided `ZB_TOKEN` is set** — without it that step is silently skipped. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full validation workflow — required reading for third-party contributors working from a fork.
+> Local file-checks alone are not enough — schema correctness (class extends chains, field references, link bidirectionality, enum format, etc.) is only enforced by the dataloader. `gate` runs the local validator and then the dataloader against an ephemeral Neon branch; the dataloader step needs `ZB_TOKEN`, and without it the stamp records `"testDataloader": "skipped"` — that is not a passed gate and does not satisfy this rule. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full validation workflow — required reading for third-party contributors working from a fork.
 
 ### Validator (in repo)
 
