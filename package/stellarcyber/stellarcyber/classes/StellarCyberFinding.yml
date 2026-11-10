@@ -1,0 +1,21 @@
+description: A Stellar Cyber correlated threat finding (case), linked to the affected asset by ARN, with MITRE ATT&CK context.
+extends: Finding
+properties:
+  - arn:
+    field: stellarcyber.arn
+  - caseScore:
+    field: stellarcyber.caseScore
+  - mitreTactic:
+    field: stellarcyber.mitreTactic
+  - mitreTechnique:
+    field: stellarcyber.mitreTechnique
+  - awsAccountId:
+    field: stellarcyber.awsAccountId
+  - awsRegion:
+    field: stellarcyber.awsRegion
+viewProperties:
+  "Name":
+    jsonata: name
+    sort: name
+  "MITRE Tactic":
+    jsonata: mitreTactic

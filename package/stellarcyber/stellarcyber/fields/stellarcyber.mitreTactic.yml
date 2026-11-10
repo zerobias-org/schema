@@ -1,0 +1,3 @@
+description: "MITRE ATT&CK tactic (from the case's xdr_event.tactic.name)."
+displayName: "MITRE Tactic"
+type: "string"
