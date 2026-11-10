@@ -60,7 +60,7 @@ Everything in this lane works with only:
 Two recent PRs were merged in a structurally-broken state because the signals contributors (and their AI agents) trusted looked green but did not actually validate the schema:
 
 1. The structure validator (then `npm run validate`, now `zbb validateContent`) passed, even though class YAMLs referenced fields that had no corresponding `fields/*.yml`. Structure validation does not check field references — see [The three validation layers](#the-three-validation-layers).
-2. CI showed no failures, because the PR was unlabeled and the dataloader job was **skipped** rather than run. Skipped is not the same as passed — see [The `approved` label CI gate](#the-approved-label-ci-gate).
+2. CI showed no failures, because no PR workflow runs the dataloader at all — the only evidence on a PR is the committed `gate-stamp.json`, and a stamp that says `"testDataloader": "skipped"` was read as green. Skipped is not the same as passed — see [Gate evidence on a PR](#gate-evidence-on-a-pr).
 
 Following the steps below catches both classes of error before you push.
 
@@ -72,9 +72,9 @@ Schemas are validated at three different layers, each catching different problem
 |---|---|---|---|---|
 | **1. Package structure** | `zbb validateContent` | `package.json` shape, `catalog.yml` shape, `.npmrc` presence, naming consistency between npm name / catalog package / directory / product dependency | seconds | Yes |
 | **2. Local dataloader** | `dataloader --content-dev …` against a local Supabase scratch DB | Field references resolve, `linkTo` targets exist, bidirectional links are consistent, enum values are ALL_CAPS, types are valid, imports cover everything you extend | ~30s–2m | **Yes** |
-| **3. Neon-branch dataloader** | `zbb gate` locally (needs `ZB_TOKEN`), and automatically in CI once a maintainer adds the `approved` label | Same dataloader, run against an ephemeral **Neon branch cloned from `content-master`** with production-shape data | minutes | Run it if you can; CI is authoritative |
+| **3. Neon-branch dataloader** | `zbb gate` locally (needs `ZB_TOKEN`); nothing runs it for you on the PR — the committed `gate-stamp.json` is what reviewers and the publish workflow check | Same dataloader, run against an ephemeral **Neon branch cloned from `content-master`** with production-shape data | minutes | **Yes** — the stamp in your PR is the only evidence |
 
-Layer 1 alone will let many real bugs through. Layer 2 is the smallest local check that catches what production cares about. Layer 3 is authoritative.
+Layer 1 alone will let many real bugs through. Layer 2 is the smallest local check that catches what production cares about. Layer 3 is authoritative, and you are the one who runs it.
 
 **All three run for you as part of `zbb gate`** — from inside your package directory:
 
@@ -228,7 +228,7 @@ Local validation is a **fast smoke test**, not a CI parity check.
 | `PGSSLMODE` | `disable` | `require` |
 | Baseline data | Empty / minimal | Production-shape content |
 | Dataloader flags | `--content-dev --skip-pgboss --skip-dynamo` | Different set of flags |
-| Trigger | You, manually | Automatic on `synchronize` once `approved` label is present |
+| Trigger | You, manually | You, manually (`zbb gate`); no PR workflow runs it |
 | Class IDs | Same as CI / prod (deterministic UUID v5 from YAML content) | Same as local / prod |
 
 Implications:
@@ -236,38 +236,31 @@ Implications:
 - **Local passing does not guarantee CI will pass.** Production-shape data sometimes surfaces conflicts (e.g., an existing class your new schema collides with) that an empty scratch DB cannot.
 - **Local failing is almost always a real bug.** Fix it before pushing — there is no scenario where a clean CI run "rescues" a local failure caused by a missing field or bad link.
 - **Class IDs are deterministic.** Each class gets a UUID v5 derived from its YAML content, so the ID your local dataloader assigns is the same ID CI and production will assign. App-side code can register class ID constants from a successful local run and trust them across environments — as long as the YAML doesn't change before merge.
-- The full Neon-branch CI is the authoritative gate. It runs **only when a maintainer adds the `approved` label** to your PR (see next section).
+- The Neon-branch gate is authoritative. **No PR workflow runs it today** — the stamp you commit is what reviewers and the publish workflow check (see next section).
 
-## The `approved` label CI gate
+## Gate evidence on a PR
 
-The CI workflow that runs the dataloader is gated on **two conditions**, both of which must be true:
+There is no PR-time dataloader job in this repo today: no `approved` label, no `Test` check,
+nothing that re-runs the gate for you. What exists:
 
-1. The pull request has the **`approved`** label.
-2. The triggering event is `labeled` (the moment the label was added) or `synchronize` (a new push to a branch that already has the label).
+1. **Your committed `gate-stamp.json`** — written by `zbb gate` from inside the package. It
+   records `"testDataloader": "passed"` / `"skipped"` and the `sourceHash` of the files it covered.
+2. **Review** — a maintainer checks that the stamp says `passed`, that its `sourceHash` matches the
+   PR's final tree (a push after the gate makes it stale), and that the diff is what the stamp
+   covered.
+3. **The publish workflow, after merge** — rejects a missing or stale stamp, so a PR that slipped
+   through review with bad evidence fails to publish rather than ships.
 
-If either condition is unmet, the dataloader job is **skipped**.
+The expected flow is therefore:
 
-### What the PR check status means
+1. Run `zbb gate` from inside your package until it passes with the dataloader step.
+2. Commit the refreshed `gate-stamp.json` **after** your last content change (re-run the gate if you
+   push again — a stale stamp is the most common reason a PR is sent back).
+3. Open the PR against `dev`, quoting the gate evidence in the description.
+4. A maintainer reviews diff + stamp and merges.
 
-| Status on PR | Meaning |
-|---|---|
-| `Test` job is **green / success** | The dataloader ran against a Neon branch and passed. Safe to merge. |
-| `Test` job is **red / failure** | The dataloader ran and failed. Read the logs and fix. |
-| `Test` job is **skipped** (or absent from the check list) | **The dataloader did not run.** This is not a pass. Do not interpret it as one. |
-
-### Who can add the label
-
-Only ZeroBias maintainers can add the `approved` label. External contributors cannot self-approve. The expected flow is:
-
-1. You open the PR against `dev`.
-2. A maintainer reviews the changes.
-3. The maintainer adds the `approved` label.
-4. CI runs. The job appears as `Test` in the PR's checks.
-5. If CI is green, the maintainer merges.
-
-If you push new commits after the label is added, CI re-runs automatically (the push is a `synchronize` event). You do not need a re-label.
-
-If CI never appears at all after the label is added, the most common cause is that the label was added on `opened` rather than via `labeled`/`synchronize`. Push an empty commit (`git commit --allow-empty -m "ci: trigger"`) to force a `synchronize` event.
+If the dataloader step was skipped (no `ZB_TOKEN`, no platform org key), the stamp says so honestly;
+do not open the PR on a skipped stamp — you will be asked for a passed one before review starts.
 
 ## Common failure modes
 
@@ -293,9 +286,9 @@ Top five issues seen on third-party PRs, with concrete symptoms and fixes.
 
 ### 4. Enum values written in lowercase or mixed case
 
-**Symptom:** Dataloader rejects the enum at load with a regex error like `value "active" does not match [A-Z][A-Z0-9_]*`.
+**Symptom:** The PR is sent back at review. The gate does **not** catch this — the dataloader only rejects values that don't start with a letter (`Enumeration value must start with letter`), so a green gate is no proof.
 
-**Fix:** Rename the value to ALL_CAPS (`ACTIVE`, `IN_PROGRESS`, `NOT_APPLICABLE`). `validateContent` does not catch this — only the dataloader does.
+**Fix:** Every value MUST be ALL_CAPS (`ACTIVE`, `IN_PROGRESS`, `NOT_APPLICABLE`). Never rewrite a value that is already published — collected data conforms to it.
 
 ### 5. Missing entry in `zerobias.imports`
 
@@ -326,6 +319,6 @@ Before opening a PR:
     --body "..."
   ```
   Without `--repo`, `gh` defaults to your fork and the PR will not reach upstream.
-- [ ] PR description notes that local dataloader passed, so a maintainer knows it is safe to add the `approved` label.
+- [ ] PR description quotes the gate evidence (`"testDataloader": "passed"` and the stamp's `sourceHash`), so a maintainer can check it against the diff.
 
-After the PR is open, wait for a maintainer to add `approved`, then watch the `Test` check. Treat skipped as "did not run," not as "passed."
+After the PR is open, a maintainer reviews the diff and the stamp together; if either is stale you will be asked to re-run the gate and push the refreshed stamp. Treat `"skipped"` as "did not run," not as "passed."
