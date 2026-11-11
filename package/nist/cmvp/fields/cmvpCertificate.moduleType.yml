@@ -1,0 +1,3 @@
+description: 'Physical/logical form of the module (see moduleType enum)'
+displayName: 'Module Type'
+type: string

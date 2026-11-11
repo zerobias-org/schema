@@ -1,0 +1,3 @@
+description: 'Vendor name as printed by CMVP — not resolved against the ZeroBias catalog (see vendorId)'
+displayName: 'Vendor Name'
+type: string

@@ -1,0 +1,3 @@
+description: 'UUID of the matching ZeroBias catalog Product, if one has been matched. Product name resolved from the Catalog on read (not denormalized). Unset until catalog matching is implemented'
+displayName: 'Product ID'
+type: string

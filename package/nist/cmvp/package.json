@@ -1,0 +1,33 @@
+{
+  "name": "@zerobias-org/schema-nist-cmvp",
+  "version": "1.0.0-rc.1",
+  "description": "NIST Cryptographic Module Validation Program (CMVP) certificate registry schema.",
+  "author": "team@zerobias.com",
+  "license": "ISC",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:zerobias-org/schema.git",
+    "directory": "package/nist/cmvp/"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "files": [
+    "classes/**",
+    "fields/**",
+    "enums/**",
+    "catalog.yml"
+  ],
+  "dependencies": {
+    "@zerobias-org/product-nist-cmvp": "latest"
+  },
+  "zerobias": {
+    "dataloader-version": "1.0.0",
+    "import-artifact": "schema",
+    "package": "nist.cmvp.schema",
+    "imports": [
+      "zerobias.zerobias.platform.schema"
+    ]
+  }
+}
